@@ -1,0 +1,140 @@
+//
+//  PrefixHeader.pch
+//
+//  Created by Junier on 2017/12/6.
+//  Copyright © 2017年 陈燕军. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+
+#import <AFNetworking/AFNetworking.h>
+#import <SVProgressHUD.h>
+#import <Masonry.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <IQKeyboardManager/IQKeyboardManager.h>
+#import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
+#import <DZNEmptyDataSet/UIScrollView+EmptyDataSet.h>
+#import <ReactiveObjC/ReactiveObjC.h>
+
+
+
+#import "AppOtherConfig.h"
+#import "YJAPPNetwork.h"
+#import "ConventionJudge.h"
+#import "APPUserDataIofo.h"
+#import "YJShareCategory.h"
+
+//工具类
+#import "UUPubLogicHelper.h"
+#import "YAZLNavigationController.h"
+#import "UIColor+ColorChange.h"
+#import "UIView+YJMethods.h"
+#import "UILabel+LabelHeightAndWidth.h"
+
+//zjs工具类
+//全局参数
+#import "CategoryHeader.h"
+#import "GeneralParamsMacro.h"
+
+
+////正式环境
+#define API_BASEURL @"https://api.huijingschool.com/"
+
+//测试环境
+//#define API_BASEURL @"http://test.huijingschool.com/"
+
+//图片Url
+#define _IMGURL @"http://api.huijingschool.com"
+
+//适配iphone6
+#define kDevice_Is_iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+//适配iphone5
+#define kDevice_Is_iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
+#define Knavheight 64
+
+#define kH [UIScreen mainScreen].bounds.size.height
+#define kW [UIScreen mainScreen].bounds.size.width
+
+#define SafeAreaTopHeight (kH == 812.0 ? 88 : 64)
+#define SafeAreaBottomHeight (kH == 812.0 ? 34 : 0)
+
+//适配宽
+#define SW ((float)[UIScreen mainScreen].bounds.size.width/414)
+//适配高
+#define SH ((float)[UIScreen mainScreen].bounds.size.height/736)
+
+//rgb宏
+#define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+#define RGB(r,g,b) RGBA(r,g,b,1.0f)
+
+//导航栏及常用按钮浅蓝色
+#define NavAndBtnColor RGB(54, 112, 245)
+
+#define WColor [UIColor whiteColor]
+
+//浅色字体颜色
+#define TextColor RGB(130, 130, 130)
+//重要字体颜色
+#define TextNoColor RGB(51, 51, 51)
+
+//提示字体颜色
+#define TextOrColor RGB(246, 130, 43)
+
+
+#define ALLViewBgColor [UIColor colorWithHexString:@"#f5f5f5"]
+
+#define BtnBgColor [UIColor colorWithHexString:@"#cccccc"]
+
+#define boderColor [UIColor colorWithHexString:@"#999999"]
+
+#define bgColor [UIColor colorWithHexString:@"#dee6f9"]
+
+#define Orbtncolor [UIColor colorWithHexString:@"#f4630b"]
+
+#define LnColor RGB(236, 225, 232)
+
+#define BtnTextColor RGB(0, 183, 255)
+
+//字体大小
+#define TextFont [UIFont systemFontOfSize:15*SW]
+#define TextsmlFont [UIFont systemFontOfSize:13*SW]
+
+
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+
+#define WYLineColor UIColorFromRGB(0xE8E8E8)
+
+#define WYColorMain UIColorFromRGB(0x5596e6)
+
+//网络状况
+#define netError @"网络不给力"
+
+//提示框
+#define SVShow \
+[SVProgressHUD show];
+
+#define SVShowSuccess(str) \
+[SVProgressHUD showSuccessWithStatus:(str)]
+
+#define SVShowError(str) \
+[SVProgressHUD showErrorWithStatus:(str)]
+
+#define SVShowMessage(str) \
+[SVProgressHUD showImage:nil status:(str)]
+
+#define SVDismiss \
+[SVProgressHUD dismiss]
+
+#define SVshowInfo(str) \
+[SVProgressHUD showInfoWithStatus:(str)]
+
+//统一获取UIFont
+#define BOLDFONT(fontSize) [UIFont boldSystemFontOfSize:fontSize*SW]
+#define FONT(fontSize) [UIFont systemFontOfSize:fontSize*SW]
+
+
+#endif /* PrefixHeader_pch */

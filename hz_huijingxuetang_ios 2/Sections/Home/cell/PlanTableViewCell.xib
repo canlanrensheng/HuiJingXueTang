@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="plancell" rowHeight="154" id="KGk-i7-Jjw" customClass="PlanTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="154"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="153.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Er-bw-Odh">
+                        <rect key="frame" x="15" y="10" width="150" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="150" id="TTk-sa-ItX"/>
+                            <constraint firstAttribute="height" constant="100" id="azO-Vj-FPC"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MtX-Ob-gpc">
+                        <rect key="frame" x="172.5" y="10" width="137.5" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="学习进度_07" translatesAutoresizingMaskIntoConstraints="NO" id="0SG-Ci-jiR">
+                        <rect key="frame" x="15" y="120" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="baq-nE-eTz"/>
+                            <constraint firstAttribute="width" constant="15" id="yVV-Lb-PY1"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDf-nt-aeq">
+                        <rect key="frame" x="37.5" y="120" width="33" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FIi-KE-wS1">
+                        <rect key="frame" x="230" y="108.5" width="75" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="75" id="Xfh-KG-xRe"/>
+                            <constraint firstAttribute="height" constant="35" id="cg9-42-EhA"/>
+                        </constraints>
+                        <state key="normal" title="继续学习">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="1Er-bw-Odh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="BdX-a0-tEo"/>
+                    <constraint firstAttribute="trailing" secondItem="MtX-Ob-gpc" secondAttribute="trailing" constant="10" id="Cco-Yy-p4x"/>
+                    <constraint firstItem="0SG-Ci-jiR" firstAttribute="top" secondItem="1Er-bw-Odh" secondAttribute="bottom" constant="10" id="S19-5M-zSK"/>
+                    <constraint firstItem="MtX-Ob-gpc" firstAttribute="top" secondItem="1Er-bw-Odh" secondAttribute="top" id="Zq3-v2-uqm"/>
+                    <constraint firstItem="MtX-Ob-gpc" firstAttribute="leading" secondItem="1Er-bw-Odh" secondAttribute="trailing" constant="7.5" id="cbe-aj-Mku"/>
+                    <constraint firstItem="TDf-nt-aeq" firstAttribute="leading" secondItem="0SG-Ci-jiR" secondAttribute="trailing" constant="7.5" id="fDq-Ih-Mxa"/>
+                    <constraint firstAttribute="bottom" secondItem="FIi-KE-wS1" secondAttribute="bottom" constant="10" id="hbj-dt-QYP"/>
+                    <constraint firstItem="TDf-nt-aeq" firstAttribute="centerY" secondItem="0SG-Ci-jiR" secondAttribute="centerY" id="sCx-7j-2h1"/>
+                    <constraint firstItem="1Er-bw-Odh" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="t5G-KS-ipR"/>
+                    <constraint firstItem="0SG-Ci-jiR" firstAttribute="leading" secondItem="1Er-bw-Odh" secondAttribute="leading" id="yO0-0f-Idj"/>
+                    <constraint firstAttribute="trailing" secondItem="FIi-KE-wS1" secondAttribute="trailing" constant="15" id="yaB-hh-466"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
+            <connections>
+                <outlet property="goonbtn" destination="FIi-KE-wS1" id="g1F-7T-kpg"/>
+                <outlet property="img" destination="1Er-bw-Odh" id="goB-DF-ifc"/>
+                <outlet property="timelb" destination="TDf-nt-aeq" id="ieZ-Ar-pLX"/>
+                <outlet property="titlelb" destination="MtX-Ob-gpc" id="3j3-vy-i3R"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="107"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="学习进度_07" width="27" height="28"/>
+    </resources>
+</document>

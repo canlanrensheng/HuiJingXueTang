@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="receivecell" rowHeight="81" id="KGk-i7-Jjw" customClass="ReceiveTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="397" height="81"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="397" height="80.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image55_" translatesAutoresizingMaskIntoConstraints="NO" id="dm2-CT-Hkh">
+                        <rect key="frame" x="83" y="21" width="69.5" height="40"/>
+                        <rect key="contentStretch" x="0.5" y="0.69999999999999996" width="0.0" height="0.0"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="240" translatesAutoresizingMaskIntoConstraints="NO" id="oAz-Lo-eQl">
+                        <rect key="frame" x="105" y="21" width="37.5" height="40"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GMn-40-6ZD">
+                        <rect key="frame" x="30" y="10" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="50" id="UUZ-Hl-ObL"/>
+                            <constraint firstAttribute="height" constant="50" id="c1b-UG-9BF"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="GMn-40-6ZD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="Bcu-3W-SUW"/>
+                    <constraint firstItem="dm2-CT-Hkh" firstAttribute="leading" secondItem="oAz-Lo-eQl" secondAttribute="leading" constant="-22" id="C20-zF-yVU"/>
+                    <constraint firstItem="dm2-CT-Hkh" firstAttribute="bottom" secondItem="oAz-Lo-eQl" secondAttribute="bottom" id="THT-9I-vQP"/>
+                    <constraint firstItem="oAz-Lo-eQl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="10" id="X0t-YE-VQL"/>
+                    <constraint firstItem="dm2-CT-Hkh" firstAttribute="top" secondItem="oAz-Lo-eQl" secondAttribute="top" id="blr-YJ-dDE"/>
+                    <constraint firstItem="oAz-Lo-eQl" firstAttribute="leading" secondItem="GMn-40-6ZD" secondAttribute="trailing" constant="25" id="dLQ-aN-wId"/>
+                    <constraint firstItem="dm2-CT-Hkh" firstAttribute="trailing" secondItem="oAz-Lo-eQl" secondAttribute="trailing" constant="10" id="tHD-XL-av3"/>
+                    <constraint firstItem="GMn-40-6ZD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="xsM-JI-vIf"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="chatcellimg" destination="dm2-CT-Hkh" id="nnC-lJ-fx0"/>
+                <outlet property="chatlable" destination="oAz-Lo-eQl" id="Otu-dE-GcD"/>
+                <outlet property="iconimg" destination="GMn-40-6ZD" id="dE0-12-TyV"/>
+            </connections>
+            <point key="canvasLocation" x="-263" y="-47"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="image55_" width="54" height="40"/>
+    </resources>
+</document>
