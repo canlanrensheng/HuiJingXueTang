@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>route</key>
+	<dict>
+		<key>route://passwordLoginVC</key>
+		<string>HJPasswordLoginViewController</string>
+		<key>route://codeLoginVC</key>
+		<string>CordLoginViewController</string>
+		<key>route://inputCodeVC</key>
+		<string>HJInputCodeViewController</string>
+		<key>route://setPasswordVC</key>
+		<string>HJSetPasswordViewController</string>
+		<key>route://inviteCodeVC</key>
+		<string>HJInviteCodeViewController</string>
+		<key>route://reSetPwdVC</key>
+		<string>HJReSetPwdViewController</string>
+	</dict>
+</dict>
+</plist>

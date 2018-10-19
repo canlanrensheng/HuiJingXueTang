@@ -19,5 +19,6 @@ pod 'DZNEmptyDataSet', '~> 1.8.1'
 pod 'IQKeyboardManager'
 pod 'FDFullscreenPopGesture', '~> 1.1'
 pod 'Reachability', '~> 3.2'
+pod 'DCURLRouter', '~> 0.81'
 
 end

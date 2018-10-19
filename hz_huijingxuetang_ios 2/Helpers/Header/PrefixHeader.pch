@@ -17,6 +17,8 @@
 #import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
 #import <DZNEmptyDataSet/UIScrollView+EmptyDataSet.h>
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <DCURLRouter/DCURLRouter.h>
+#import "UIViewController+DCURLRouter.h"
 
 
 
@@ -35,6 +37,8 @@
 
 //zjs工具类
 //全局参数
+#import "Tool.h"
+#import "ViewHeader.h"
 #import "CategoryHeader.h"
 #import "GeneralParamsMacro.h"
 

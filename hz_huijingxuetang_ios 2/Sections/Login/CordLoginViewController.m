@@ -7,7 +7,7 @@
 //
 
 #import "CordLoginViewController.h"
-#import "RegistViewController.h"
+//#import "RegistViewController.h"
 #import "MePageViewController.h"
 #import <NIMSDK/NIMSDK.h>
 @interface CordLoginViewController ()
@@ -136,8 +136,8 @@
     
 }
 -(void)registaction{
-    RegistViewController *vc = [[RegistViewController alloc]init];
-    [self.navigationController pushViewController:vc animated:YES];
+//    RegistViewController *vc = [[RegistViewController alloc]init];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 -(void)codeAction{
     [self.navigationController popViewControllerAnimated:YES];

@@ -129,21 +129,48 @@
  **/
 +(void)registWithPhonenum:(NSString *)phonenum pwd:(NSString *)pwd code:(NSString *)code incode:(NSString *)incode success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/register",API_BASEURL];
-    NSDictionary *parameters = @{
-                                 @"telno":phonenum,
-                                 @"password":pwd,
-                                 @"smscode":code,
-                                 @"invite_code":incode,
-
-                                 };
+    NSDictionary *parameters = nil;
+    if (incode) {
+        parameters = @{
+                       @"telno":phonenum,
+                       @"password":pwd,
+                       @"smscode":code,
+                       @"invite_code":incode,
+                       @"istologin" :@"1"
+                       };
+    } else {
+        parameters = @{
+                       @"telno":phonenum,
+                       @"password":pwd,
+                       @"smscode":code,
+                       @"istologin" :@"1"
+                       };
+    }
+    
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+        DLog(@"获取到的注册的结果是:%@",[NSString convertToJsonData:dic]);
         success(dic);
     } fail:^(id error) {
         failure(error);
     }];
 }
+
+//判断是否已经注册
++ (void)checkReggedWithPhonenum:(NSString *)phonenum success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/checkregged?telephone=%@",API_BASEURL,phonenum];
+//    NSDictionary *parameters = @{
+//                                 @"telephone":phonenum
+//                                 };
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"获取到的结果的数据是:%@ %@",dic,url );
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
 
 /**
  登录
@@ -173,7 +200,7 @@
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+        DLog(@"获取验证码的借口:%@",[NSString convertToJsonData:dic]);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -208,7 +235,6 @@
                                  @"password":pwd,
                                  @"smscode":code,
                                  @"repassword":rpwd,
-                                 
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -447,7 +473,7 @@
 /**
  vip策略咨讯详情
  **/
-+(void)VIPtacticsInfowithaccesstoken:(NSString *)accesstoken infoid:(NSString *)infoid success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
++ (void)VIPtacticsInfowithaccesstoken:(NSString *)accesstoken infoid:(NSString *)infoid success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/vipnewsdetail",API_BASEURL];
     
     NSDictionary *parameters = @{

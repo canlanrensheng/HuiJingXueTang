@@ -2,7 +2,7 @@
 //  BaseViewControllerProtocol.h
 //  BM
 //
-//  Created by txooo on 17/2/28.
+//  Created by hjooo on 17/2/28.
 //  Copyright © 2017年 张金山. All rights reserved.
 //
 
@@ -19,10 +19,12 @@
 // init viewModel with params
 - (instancetype)initWithParams:(NSDictionary *)params;
 
-- (void)tx_bindViewModel;
+- (void)hj_bindViewModel;
 
-- (void)tx_loadData;
+- (void)hj_loadData;
 
-- (void)tx_configSubViews;
+- (void)hj_configSubViews;
+
+- (void)hj_setNavagation;
 
 @end

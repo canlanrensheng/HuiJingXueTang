@@ -55,7 +55,6 @@
 		131D73DA2177302F00DC94C7 /* DiscoverInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73622177302F00DC94C7 /* DiscoverInfoViewController.m */; };
 		131D73DB2177302F00DC94C7 /* ForgetPWDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73642177302F00DC94C7 /* ForgetPWDViewController.m */; };
 		131D73DC2177302F00DC94C7 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73662177302F00DC94C7 /* LoginViewController.m */; };
-		131D73DD2177302F00DC94C7 /* RegistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73682177302F00DC94C7 /* RegistViewController.m */; };
 		131D73DE2177302F00DC94C7 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D736B2177302F00DC94C7 /* AboutViewController.m */; };
 		131D73DF2177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D736E2177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.m */; };
 		131D73E02177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 131D736F2177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.xib */; };
@@ -138,10 +137,14 @@
 		131D74E32177513200DC94C7 /* UITableView+Register.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74D02177513200DC94C7 /* UITableView+Register.m */; };
 		131D74E52177513200DC94C7 /* UIView+category.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74D42177513200DC94C7 /* UIView+category.m */; };
 		131D74E82177513200DC94C7 /* CustomTabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74DB2177513200DC94C7 /* CustomTabbarController.m */; };
+		1332D42121797966009190A6 /* HudTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D41D21797966009190A6 /* HudTool.m */; };
+		1332D42221797966009190A6 /* UserInfoSingleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42021797966009190A6 /* UserInfoSingleObject.m */; };
+		1332D42521797B74009190A6 /* HJInviteCodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42421797B74009190A6 /* HJInviteCodeView.m */; };
+		1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42A21798664009190A6 /* AppDelegate+Category.m */; };
+		1332D42E217986EE009190A6 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42C217986ED009190A6 /* WelcomeViewController.m */; };
 		135E584C2178131E0050641D /* UIBarButtonItem+TXAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E584A2178131E0050641D /* UIBarButtonItem+TXAdditions.m */; };
 		135E584F2178135B0050641D /* UITabBar+TXAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E584E2178135B0050641D /* UITabBar+TXAdditions.m */; };
 		135E5856217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5855217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m */; };
-		135E5859217813EA0050641D /* UIViewController+TXDealloc.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5858217813EA0050641D /* UIViewController+TXDealloc.m */; };
 		135E5863217814850050641D /* TXAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E585B217814850050641D /* TXAlertView.m */; };
 		135E5864217814850050641D /* SQButtonTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E585D217814850050641D /* SQButtonTagView.m */; };
 		135E5865217814850050641D /* TXCheckVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5860217814850050641D /* TXCheckVersion.m */; };
@@ -167,8 +170,17 @@
 		135E58BE217821220050641D /* BaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58AA217821220050641D /* BaseViewModel.m */; };
 		135E58C3217821590050641D /* JSLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58C2217821590050641D /* JSLoadingView.m */; };
 		135E58C6217822210050641D /* UIImage+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58C5217822210050641D /* UIImage+Category.m */; };
-		135E58D8217827D10050641D /* UserInfoSingleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58D4217827D10050641D /* UserInfoSingleObject.m */; };
-		135E58D9217827D10050641D /* HudTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58D7217827D10050641D /* HudTool.m */; };
+		135E58E621782C810050641D /* UIViewController+TXDealloc.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58E521782C800050641D /* UIViewController+TXDealloc.m */; };
+		135E58EB217874F20050641D /* Router.plist in Resources */ = {isa = PBXBuildFile; fileRef = 135E58EA217874F20050641D /* Router.plist */; };
+		135E58EE217885B10050641D /* HJInputCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58ED217885B10050641D /* HJInputCodeViewController.m */; };
+		135E58F1217897BC0050641D /* HJSetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58F0217897BC0050641D /* HJSetPasswordViewController.m */; };
+		135E58F72178AC720050641D /* HJDelateTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58F62178AC720050641D /* HJDelateTextField.m */; };
+		135E58FB2179636C0050641D /* HJPasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58FA2179636C0050641D /* HJPasswordView.m */; };
+		135E5901217977510050641D /* HJInviteCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5900217977510050641D /* HJInviteCodeViewController.m */; };
+		13E8852D2179A025002598AD /* HJPasswordLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8852C2179A025002598AD /* HJPasswordLoginViewController.m */; };
+		13E885312179AC12002598AD /* HJForgetPwdNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E885302179AC12002598AD /* HJForgetPwdNavigationController.m */; };
+		13E885342179B54D002598AD /* HJLocalCodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E885332179B54D002598AD /* HJLocalCodeView.m */; };
+		13E885372179C02C002598AD /* HJReSetPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E885362179C02C002598AD /* HJReSetPwdViewController.m */; };
 		4B5454D020BD37F0000D2F10 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5454CF20BD37F0000D2F10 /* libc++.tbd */; };
 		4B5454D220BD3848000D2F10 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5454D120BD3847000D2F10 /* CoreText.framework */; };
 		4B5454D420BD3876000D2F10 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5454D320BD3875000D2F10 /* UIKit.framework */; };
@@ -301,8 +313,6 @@
 		131D73642177302F00DC94C7 /* ForgetPWDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetPWDViewController.m; sourceTree = "<group>"; };
 		131D73652177302F00DC94C7 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		131D73662177302F00DC94C7 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		131D73672177302F00DC94C7 /* RegistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistViewController.h; sourceTree = "<group>"; };
-		131D73682177302F00DC94C7 /* RegistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistViewController.m; sourceTree = "<group>"; };
 		131D736A2177302F00DC94C7 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		131D736B2177302F00DC94C7 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		131D736D2177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgLabelAndLabelTableViewCell.h; sourceTree = "<group>"; };
@@ -453,6 +463,17 @@
 		131D74D42177513200DC94C7 /* UIView+category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+category.m"; sourceTree = "<group>"; };
 		131D74DA2177513200DC94C7 /* CustomTabbarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabbarController.h; sourceTree = "<group>"; };
 		131D74DB2177513200DC94C7 /* CustomTabbarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabbarController.m; sourceTree = "<group>"; };
+		1332D41C21797966009190A6 /* HudTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudTool.h; sourceTree = "<group>"; };
+		1332D41D21797966009190A6 /* HudTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudTool.m; sourceTree = "<group>"; };
+		1332D41E21797966009190A6 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
+		1332D41F21797966009190A6 /* UserInfoSingleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoSingleObject.h; sourceTree = "<group>"; };
+		1332D42021797966009190A6 /* UserInfoSingleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoSingleObject.m; sourceTree = "<group>"; };
+		1332D42321797B74009190A6 /* HJInviteCodeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJInviteCodeView.h; sourceTree = "<group>"; };
+		1332D42421797B74009190A6 /* HJInviteCodeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJInviteCodeView.m; sourceTree = "<group>"; };
+		1332D4292179865C009190A6 /* AppDelegate+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Category.h"; sourceTree = "<group>"; };
+		1332D42A21798664009190A6 /* AppDelegate+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Category.m"; sourceTree = "<group>"; };
+		1332D42C217986ED009190A6 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		1332D42D217986EE009190A6 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		135E5847217811170050641D /* GeneralParamsMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneralParamsMacro.h; sourceTree = "<group>"; };
 		135E5848217812350050641D /* UIColor_TXHexColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIColor_TXHexColor.h; sourceTree = "<group>"; };
 		135E58492178125F0050641D /* CategoryHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryHeader.h; sourceTree = "<group>"; };
@@ -462,8 +483,6 @@
 		135E584E2178135B0050641D /* UITabBar+TXAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBar+TXAdditions.m"; sourceTree = "<group>"; };
 		135E5854217813A90050641D /* UIViewController+TXSystemBackButtonHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TXSystemBackButtonHandler.h"; sourceTree = "<group>"; };
 		135E5855217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TXSystemBackButtonHandler.m"; sourceTree = "<group>"; };
-		135E5857217813EA0050641D /* UIViewController+TXDealloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TXDealloc.h"; path = "../../../../.Trash/UIViewController+TXDealloc.h"; sourceTree = "<group>"; };
-		135E5858217813EA0050641D /* UIViewController+TXDealloc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TXDealloc.m"; path = "../../../../.Trash/UIViewController+TXDealloc.m"; sourceTree = "<group>"; };
 		135E585B217814850050641D /* TXAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXAlertView.m; sourceTree = "<group>"; };
 		135E585C217814850050641D /* TXCheckVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXCheckVersion.h; sourceTree = "<group>"; };
 		135E585D217814850050641D /* SQButtonTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQButtonTagView.m; sourceTree = "<group>"; };
@@ -522,11 +541,28 @@
 		135E58C2217821590050641D /* JSLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSLoadingView.m; sourceTree = "<group>"; };
 		135E58C4217822210050641D /* UIImage+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Category.h"; sourceTree = "<group>"; };
 		135E58C5217822210050641D /* UIImage+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Category.m"; sourceTree = "<group>"; };
-		135E58D3217827D10050641D /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
-		135E58D4217827D10050641D /* UserInfoSingleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoSingleObject.m; sourceTree = "<group>"; };
-		135E58D5217827D10050641D /* UserInfoSingleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoSingleObject.h; sourceTree = "<group>"; };
-		135E58D6217827D10050641D /* HudTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudTool.h; sourceTree = "<group>"; };
-		135E58D7217827D10050641D /* HudTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudTool.m; sourceTree = "<group>"; };
+		135E58E421782C7F0050641D /* UIViewController+TXDealloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TXDealloc.h"; path = "../../../../../.Trash/UIViewController+TXDealloc.h"; sourceTree = "<group>"; };
+		135E58E521782C800050641D /* UIViewController+TXDealloc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TXDealloc.m"; path = "../../../../../.Trash/UIViewController+TXDealloc.m"; sourceTree = "<group>"; };
+		135E58E821784B9C0050641D /* ViewHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewHeader.h; sourceTree = "<group>"; };
+		135E58EA217874F20050641D /* Router.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Router.plist; sourceTree = "<group>"; };
+		135E58EC217885B10050641D /* HJInputCodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJInputCodeViewController.h; sourceTree = "<group>"; };
+		135E58ED217885B10050641D /* HJInputCodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJInputCodeViewController.m; sourceTree = "<group>"; };
+		135E58EF217897BC0050641D /* HJSetPasswordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSetPasswordViewController.h; sourceTree = "<group>"; };
+		135E58F0217897BC0050641D /* HJSetPasswordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSetPasswordViewController.m; sourceTree = "<group>"; };
+		135E58F52178AC720050641D /* HJDelateTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJDelateTextField.h; sourceTree = "<group>"; };
+		135E58F62178AC720050641D /* HJDelateTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJDelateTextField.m; sourceTree = "<group>"; };
+		135E58F92179636C0050641D /* HJPasswordView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJPasswordView.h; sourceTree = "<group>"; };
+		135E58FA2179636C0050641D /* HJPasswordView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPasswordView.m; sourceTree = "<group>"; };
+		135E58FF217977510050641D /* HJInviteCodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJInviteCodeViewController.h; sourceTree = "<group>"; };
+		135E5900217977510050641D /* HJInviteCodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJInviteCodeViewController.m; sourceTree = "<group>"; };
+		13E8852B2179A025002598AD /* HJPasswordLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJPasswordLoginViewController.h; sourceTree = "<group>"; };
+		13E8852C2179A025002598AD /* HJPasswordLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPasswordLoginViewController.m; sourceTree = "<group>"; };
+		13E8852F2179AC12002598AD /* HJForgetPwdNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJForgetPwdNavigationController.h; sourceTree = "<group>"; };
+		13E885302179AC12002598AD /* HJForgetPwdNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJForgetPwdNavigationController.m; sourceTree = "<group>"; };
+		13E885322179B54D002598AD /* HJLocalCodeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJLocalCodeView.h; sourceTree = "<group>"; };
+		13E885332179B54D002598AD /* HJLocalCodeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJLocalCodeView.m; sourceTree = "<group>"; };
+		13E885352179C02C002598AD /* HJReSetPwdViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJReSetPwdViewController.h; sourceTree = "<group>"; };
+		13E885362179C02C002598AD /* HJReSetPwdViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJReSetPwdViewController.m; sourceTree = "<group>"; };
 		4B5454CF20BD37F0000D2F10 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		4B5454D120BD3847000D2F10 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		4B5454D320BD3875000D2F10 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -787,6 +823,7 @@
 		131D735E2177302F00DC94C7 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				135E58F8217963400050641D /*  View */,
 				131D735F2177302F00DC94C7 /* CordLoginViewController.h */,
 				131D73602177302F00DC94C7 /* CordLoginViewController.m */,
 				131D73612177302F00DC94C7 /* DiscoverInfoViewController.h */,
@@ -795,8 +832,16 @@
 				131D73642177302F00DC94C7 /* ForgetPWDViewController.m */,
 				131D73652177302F00DC94C7 /* LoginViewController.h */,
 				131D73662177302F00DC94C7 /* LoginViewController.m */,
-				131D73672177302F00DC94C7 /* RegistViewController.h */,
-				131D73682177302F00DC94C7 /* RegistViewController.m */,
+				135E58EC217885B10050641D /* HJInputCodeViewController.h */,
+				135E58ED217885B10050641D /* HJInputCodeViewController.m */,
+				135E58EF217897BC0050641D /* HJSetPasswordViewController.h */,
+				135E58F0217897BC0050641D /* HJSetPasswordViewController.m */,
+				135E58FF217977510050641D /* HJInviteCodeViewController.h */,
+				135E5900217977510050641D /* HJInviteCodeViewController.m */,
+				13E8852B2179A025002598AD /* HJPasswordLoginViewController.h */,
+				13E8852C2179A025002598AD /* HJPasswordLoginViewController.m */,
+				13E885352179C02C002598AD /* HJReSetPwdViewController.h */,
+				13E885362179C02C002598AD /* HJReSetPwdViewController.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -932,9 +977,9 @@
 		131D73FE2177308E00DC94C7 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1332D41B21797966009190A6 /* Tools */,
 				135E58CB2178278F0050641D /* Header */,
 				135E5885217821220050641D /* Base */,
-				135E588321781A7A0050641D /* Tool */,
 				135E585A217814540050641D /* Views */,
 				131D74C02177513200DC94C7 /* Categories */,
 				131D74D92177513200DC94C7 /* TabBarController */,
@@ -1131,6 +1176,8 @@
 		131D74BB21774FEF00DC94C7 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
+				1332D4292179865C009190A6 /* AppDelegate+Category.h */,
+				1332D42A21798664009190A6 /* AppDelegate+Category.m */,
 				135E587D217815F50050641D /* BMThirdPartService.h */,
 				135E587E217815F50050641D /* BMThirdPartService.m */,
 				131D73FF2177308E00DC94C7 /* AppDelegate.h */,
@@ -1142,10 +1189,10 @@
 		131D74C02177513200DC94C7 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				135E58E421782C7F0050641D /* UIViewController+TXDealloc.h */,
+				135E58E521782C800050641D /* UIViewController+TXDealloc.m */,
 				135E587B2178150F0050641D /* NSString+TXCategory.h */,
 				135E587A2178150F0050641D /* NSString+TXCategory.m */,
-				135E5857217813EA0050641D /* UIViewController+TXDealloc.h */,
-				135E5858217813EA0050641D /* UIViewController+TXDealloc.m */,
 				135E5854217813A90050641D /* UIViewController+TXSystemBackButtonHandler.h */,
 				135E5855217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m */,
 				135E584D2178135B0050641D /* UITabBar+TXAdditions.h */,
@@ -1162,6 +1209,8 @@
 				135E58492178125F0050641D /* CategoryHeader.h */,
 				135E58C4217822210050641D /* UIImage+Category.h */,
 				135E58C5217822210050641D /* UIImage+Category.m */,
+				135E58F52178AC720050641D /* HJDelateTextField.h */,
+				135E58F62178AC720050641D /* HJDelateTextField.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1169,10 +1218,24 @@
 		131D74D92177513200DC94C7 /* TabBarController */ = {
 			isa = PBXGroup;
 			children = (
+				1332D42D217986EE009190A6 /* WelcomeViewController.h */,
+				1332D42C217986ED009190A6 /* WelcomeViewController.m */,
 				131D74DA2177513200DC94C7 /* CustomTabbarController.h */,
 				131D74DB2177513200DC94C7 /* CustomTabbarController.m */,
 			);
 			path = TabBarController;
+			sourceTree = "<group>";
+		};
+		1332D41B21797966009190A6 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				1332D41C21797966009190A6 /* HudTool.h */,
+				1332D41D21797966009190A6 /* HudTool.m */,
+				1332D41E21797966009190A6 /* Tool.h */,
+				1332D41F21797966009190A6 /* UserInfoSingleObject.h */,
+				1332D42021797966009190A6 /* UserInfoSingleObject.m */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		135E585A217814540050641D /* Views */ = {
@@ -1190,6 +1253,7 @@
 				135E5860217814850050641D /* TXCheckVersion.m */,
 				135E5862217814850050641D /* TXDataManage.h */,
 				135E5861217814850050641D /* TXDataManage.m */,
+				135E58E821784B9C0050641D /* ViewHeader.h */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1226,19 +1290,6 @@
 			path = LJViewTools;
 			sourceTree = "<group>";
 		};
-		135E588321781A7A0050641D /* Tool */ = {
-			isa = PBXGroup;
-			children = (
-				135E58D6217827D10050641D /* HudTool.h */,
-				135E58D7217827D10050641D /* HudTool.m */,
-				135E58D3217827D10050641D /* Tool.h */,
-				135E58D5217827D10050641D /* UserInfoSingleObject.h */,
-				135E58D4217827D10050641D /* UserInfoSingleObject.m */,
-			);
-			name = Tool;
-			path = ../../Tool;
-			sourceTree = "<group>";
-		};
 		135E5885217821220050641D /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -1273,6 +1324,8 @@
 				135E58AA217821220050641D /* BaseViewModel.m */,
 				135E58AB217821220050641D /* BaseViewModelProtocol.h */,
 				135E58AC217821220050641D /* BaseViewProtocol.h */,
+				13E8852F2179AC12002598AD /* HJForgetPwdNavigationController.h */,
+				13E885302179AC12002598AD /* HJForgetPwdNavigationController.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1295,8 +1348,22 @@
 				131D74272177308E00DC94C7 /* PrefixHeader.pch */,
 				135E5847217811170050641D /* GeneralParamsMacro.h */,
 				131D74012177308E00DC94C7 /* AppOtherConfig.h */,
+				135E58EA217874F20050641D /* Router.plist */,
 			);
 			path = Header;
+			sourceTree = "<group>";
+		};
+		135E58F8217963400050641D /*  View */ = {
+			isa = PBXGroup;
+			children = (
+				135E58F92179636C0050641D /* HJPasswordView.h */,
+				135E58FA2179636C0050641D /* HJPasswordView.m */,
+				1332D42321797B74009190A6 /* HJInviteCodeView.h */,
+				1332D42421797B74009190A6 /* HJInviteCodeView.m */,
+				13E885322179B54D002598AD /* HJLocalCodeView.h */,
+				13E885332179B54D002598AD /* HJLocalCodeView.m */,
+			);
+			path = " View";
 			sourceTree = "<group>";
 		};
 		4B130A4220454EBC00CBE31C /* Recovered References */ = {
@@ -1436,6 +1503,7 @@
 		4B5C68F8200CDF7F00264853 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = HJ;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Junier;
 				TargetAttributes = {
@@ -1484,6 +1552,7 @@
 				131D73B62177302F00DC94C7 /* PlanTableViewCell.xib in Resources */,
 				131D73E02177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.xib in Resources */,
 				131D73F22177302F00DC94C7 /* AlertTableViewCell.xib in Resources */,
+				135E58EB217874F20050641D /* Router.plist in Resources */,
 				131D74422177308E00DC94C7 /* Assets.xcassets in Resources */,
 				131D73B22177302F00DC94C7 /* FollowTableViewCell.xib in Resources */,
 				131D73D12177302F00DC94C7 /* NowTableViewCell.xib in Resources */,
@@ -1577,6 +1646,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1332D42521797B74009190A6 /* HJInviteCodeView.m in Sources */,
 				131D73BB2177302F00DC94C7 /* TeacherTableViewCell.m in Sources */,
 				131D73CD2177302F00DC94C7 /* CardViewController.m in Sources */,
 				131D74482177308E00DC94C7 /* HACursor.m in Sources */,
@@ -1602,27 +1672,31 @@
 				135E584F2178135B0050641D /* UITabBar+TXAdditions.m in Sources */,
 				131D73D72177302F00DC94C7 /* PayViewController.m in Sources */,
 				131D744C2177308E00DC94C7 /* HARootScrollViewManager.m in Sources */,
+				1332D42121797966009190A6 /* HudTool.m in Sources */,
 				135E58AF217821220050641D /* BaseCollectionViewCell.m in Sources */,
 				131D73AF2177302F00DC94C7 /* DiagnoseTableViewCell.m in Sources */,
 				135E5863217814850050641D /* TXAlertView.m in Sources */,
 				135E58B4217821220050641D /* BaseNavigationViewController.m in Sources */,
 				131D73BF2177302F00DC94C7 /* FollowViewController.m in Sources */,
 				131D73E72177302F00DC94C7 /* MyCardViewController.m in Sources */,
-				135E5859217813EA0050641D /* UIViewController+TXDealloc.m in Sources */,
 				135E58B3217821220050641D /* BaseModel.m in Sources */,
 				131D73D42177302F00DC94C7 /* FreeLiveViewController.m in Sources */,
+				13E8852D2179A025002598AD /* HJPasswordLoginViewController.m in Sources */,
 				135E58BA217821220050641D /* BaseTableViewController.m in Sources */,
 				131D73FD2177303000DC94C7 /* ScreenViewController.m in Sources */,
 				131D73C02177302F00DC94C7 /* HomePageViewController.m in Sources */,
 				131D73F02177302F00DC94C7 /* shoppingCartViewController.m in Sources */,
+				135E58F1217897BC0050641D /* HJSetPasswordViewController.m in Sources */,
 				131D73F32177302F00DC94C7 /* GiftView.m in Sources */,
 				131D744A2177308E00DC94C7 /* HARootScrollView.m in Sources */,
 				4BB9FAB4206BB62B002243B5 /* YJAPPNetwork.m in Sources */,
 				131D73BE2177302F00DC94C7 /* DiaInfoViewController.m in Sources */,
 				131D73F82177302F00DC94C7 /* SchoolTableViewCell.m in Sources */,
 				135E586D2178149D0050641D /* YYWeakProxy.m in Sources */,
+				13E885342179B54D002598AD /* HJLocalCodeView.m in Sources */,
 				135E586C2178149D0050641D /* YYFPSLabel.m in Sources */,
 				135E58B1217821220050641D /* BaseDoubleTitleView.m in Sources */,
+				13E885372179C02C002598AD /* HJReSetPwdViewController.m in Sources */,
 				131D744D2177308E00DC94C7 /* HAScrollNavBar.m in Sources */,
 				135E5879217814C50050641D /* UILabel+LJLabel.m in Sources */,
 				131D74412177308E00DC94C7 /* AppDelegate.m in Sources */,
@@ -1634,19 +1708,21 @@
 				131D745C2177308E00DC94C7 /* YJShareCategory.m in Sources */,
 				131D73E82177302F00DC94C7 /* MyClassViewController.m in Sources */,
 				135E5856217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m in Sources */,
+				135E58E621782C810050641D /* UIViewController+TXDealloc.m in Sources */,
 				131D73D22177302F00DC94C7 /* DredgeVipViewController.m in Sources */,
 				135E5878217814C50050641D /* UIButton+LJButton.m in Sources */,
 				135E58BE217821220050641D /* BaseViewModel.m in Sources */,
 				131D73CC2177302F00DC94C7 /* BuyVipViewController.m in Sources */,
 				131D73AD2177302F00DC94C7 /* ClassCollectionViewCell.m in Sources */,
+				135E58F72178AC720050641D /* HJDelateTextField.m in Sources */,
 				131D745F2177308E00DC94C7 /* YAZLNavigationController.m in Sources */,
+				135E5901217977510050641D /* HJInviteCodeViewController.m in Sources */,
 				131D73C42177302F00DC94C7 /* TeacherInfoViewController.m in Sources */,
 				131D73D52177302F00DC94C7 /* LiveAncientlyViewControllerViewController.m in Sources */,
 				135E58C6217822210050641D /* UIImage+Category.m in Sources */,
 				4BB9FAB5206BB62B002243B5 /* YJNetWorkTool.m in Sources */,
 				135E587C2178150F0050641D /* NSString+TXCategory.m in Sources */,
 				135E587F217815F50050641D /* BMThirdPartService.m in Sources */,
-				135E58D8217827D10050641D /* UserInfoSingleObject.m in Sources */,
 				131D74B321774CAE00DC94C7 /* NELivePlayerControlView.m in Sources */,
 				131D74492177308E00DC94C7 /* HAItemManager.m in Sources */,
 				131D74E32177513200DC94C7 /* UITableView+Register.m in Sources */,
@@ -1655,19 +1731,23 @@
 				131D73DB2177302F00DC94C7 /* ForgetPWDViewController.m in Sources */,
 				131D744F2177308E00DC94C7 /* HASortItemView.m in Sources */,
 				131D73D02177302F00DC94C7 /* NowTableViewCell.m in Sources */,
+				1332D42221797966009190A6 /* UserInfoSingleObject.m in Sources */,
 				131D73B12177302F00DC94C7 /* FollowTableViewCell.m in Sources */,
 				131D73B72177302F00DC94C7 /* ReceiveTableViewCell.m in Sources */,
 				131D73DA2177302F00DC94C7 /* DiscoverInfoViewController.m in Sources */,
 				131D74E82177513200DC94C7 /* CustomTabbarController.m in Sources */,
+				135E58EE217885B10050641D /* HJInputCodeViewController.m in Sources */,
 				131D73E92177302F00DC94C7 /* OrderListCell.m in Sources */,
 				131D74472177308E00DC94C7 /* HAAnimationTool.m in Sources */,
 				135E5866217814850050641D /* TXDataManage.m in Sources */,
 				131D74572177308E00DC94C7 /* ConventionJudge.m in Sources */,
 				131D73C62177302F00DC94C7 /* ViewPointViewController.m in Sources */,
+				13E885312179AC12002598AD /* HJForgetPwdNavigationController.m in Sources */,
 				131D73E12177302F00DC94C7 /* MeCardTableViewCell.m in Sources */,
 				131D73E32177302F00DC94C7 /* ClassAppraiseViewController.m in Sources */,
 				131D73CB2177302F00DC94C7 /* InformationPageViewController.m in Sources */,
 				131D73E52177302F00DC94C7 /* InviteViewController.m in Sources */,
+				135E58FB2179636C0050641D /* HJPasswordView.m in Sources */,
 				131D73FC2177303000DC94C7 /* SchoolPageViewController.m in Sources */,
 				131D74462177308E00DC94C7 /* FSTextView.m in Sources */,
 				131D73F62177302F00DC94C7 /* AppraiseTableViewCell.m in Sources */,
@@ -1676,8 +1756,8 @@
 				131D74562177308E00DC94C7 /* APPUserDataIofo.m in Sources */,
 				131D73D82177302F00DC94C7 /* PayViewsucceedController.m in Sources */,
 				131D73DC2177302F00DC94C7 /* LoginViewController.m in Sources */,
+				1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */,
 				131D73FB2177302F00DC94C7 /* RegistCodeViewController.m in Sources */,
-				135E58D9217827D10050641D /* HudTool.m in Sources */,
 				131D74522177308E00DC94C7 /* UIView+Extension.m in Sources */,
 				135E58C3217821590050641D /* JSLoadingView.m in Sources */,
 				131D73C32177302F00DC94C7 /* TacticsViewController.m in Sources */,
@@ -1686,10 +1766,10 @@
 				131D73BD2177302F00DC94C7 /* DiagnoseViewController.m in Sources */,
 				131D73E42177302F00DC94C7 /* FeedBackViewController.m in Sources */,
 				131D73C72177302F00DC94C7 /* VipTacticsInfoViewController.m in Sources */,
+				1332D42E217986EE009190A6 /* WelcomeViewController.m in Sources */,
 				131D745D2177308E00DC94C7 /* YJShareTool.m in Sources */,
 				131D73D62177302F00DC94C7 /* LivePageViewController.m in Sources */,
 				131D744E2177308E00DC94C7 /* HASortButton.m in Sources */,
-				131D73DD2177302F00DC94C7 /* RegistViewController.m in Sources */,
 				131D74452177308E00DC94C7 /* UIView+YJMethods.m in Sources */,
 				135E58B0217821220050641D /* BaseCollectionViewController.m in Sources */,
 				131D73B32177302F00DC94C7 /* MeTableViewCell.m in Sources */,
@@ -1884,7 +1964,7 @@
 					"$(PROJECT_DIR)/Third/UMshareSDK",
 					"$(PROJECT_DIR)/Third/UMshareSDK/UMSocialUI",
 				);
-				GCC_PREFIX_HEADER = $SRCROOT/Helpers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = $SRCROOT/Helpers/Header/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -1929,7 +2009,7 @@
 					"$(PROJECT_DIR)/Third/UMshareSDK",
 					"$(PROJECT_DIR)/Third/UMshareSDK/UMSocialUI",
 				);
-				GCC_PREFIX_HEADER = $SRCROOT/Helpers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = $SRCROOT/Helpers/Header/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",

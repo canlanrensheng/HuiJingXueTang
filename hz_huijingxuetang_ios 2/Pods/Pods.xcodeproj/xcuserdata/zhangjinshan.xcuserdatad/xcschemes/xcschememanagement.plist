@@ -11,6 +11,13 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>DCURLRouter.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>14</integer>
+		</dict>
 		<key>DZNEmptyDataSet.xcscheme</key>
 		<dict>
 			<key>isShown</key>

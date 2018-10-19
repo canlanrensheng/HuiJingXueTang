@@ -351,7 +351,7 @@ alpha:1.0]
 /* ************************************************************************************************* */
 
 #define MediumFont(FONTSIZE) [UIFont fontWithName:@"PingFangSC-Medium" size:(FONTSIZE)]
-
+#define HEXColor(color) [UIColor colorWithHexString:color]
 
 ///正常字体
 #define H30 [UIFont systemFontOfSize:font(30)]

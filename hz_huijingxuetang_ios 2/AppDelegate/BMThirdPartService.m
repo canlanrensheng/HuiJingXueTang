@@ -11,6 +11,7 @@
 #import "UserInfoSingleObject.h"
 //#import <UMMobClick/MobClick.h>
 
+
 @implementation BMThirdPartService
 
 + (void)load {
@@ -25,6 +26,7 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[self class] checkVersion];
             [[self class] initThirdPartParams];
+            [DCURLRouter loadConfigDictFromPlist:@"Router.plist"];
 #if DEBUG
          
 #endif

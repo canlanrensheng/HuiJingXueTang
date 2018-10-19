@@ -51,7 +51,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+//    [self.navigationController setNavigationBarHidden:YES animated:animated];
 
 }
 - (IBAction)senerbtnAction:(id)sender {
@@ -62,12 +62,13 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"慧鲸学堂";
     self.navH.constant = SafeAreaTopHeight;
     //这个的目的是为了使得启动app时，单元格是收缩的
     for (int i=0; i<6; i++) {
         load[i] = NO;
     }
-    scrollview = [[UIScrollView alloc]initWithFrame:CGRectMake(0, SafeAreaTopHeight, kW, kH-SafeAreaTopHeight-48)];
+    scrollview = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, kW, kH-48)];
     scrollview.backgroundColor = ALLViewBgColor;
     scrollview.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadnew)];
     [self.view addSubview:scrollview];

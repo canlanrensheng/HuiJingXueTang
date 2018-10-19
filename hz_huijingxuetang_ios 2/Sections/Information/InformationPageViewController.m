@@ -36,12 +36,14 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+//    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navH.constant = SafeAreaTopHeight;
+//    self.navH.constant = SafeAreaTopHeight;
+    self.title = @"资讯";
     _navview.backgroundColor = NavAndBtnColor;
     [self loadTopInfo];
     
@@ -74,22 +76,15 @@
         [self loadNewwithid:[dic objectForKey:@"id"] index:k];
     }
     
-    
-//    [_titleArray addObject:@"要闻"];
-//    [_titleArray addObject:@"滚动"];
-//    [_titleArray addObject:@"机会"];
-//    [_titleArray addObject:@"公司"];
-//    [_titleArray addObject:@"更多"];
-    
     cursor = [[HACursor alloc]init];
     cursor.itemTitleBtnWidth=kW/toparr.count;
-    cursor.frame = CGRectMake(0, SafeAreaTopHeight, kW, 40);
+    cursor.frame = CGRectMake(0, 0, kW, 40);
     cursor.scrollNavBar.linecoler = NavAndBtnColor;
     cursor.titles =_titleArray;
     cursor.pageViews = [self createPageViews];
     cursor.backgroundColor= ALLViewBgColor;
     //设置根滚动视图的高度
-    cursor.rootScrollViewHeight = kH -45-SafeAreaTopHeight-44;
+    cursor.rootScrollViewHeight = kH -45-44;
     //    cursor.rootScrollView.backgroundColor=Background_Color;
     //默认值是白色
     cursor.titleNormalColor = TextNoColor;
@@ -168,7 +163,7 @@
         if (i==0) {
             UIView*view1 = [[UIView alloc]init];
             view1.backgroundColor = ALLViewBgColor;
-            _tableview1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -SafeAreaTopHeight-40-44)];
+            _tableview1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -40-44)];
             _tableview1.dataSource = self;
             _tableview1.delegate = self;
             _tableview1.backgroundColor = ALLViewBgColor;
@@ -182,7 +177,7 @@
         }else if(i==1){
             UIView *view2 = [[UIView alloc]init];
             view2.backgroundColor = ALLViewBgColor;
-            _tableview2 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -SafeAreaTopHeight-40-44)];
+            _tableview2 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -40-44)];
             _tableview2.dataSource = self;
             _tableview2.delegate = self;
             _tableview2.backgroundColor = ALLViewBgColor;
@@ -195,7 +190,7 @@
         }else if(i==2){
             UIView *view3 = [[UIView alloc]init];
             view3.backgroundColor = ALLViewBgColor;
-            _tableview3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -SafeAreaTopHeight-40-44)];
+            _tableview3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -40-44)];
             _tableview3.dataSource = self;
             _tableview3.delegate = self;
             _tableview3.backgroundColor = ALLViewBgColor;
@@ -208,7 +203,7 @@
         }else if(i==3){
             UIView *view4 = [[UIView alloc]init];
             view4.backgroundColor = ALLViewBgColor;
-            _tableview4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -SafeAreaTopHeight-40-44)];
+            _tableview4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -40-44)];
             _tableview4.dataSource = self;
             _tableview4.delegate = self;
             _tableview4.backgroundColor = ALLViewBgColor;
@@ -221,7 +216,7 @@
         }else if(i==4){
             UIView *view5 = [[UIView alloc]init];
             view5.backgroundColor = ALLViewBgColor;
-            _tableview5 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -SafeAreaTopHeight-40-44)];
+            _tableview5 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, kW,self.view.height -40-44)];
             _tableview5.dataSource = self;
             _tableview5.delegate = self;
             _tableview5.backgroundColor = ALLViewBgColor;

@@ -2,7 +2,7 @@
 //  BaseViewController.m
 //  Zhuan
 //
-//  Created by txooo on 16/3/1.
+//  Created by hjooo on 16/3/1.
 //  Copyright © 2016年 张金山. All rights reserved.
 //
 
@@ -39,9 +39,10 @@
     @weakify(viewController)
     [[viewController rac_signalForSelector:@selector(viewDidLoad)] subscribeNext:^(id x) {
         @strongify(viewController)
-        [viewController tx_bindViewModel];
-        [viewController tx_loadData];
-        [viewController tx_configSubViews];
+        [viewController hj_setNavagation];
+        [viewController hj_bindViewModel];
+        [viewController hj_loadData];
+        [viewController hj_configSubViews];
         [viewController setTitleView];
     }];
     return viewController;
@@ -128,11 +129,21 @@
     }];
 }
 
-- (void)tx_configSubViews {};
+- (void)hj_setNavagation {
+    
+}
 
-- (void)tx_bindViewModel {};
+- (void)hj_configSubViews {
+    
+}
 
-- (void)tx_loadData {};
+- (void)hj_bindViewModel {
+    
+}
+
+- (void)hj_loadData {
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

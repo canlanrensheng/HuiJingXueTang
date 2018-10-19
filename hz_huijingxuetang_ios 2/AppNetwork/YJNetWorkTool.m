@@ -45,13 +45,12 @@
     //判断请求方法是GET还是POST
     if ([method isEqualToString:@"GET"]) {
         //调用AFN框架的方法
-        
         [self GET:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
                 
                 erorblock(NOTNETMESSAGE);
                 
-                return SVshowInfo(NOTNETMESSAGE);
+//                return SVshowInfo(NOTNETMESSAGE);
             }
             //如果请求成功，则回调responseObject
             callBack(responseObject);
@@ -68,7 +67,7 @@
                 
                 erorblock(NOTNETMESSAGE);
                 
-                return SVshowInfo(NOTNETMESSAGE);
+//                return SVshowInfo(NOTNETMESSAGE);
             }
             callBack(responseObject);
 
@@ -77,9 +76,6 @@
             NSLog(@"%@",error);
         }];
     }
-    
-
-
 }
 
 /**

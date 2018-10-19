@@ -47,6 +47,9 @@
  **/
 +(void)registWithPhonenum:(NSString *)phonenum pwd:(NSString *)pwd code:(NSString *)code incode:(NSString *)incode success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
 
+//判断是否已经组册
++(void)checkReggedWithPhonenum:(NSString *)phonenum success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
 /**
  登录
  **/

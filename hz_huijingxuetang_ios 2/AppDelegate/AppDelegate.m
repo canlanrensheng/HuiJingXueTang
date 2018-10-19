@@ -7,16 +7,13 @@
 //
 
 #import "AppDelegate.h"
-#import "YAZLNavigationController.h"
-#import "HomePageViewController.h"
-#import "InformationPageViewController.h"
-#import "MePageViewController.h"
-#import "LivePageViewController.h"
-#import "SchoolPageViewController.h"
 #import <NIMSDK/NIMSDK.h>
 #import <AlipaySDK/AlipaySDK.h>
 #import <WXApi.h>
 #import <UMShare/UMShare.h>
+
+#import "CustomTabbarController.h"
+#import "AppDelegate+Category.h"
 
 @interface AppDelegate ()<WXApiDelegate>
 
@@ -27,8 +24,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = white_color;
+    [self.window makeKeyAndVisible];
+    //设置根试图控制器
+    [self setRootViewController:application];
+    
     [self autoLogin];
-    [self getmain];
     [self getNIMSDK];
     [self getWXApi];
     [self setUShare];
@@ -131,63 +133,63 @@
     return YES;
 }
 
--(void)getmain{
-    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    UITabBarController *tb=[[UITabBarController alloc]init];
-    
-    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    // 2.通过标识符找到对应的页面
-    UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"HomePageViewController"];
-//    HomePageViewController *vc1 = [[HomePageViewController alloc]init];
-    YAZLNavigationController *nvc1 = [[YAZLNavigationController alloc]initWithRootViewController:vc];
-    nvc1.tabBarItem.title=@"首页";
-    vc.view.backgroundColor=ALLViewBgColor;
-    nvc1.tabBarItem.image = [UIImage imageNamed:@"image1"];
-    nvc1.tabBarItem.selectedImage = [UIImage imageNamed:@"image2"];
-    [vc.navigationController setNavigationBarHidden:YES];
-
-    LivePageViewController *vc2 = [[LivePageViewController alloc]init];
-    YAZLNavigationController *nvc2 = [[YAZLNavigationController alloc]initWithRootViewController:vc2];
-    vc2.view.backgroundColor=ALLViewBgColor;
-    nvc2.tabBarItem.title=@"直播";
-    nvc2.tabBarItem.image = [UIImage imageNamed:@"image3"];
-    nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
-    
-    [vc2.navigationController setNavigationBarHidden:YES];
-
-    
-    
-    SchoolPageViewController *vc3 = [[SchoolPageViewController alloc]init];
-    YAZLNavigationController *nvc3 = [[YAZLNavigationController alloc]initWithRootViewController:vc3];
-    vc3.view.backgroundColor=ALLViewBgColor;
-    nvc3.tabBarItem.title=@"学堂";
-    nvc3.tabBarItem.image = [UIImage imageNamed:@"image5"];
-    nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
-    [vc3.navigationController setNavigationBarHidden:YES];
-
-    // 2.通过标识符找到对应的页面
-    UIViewController *vc4 = [storyBoard instantiateViewControllerWithIdentifier:@"InformationPageViewController"];
-    YAZLNavigationController *nvc4 = [[YAZLNavigationController alloc]initWithRootViewController:vc4];
-    vc4.view.backgroundColor=ALLViewBgColor;
-    nvc4.tabBarItem.title=@"资讯";
-    nvc4.tabBarItem.image = [UIImage imageNamed:@"image7"];
-    nvc4.tabBarItem.selectedImage = [UIImage imageNamed:@"image8"];
-    [vc4.navigationController setNavigationBarHidden:YES];
-
-    
-    MePageViewController *vc5 = [[MePageViewController alloc]init];
-    YAZLNavigationController *nvc5 = [[YAZLNavigationController alloc]initWithRootViewController:vc5];
-    nvc5.tabBarItem.title=@"我的";
-    nvc5.tabBarItem.selectedImage = [UIImage imageNamed:@"image10"];
-    nvc5.tabBarItem.image = [UIImage imageNamed:@"image9"];
-    vc5.navigationItem.title = @"个人中心";
-    vc5.view.backgroundColor = ALLViewBgColor;
-    
-    tb.viewControllers=@[nvc1,nvc2,nvc3,nvc4,nvc5];
-    tb.tabBar.tintColor= NavAndBtnColor;
-    self.window.rootViewController = tb;
-    [self.window makeKeyAndVisible];
-}
+//-(void)getmain{
+//    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+//    UITabBarController *tb=[[UITabBarController alloc]init];
+//    
+//    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    // 2.通过标识符找到对应的页面
+//    UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"HomePageViewController"];
+////    HomePageViewController *vc1 = [[HomePageViewController alloc]init];
+//    YAZLNavigationController *nvc1 = [[YAZLNavigationController alloc]initWithRootViewController:vc];
+//    nvc1.tabBarItem.title=@"首页";
+//    vc.view.backgroundColor=ALLViewBgColor;
+//    nvc1.tabBarItem.image = [UIImage imageNamed:@"image1"];
+//    nvc1.tabBarItem.selectedImage = [UIImage imageNamed:@"image2"];
+//    [vc.navigationController setNavigationBarHidden:YES];
+//
+//    LivePageViewController *vc2 = [[LivePageViewController alloc]init];
+//    YAZLNavigationController *nvc2 = [[YAZLNavigationController alloc]initWithRootViewController:vc2];
+//    vc2.view.backgroundColor=ALLViewBgColor;
+//    nvc2.tabBarItem.title=@"直播";
+//    nvc2.tabBarItem.image = [UIImage imageNamed:@"image3"];
+//    nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
+//    
+//    [vc2.navigationController setNavigationBarHidden:YES];
+//
+//    
+//    
+//    SchoolPageViewController *vc3 = [[SchoolPageViewController alloc]init];
+//    YAZLNavigationController *nvc3 = [[YAZLNavigationController alloc]initWithRootViewController:vc3];
+//    vc3.view.backgroundColor=ALLViewBgColor;
+//    nvc3.tabBarItem.title=@"学堂";
+//    nvc3.tabBarItem.image = [UIImage imageNamed:@"image5"];
+//    nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
+//    [vc3.navigationController setNavigationBarHidden:YES];
+//
+//    // 2.通过标识符找到对应的页面
+//    UIViewController *vc4 = [storyBoard instantiateViewControllerWithIdentifier:@"InformationPageViewController"];
+//    YAZLNavigationController *nvc4 = [[YAZLNavigationController alloc]initWithRootViewController:vc4];
+//    vc4.view.backgroundColor=ALLViewBgColor;
+//    nvc4.tabBarItem.title=@"资讯";
+//    nvc4.tabBarItem.image = [UIImage imageNamed:@"image7"];
+//    nvc4.tabBarItem.selectedImage = [UIImage imageNamed:@"image8"];
+//    [vc4.navigationController setNavigationBarHidden:YES];
+//
+//    
+//    MePageViewController *vc5 = [[MePageViewController alloc]init];
+//    YAZLNavigationController *nvc5 = [[YAZLNavigationController alloc]initWithRootViewController:vc5];
+//    nvc5.tabBarItem.title=@"我的";
+//    nvc5.tabBarItem.selectedImage = [UIImage imageNamed:@"image10"];
+//    nvc5.tabBarItem.image = [UIImage imageNamed:@"image9"];
+//    vc5.navigationItem.title = @"个人中心";
+//    vc5.view.backgroundColor = ALLViewBgColor;
+//    
+//    tb.viewControllers=@[nvc1,nvc2,nvc3,nvc4,nvc5];
+//    tb.tabBar.tintColor= NavAndBtnColor;
+//    self.window.rootViewController = tb;
+//    [self.window makeKeyAndVisible];
+//}
 
 -(void)autoLogin{
     if (![[APPUserDataIofo AccessToken]isEqualToString:@""]) {
