@@ -55,6 +55,7 @@
     [self loaddatawithCourseType:@"3" num:peopleunm evaluate:evaluate teacherid:teacherid type:type price:price];
     [self loaddatawithCourseType:@"4" num:@"" evaluate:@"" teacherid:@"" type:@"" price:@""];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     selarr1 = [ NSMutableArray array];
@@ -346,7 +347,7 @@
     }
 }
 
--(void)getrightview{
+- (void)getrightview{
     UIView *rightview = [[UIView alloc]initWithFrame:CGRectMake(scrollview.frame.size.width, 0, scrollview.frame.size.width, scrollview.frame.size.height)];
     rightview.backgroundColor = [UIColor redColor];
     [scrollview addSubview:rightview];

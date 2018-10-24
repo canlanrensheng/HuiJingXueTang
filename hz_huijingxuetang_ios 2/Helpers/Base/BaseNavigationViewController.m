@@ -41,21 +41,7 @@
     [navBar setBackgroundImage:[UIImage imageWithColor:NavigationBar_Color] forBarMetrics:UIBarMetricsDefault];
     [navBar setShadowImage:[UIImage new]];
     
-//    UIImage* image = [UIImage imageNamed:@"inputBack"];
-//    navBar.backIndicatorImage = image;
-//    navBar.backIndicatorTransitionMaskImage = image;
-//    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, 0)forBarMetrics:UIBarMetricsDefault];
-    
-//    [UINavigationBar appearance].backIndicatorTransitionMaskImage = [UIImage imageNamed:@"btn_switch_front"];
-//    [UINavigationBar appearance].backIndicatorImage = [UIImage imageNamed:@"btn_switch_front"];
-    
-//    UIImage* image = [UIImage imageNamed:@"inputBack"];
-//    navBar.backIndicatorImage = image;
-//    navBar.backIndicatorTransitionMaskImage = image;
-//    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(NSIntegerMin, NSIntegerMin) forBarMetrics:UIBarMetricsDefault];
-    
-    // 设置全局状态栏样式
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
 }
 #pragma mark------重写系统方法
 -(BOOL)shouldAutorotate{
@@ -81,8 +67,10 @@
 -(UIBarButtonItem*)createBackButton{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     backButton.frame = CGRectMake(0, 0, 26, 40);
-    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateNormal];
-    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateSelected];
+//    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateNormal];
+//    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateSelected];
+    [backButton setImage:[UIImage imageNamed:@"back_n"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_p"] forState:UIControlStateHighlighted];
     [backButton addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];
     [backButton addTarget:self action:@selector(highlightClick:) forControlEvents:UIControlEventAllTouchEvents];
     return [[UIBarButtonItem alloc] initWithCustomView:backButton];

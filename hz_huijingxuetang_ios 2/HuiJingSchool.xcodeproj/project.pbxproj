@@ -117,7 +117,6 @@
 		131D745D2177308E00DC94C7 /* YJShareTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D743A2177308E00DC94C7 /* YJShareTool.m */; };
 		131D745E2177308E00DC94C7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D743C2177308E00DC94C7 /* ViewController.m */; };
 		131D745F2177308E00DC94C7 /* YAZLNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D743E2177308E00DC94C7 /* YAZLNavigationController.m */; };
-		131D74602177308E00DC94C7 /* YJTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74402177308E00DC94C7 /* YJTabBarViewController.m */; };
 		131D74AC21774CAE00DC94C7 /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 131D749121774CAD00DC94C7 /* AlipaySDK.bundle */; };
 		131D74AD21774CAE00DC94C7 /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131D749221774CAD00DC94C7 /* AlipaySDK.framework */; };
 		131D74AE21774CAE00DC94C7 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 131D749821774CAE00DC94C7 /* libcrypto.a */; };
@@ -138,7 +137,6 @@
 		131D74E52177513200DC94C7 /* UIView+category.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74D42177513200DC94C7 /* UIView+category.m */; };
 		131D74E82177513200DC94C7 /* CustomTabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74DB2177513200DC94C7 /* CustomTabbarController.m */; };
 		1332D42121797966009190A6 /* HudTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D41D21797966009190A6 /* HudTool.m */; };
-		1332D42221797966009190A6 /* UserInfoSingleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42021797966009190A6 /* UserInfoSingleObject.m */; };
 		1332D42521797B74009190A6 /* HJInviteCodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42421797B74009190A6 /* HJInviteCodeView.m */; };
 		1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42A21798664009190A6 /* AppDelegate+Category.m */; };
 		1332D42E217986EE009190A6 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42C217986ED009190A6 /* WelcomeViewController.m */; };
@@ -177,6 +175,44 @@
 		135E58F72178AC720050641D /* HJDelateTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58F62178AC720050641D /* HJDelateTextField.m */; };
 		135E58FB2179636C0050641D /* HJPasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E58FA2179636C0050641D /* HJPasswordView.m */; };
 		135E5901217977510050641D /* HJInviteCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5900217977510050641D /* HJInviteCodeViewController.m */; };
+		139201DD217D6290007C133A /* UserInfoSingleObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 139201DC217D6290007C133A /* UserInfoSingleObject.m */; };
+		139201E1217D6693007C133A /* MBProgressHUD+HJHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 139201E0217D6693007C133A /* MBProgressHUD+HJHud.m */; };
+		13A52C09217D9B7800A3852D /* HJHomeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C08217D9B7800A3852D /* HJHomeHeaderView.m */; };
+		13A52C0E217DA3A700A3852D /* HJHomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C0D217DA3A700A3852D /* HJHomeViewModel.m */; };
+		13A52C1F217DA73000A3852D /* TAAbstractDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C12217DA73000A3852D /* TAAbstractDotView.m */; };
+		13A52C20217DA73000A3852D /* TAAnimatedDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C14217DA73000A3852D /* TAAnimatedDotView.m */; };
+		13A52C21217DA73000A3852D /* TADotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C16217DA73000A3852D /* TADotView.m */; };
+		13A52C22217DA73000A3852D /* TAPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C18217DA73000A3852D /* TAPageControl.m */; };
+		13A52C23217DA73000A3852D /* SDCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C1A217DA73000A3852D /* SDCollectionViewCell.m */; };
+		13A52C24217DA73000A3852D /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C1C217DA73000A3852D /* SDCycleScrollView.m */; };
+		13A52C25217DA73000A3852D /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C1E217DA73000A3852D /* UIView+SDExtension.m */; };
+		13A52C28217DADAA00A3852D /* HJHomeLimitKillView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C27217DADAA00A3852D /* HJHomeLimitKillView.m */; };
+		13A52C2D217DBC5100A3852D /* HJHomeLiveOnlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C2C217DBC5100A3852D /* HJHomeLiveOnlineView.m */; };
+		13A52C30217DC99600A3852D /* HJHomeExclusiveInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C2F217DC99600A3852D /* HJHomeExclusiveInfoView.m */; };
+		13A52C33217DE31700A3852D /* HJHomeStuntJudgeStockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C32217DE31700A3852D /* HJHomeStuntJudgeStockView.m */; };
+		13A52C36217DEC1E00A3852D /* HJHomeTeacherRecommendedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C35217DEC1E00A3852D /* HJHomeTeacherRecommendedView.m */; };
+		13A52C39217DF0D400A3852D /* HJHomeCourseRecommendedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C38217DF0D400A3852D /* HJHomeCourseRecommendedView.m */; };
+		13A52C3F217EB82F00A3852D /* AdvertScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C3E217EB82F00A3852D /* AdvertScrollView.m */; };
+		13A52C42217EB87200A3852D /* HJHomeLatestSatausView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C41217EB87200A3852D /* HJHomeLatestSatausView.m */; };
+		13A52C45217EE73D00A3852D /* HJHomeCourseRecommendedModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C44217EE73D00A3852D /* HJHomeCourseRecommendedModel.m */; };
+		13A52C4E217EF73B00A3852D /* HJSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C4D217EF73B00A3852D /* HJSchoolViewController.m */; };
+		13A52C51217EF77900A3852D /* HJSchoolSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C50217EF77900A3852D /* HJSchoolSearchView.m */; };
+		13A52C56217F15B000A3852D /* TopButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C55217F15B000A3852D /* TopButtonView.m */; };
+		13A52C59217F172200A3852D /* HJSchoolClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C58217F172200A3852D /* HJSchoolClassViewController.m */; };
+		13A52C5C217F174000A3852D /* HJSchoolLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C5B217F174000A3852D /* HJSchoolLiveViewController.m */; };
+		13A52C5F217F3C7900A3852D /* HJSchoolSementView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C5E217F3C7900A3852D /* HJSchoolSementView.m */; };
+		13A52C62217F480800A3852D /* HJSchoolClassCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C61217F480800A3852D /* HJSchoolClassCell.m */; };
+		13A52C66217FFC4E00A3852D /* HJSchoolClassSelectToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C65217FFC4E00A3852D /* HJSchoolClassSelectToolView.m */; };
+		13A52C6A2180148700A3852D /* HJSchoolLiveToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C692180148700A3852D /* HJSchoolLiveToolView.m */; };
+		13A52C6D2180154100A3852D /* HJSchoolLiveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C6C2180154100A3852D /* HJSchoolLiveCell.m */; };
+		13A52C722180377200A3852D /* HJHomeStuntJudgeStockModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C712180377200A3852D /* HJHomeStuntJudgeStockModel.m */; };
+		13A52C75218049A500A3852D /* HJSchoolClassSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C74218049A500A3852D /* HJSchoolClassSelectView.m */; };
+		13A52C7D21805F9000A3852D /* HJShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C7C21805F9000A3852D /* HJShopCarViewController.m */; };
+		13A52C80218060BE00A3852D /* HJShopCarListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C7F218060BE00A3852D /* HJShopCarListCell.m */; };
+		13A52C832180670F00A3852D /* HJShopCarTotalMoneyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C822180670F00A3852D /* HJShopCarTotalMoneyCell.m */; };
+		13A52C8B2180706600A3852D /* HJConfirmOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C8A2180706600A3852D /* HJConfirmOrderViewController.m */; };
+		13A52C8E2180712300A3852D /* HJConfirmOrderListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C8D2180712300A3852D /* HJConfirmOrderListCell.m */; };
+		13A52C91218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A52C90218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m */; };
 		13E8852D2179A025002598AD /* HJPasswordLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8852C2179A025002598AD /* HJPasswordLoginViewController.m */; };
 		13E885312179AC12002598AD /* HJForgetPwdNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E885302179AC12002598AD /* HJForgetPwdNavigationController.m */; };
 		13E885342179B54D002598AD /* HJLocalCodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E885332179B54D002598AD /* HJLocalCodeView.m */; };
@@ -430,8 +466,6 @@
 		131D743C2177308E00DC94C7 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		131D743D2177308E00DC94C7 /* YAZLNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YAZLNavigationController.h; sourceTree = "<group>"; };
 		131D743E2177308E00DC94C7 /* YAZLNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YAZLNavigationController.m; sourceTree = "<group>"; };
-		131D743F2177308E00DC94C7 /* YJTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJTabBarViewController.h; sourceTree = "<group>"; };
-		131D74402177308E00DC94C7 /* YJTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJTabBarViewController.m; sourceTree = "<group>"; };
 		131D749121774CAD00DC94C7 /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AlipaySDK.bundle; sourceTree = "<group>"; };
 		131D749221774CAD00DC94C7 /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AlipaySDK.framework; sourceTree = "<group>"; };
 		131D749521774CAE00DC94C7 /* NELivePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NELivePlayer.h; sourceTree = "<group>"; };
@@ -466,8 +500,6 @@
 		1332D41C21797966009190A6 /* HudTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudTool.h; sourceTree = "<group>"; };
 		1332D41D21797966009190A6 /* HudTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudTool.m; sourceTree = "<group>"; };
 		1332D41E21797966009190A6 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
-		1332D41F21797966009190A6 /* UserInfoSingleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoSingleObject.h; sourceTree = "<group>"; };
-		1332D42021797966009190A6 /* UserInfoSingleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoSingleObject.m; sourceTree = "<group>"; };
 		1332D42321797B74009190A6 /* HJInviteCodeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJInviteCodeView.h; sourceTree = "<group>"; };
 		1332D42421797B74009190A6 /* HJInviteCodeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJInviteCodeView.m; sourceTree = "<group>"; };
 		1332D4292179865C009190A6 /* AppDelegate+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Category.h"; sourceTree = "<group>"; };
@@ -555,6 +587,82 @@
 		135E58FA2179636C0050641D /* HJPasswordView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPasswordView.m; sourceTree = "<group>"; };
 		135E58FF217977510050641D /* HJInviteCodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJInviteCodeViewController.h; sourceTree = "<group>"; };
 		135E5900217977510050641D /* HJInviteCodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJInviteCodeViewController.m; sourceTree = "<group>"; };
+		139201DB217D6290007C133A /* UserInfoSingleObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoSingleObject.h; sourceTree = "<group>"; };
+		139201DC217D6290007C133A /* UserInfoSingleObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoSingleObject.m; sourceTree = "<group>"; };
+		139201DF217D6693007C133A /* MBProgressHUD+HJHud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+HJHud.h"; sourceTree = "<group>"; };
+		139201E0217D6693007C133A /* MBProgressHUD+HJHud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+HJHud.m"; sourceTree = "<group>"; };
+		13A52C07217D9B7800A3852D /* HJHomeHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeHeaderView.h; sourceTree = "<group>"; };
+		13A52C08217D9B7800A3852D /* HJHomeHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeHeaderView.m; sourceTree = "<group>"; };
+		13A52C0C217DA3A700A3852D /* HJHomeViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeViewModel.h; sourceTree = "<group>"; };
+		13A52C0D217DA3A700A3852D /* HJHomeViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeViewModel.m; sourceTree = "<group>"; };
+		13A52C11217DA73000A3852D /* TAAbstractDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAAbstractDotView.h; sourceTree = "<group>"; };
+		13A52C12217DA73000A3852D /* TAAbstractDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAAbstractDotView.m; sourceTree = "<group>"; };
+		13A52C13217DA73000A3852D /* TAAnimatedDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAAnimatedDotView.h; sourceTree = "<group>"; };
+		13A52C14217DA73000A3852D /* TAAnimatedDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAAnimatedDotView.m; sourceTree = "<group>"; };
+		13A52C15217DA73000A3852D /* TADotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TADotView.h; sourceTree = "<group>"; };
+		13A52C16217DA73000A3852D /* TADotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TADotView.m; sourceTree = "<group>"; };
+		13A52C17217DA73000A3852D /* TAPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAPageControl.h; sourceTree = "<group>"; };
+		13A52C18217DA73000A3852D /* TAPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAPageControl.m; sourceTree = "<group>"; };
+		13A52C19217DA73000A3852D /* SDCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCollectionViewCell.h; sourceTree = "<group>"; };
+		13A52C1A217DA73000A3852D /* SDCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCollectionViewCell.m; sourceTree = "<group>"; };
+		13A52C1B217DA73000A3852D /* SDCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDCycleScrollView.h; sourceTree = "<group>"; };
+		13A52C1C217DA73000A3852D /* SDCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDCycleScrollView.m; sourceTree = "<group>"; };
+		13A52C1D217DA73000A3852D /* UIView+SDExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDExtension.h"; sourceTree = "<group>"; };
+		13A52C1E217DA73000A3852D /* UIView+SDExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDExtension.m"; sourceTree = "<group>"; };
+		13A52C26217DADAA00A3852D /* HJHomeLimitKillView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeLimitKillView.h; sourceTree = "<group>"; };
+		13A52C27217DADAA00A3852D /* HJHomeLimitKillView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeLimitKillView.m; sourceTree = "<group>"; };
+		13A52C2B217DBC5100A3852D /* HJHomeLiveOnlineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeLiveOnlineView.h; sourceTree = "<group>"; };
+		13A52C2C217DBC5100A3852D /* HJHomeLiveOnlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeLiveOnlineView.m; sourceTree = "<group>"; };
+		13A52C2E217DC99600A3852D /* HJHomeExclusiveInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeExclusiveInfoView.h; sourceTree = "<group>"; };
+		13A52C2F217DC99600A3852D /* HJHomeExclusiveInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeExclusiveInfoView.m; sourceTree = "<group>"; };
+		13A52C31217DE31700A3852D /* HJHomeStuntJudgeStockView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeStuntJudgeStockView.h; sourceTree = "<group>"; };
+		13A52C32217DE31700A3852D /* HJHomeStuntJudgeStockView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeStuntJudgeStockView.m; sourceTree = "<group>"; };
+		13A52C34217DEC1E00A3852D /* HJHomeTeacherRecommendedView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeTeacherRecommendedView.h; sourceTree = "<group>"; };
+		13A52C35217DEC1E00A3852D /* HJHomeTeacherRecommendedView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeTeacherRecommendedView.m; sourceTree = "<group>"; };
+		13A52C37217DF0D400A3852D /* HJHomeCourseRecommendedView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeCourseRecommendedView.h; sourceTree = "<group>"; };
+		13A52C38217DF0D400A3852D /* HJHomeCourseRecommendedView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeCourseRecommendedView.m; sourceTree = "<group>"; };
+		13A52C3D217EB82E00A3852D /* AdvertScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertScrollView.h; sourceTree = "<group>"; };
+		13A52C3E217EB82F00A3852D /* AdvertScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertScrollView.m; sourceTree = "<group>"; };
+		13A52C40217EB87200A3852D /* HJHomeLatestSatausView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeLatestSatausView.h; sourceTree = "<group>"; };
+		13A52C41217EB87200A3852D /* HJHomeLatestSatausView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeLatestSatausView.m; sourceTree = "<group>"; };
+		13A52C43217EE73D00A3852D /* HJHomeCourseRecommendedModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeCourseRecommendedModel.h; sourceTree = "<group>"; };
+		13A52C44217EE73D00A3852D /* HJHomeCourseRecommendedModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeCourseRecommendedModel.m; sourceTree = "<group>"; };
+		13A52C4C217EF73B00A3852D /* HJSchoolViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolViewController.h; sourceTree = "<group>"; };
+		13A52C4D217EF73B00A3852D /* HJSchoolViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolViewController.m; sourceTree = "<group>"; };
+		13A52C4F217EF77900A3852D /* HJSchoolSearchView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolSearchView.h; sourceTree = "<group>"; };
+		13A52C50217EF77900A3852D /* HJSchoolSearchView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolSearchView.m; sourceTree = "<group>"; };
+		13A52C54217F15A600A3852D /* TopButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopButtonView.h; sourceTree = "<group>"; };
+		13A52C55217F15B000A3852D /* TopButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopButtonView.m; sourceTree = "<group>"; };
+		13A52C57217F172200A3852D /* HJSchoolClassViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolClassViewController.h; sourceTree = "<group>"; };
+		13A52C58217F172200A3852D /* HJSchoolClassViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolClassViewController.m; sourceTree = "<group>"; };
+		13A52C5A217F174000A3852D /* HJSchoolLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolLiveViewController.h; sourceTree = "<group>"; };
+		13A52C5B217F174000A3852D /* HJSchoolLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolLiveViewController.m; sourceTree = "<group>"; };
+		13A52C5D217F3C7900A3852D /* HJSchoolSementView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolSementView.h; sourceTree = "<group>"; };
+		13A52C5E217F3C7900A3852D /* HJSchoolSementView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolSementView.m; sourceTree = "<group>"; };
+		13A52C60217F480800A3852D /* HJSchoolClassCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolClassCell.h; sourceTree = "<group>"; };
+		13A52C61217F480800A3852D /* HJSchoolClassCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolClassCell.m; sourceTree = "<group>"; };
+		13A52C64217FFC4E00A3852D /* HJSchoolClassSelectToolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolClassSelectToolView.h; sourceTree = "<group>"; };
+		13A52C65217FFC4E00A3852D /* HJSchoolClassSelectToolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolClassSelectToolView.m; sourceTree = "<group>"; };
+		13A52C682180148700A3852D /* HJSchoolLiveToolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolLiveToolView.h; sourceTree = "<group>"; };
+		13A52C692180148700A3852D /* HJSchoolLiveToolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolLiveToolView.m; sourceTree = "<group>"; };
+		13A52C6B2180154100A3852D /* HJSchoolLiveCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolLiveCell.h; sourceTree = "<group>"; };
+		13A52C6C2180154100A3852D /* HJSchoolLiveCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolLiveCell.m; sourceTree = "<group>"; };
+		13A52C702180377200A3852D /* HJHomeStuntJudgeStockModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJHomeStuntJudgeStockModel.h; sourceTree = "<group>"; };
+		13A52C712180377200A3852D /* HJHomeStuntJudgeStockModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJHomeStuntJudgeStockModel.m; sourceTree = "<group>"; };
+		13A52C73218049A500A3852D /* HJSchoolClassSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolClassSelectView.h; sourceTree = "<group>"; };
+		13A52C74218049A500A3852D /* HJSchoolClassSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolClassSelectView.m; sourceTree = "<group>"; };
+		13A52C7B21805F9000A3852D /* HJShopCarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJShopCarViewController.h; sourceTree = "<group>"; };
+		13A52C7C21805F9000A3852D /* HJShopCarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJShopCarViewController.m; sourceTree = "<group>"; };
+		13A52C7E218060BE00A3852D /* HJShopCarListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJShopCarListCell.h; sourceTree = "<group>"; };
+		13A52C7F218060BE00A3852D /* HJShopCarListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJShopCarListCell.m; sourceTree = "<group>"; };
+		13A52C812180670F00A3852D /* HJShopCarTotalMoneyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJShopCarTotalMoneyCell.h; sourceTree = "<group>"; };
+		13A52C822180670F00A3852D /* HJShopCarTotalMoneyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJShopCarTotalMoneyCell.m; sourceTree = "<group>"; };
+		13A52C892180706600A3852D /* HJConfirmOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJConfirmOrderViewController.h; sourceTree = "<group>"; };
+		13A52C8A2180706600A3852D /* HJConfirmOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJConfirmOrderViewController.m; sourceTree = "<group>"; };
+		13A52C8C2180712300A3852D /* HJConfirmOrderListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJConfirmOrderListCell.h; sourceTree = "<group>"; };
+		13A52C8D2180712300A3852D /* HJConfirmOrderListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJConfirmOrderListCell.m; sourceTree = "<group>"; };
+		13A52C8F218071F700A3852D /* HJConfirmOrderTotalMoneyCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJConfirmOrderTotalMoneyCell.h; sourceTree = "<group>"; };
+		13A52C90218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJConfirmOrderTotalMoneyCell.m; sourceTree = "<group>"; };
 		13E8852B2179A025002598AD /* HJPasswordLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJPasswordLoginViewController.h; sourceTree = "<group>"; };
 		13E8852C2179A025002598AD /* HJPasswordLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPasswordLoginViewController.m; sourceTree = "<group>"; };
 		13E8852F2179AC12002598AD /* HJForgetPwdNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJForgetPwdNavigationController.h; sourceTree = "<group>"; };
@@ -701,6 +809,10 @@
 		131D730B2177302F00DC94C7 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				13A52C05217D9B6000A3852D /* Controller */,
+				13A52C03217D9B6000A3852D /* Model */,
+				13A52C04217D9B6000A3852D /* View */,
+				13A52C06217D9B6000A3852D /* ViewModel */,
 				131D730C2177302F00DC94C7 /* cell */,
 				131D73252177302F00DC94C7 /* DiagnoseViewController.h */,
 				131D73262177302F00DC94C7 /* DiagnoseViewController.m */,
@@ -708,8 +820,6 @@
 				131D73282177302F00DC94C7 /* DiaInfoViewController.m */,
 				131D73292177302F00DC94C7 /* FollowViewController.h */,
 				131D732A2177302F00DC94C7 /* FollowViewController.m */,
-				131D732B2177302F00DC94C7 /* HomePageViewController.h */,
-				131D732C2177302F00DC94C7 /* HomePageViewController.m */,
 				131D732D2177302F00DC94C7 /* PlanViewController.h */,
 				131D732E2177302F00DC94C7 /* PlanViewController.m */,
 				131D732F2177302F00DC94C7 /* SeverChatViewController.h */,
@@ -948,6 +1058,12 @@
 		131D739D2177302F00DC94C7 /* School */ = {
 			isa = PBXGroup;
 			children = (
+				13A52C842180704800A3852D /* ConfirmOrder */,
+				13A52C7621805D3A00A3852D /* ShopCar */,
+				13A52C4B217EF72000A3852D /* Controller */,
+				13A52C4A217EF72000A3852D /* Model */,
+				13A52C48217EF71F00A3852D /* View */,
+				13A52C49217EF71F00A3852D /* ViewModel */,
 				131D739E2177302F00DC94C7 /* cell */,
 				131D73A52177302F00DC94C7 /* ClassInfoViewController.h */,
 				131D73A62177302F00DC94C7 /* ClassInfoViewController.m */,
@@ -992,8 +1108,6 @@
 				131D743C2177308E00DC94C7 /* ViewController.m */,
 				131D743D2177308E00DC94C7 /* YAZLNavigationController.h */,
 				131D743E2177308E00DC94C7 /* YAZLNavigationController.m */,
-				131D743F2177308E00DC94C7 /* YJTabBarViewController.h */,
-				131D74402177308E00DC94C7 /* YJTabBarViewController.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1211,6 +1325,8 @@
 				135E58C5217822210050641D /* UIImage+Category.m */,
 				135E58F52178AC720050641D /* HJDelateTextField.h */,
 				135E58F62178AC720050641D /* HJDelateTextField.m */,
+				139201DF217D6693007C133A /* MBProgressHUD+HJHud.h */,
+				139201E0217D6693007C133A /* MBProgressHUD+HJHud.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1229,11 +1345,11 @@
 		1332D41B21797966009190A6 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				139201DB217D6290007C133A /* UserInfoSingleObject.h */,
+				139201DC217D6290007C133A /* UserInfoSingleObject.m */,
 				1332D41C21797966009190A6 /* HudTool.h */,
 				1332D41D21797966009190A6 /* HudTool.m */,
 				1332D41E21797966009190A6 /* Tool.h */,
-				1332D41F21797966009190A6 /* UserInfoSingleObject.h */,
-				1332D42021797966009190A6 /* UserInfoSingleObject.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1241,6 +1357,9 @@
 		135E585A217814540050641D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				13A52C54217F15A600A3852D /* TopButtonView.h */,
+				13A52C55217F15B000A3852D /* TopButtonView.m */,
+				13A52C0F217DA73000A3852D /* SDCycleScrollView */,
 				135E58C0217821590050641D /* JSLoadingView */,
 				135E5872217814C50050641D /* LJViewTools */,
 				135E586E217814AF0050641D /* LJAvatarBrowser */,
@@ -1364,6 +1483,227 @@
 				13E885332179B54D002598AD /* HJLocalCodeView.m */,
 			);
 			path = " View";
+			sourceTree = "<group>";
+		};
+		13A52C03217D9B6000A3852D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C43217EE73D00A3852D /* HJHomeCourseRecommendedModel.h */,
+				13A52C44217EE73D00A3852D /* HJHomeCourseRecommendedModel.m */,
+				13A52C702180377200A3852D /* HJHomeStuntJudgeStockModel.h */,
+				13A52C712180377200A3852D /* HJHomeStuntJudgeStockModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13A52C04217D9B6000A3852D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C3D217EB82E00A3852D /* AdvertScrollView.h */,
+				13A52C3E217EB82F00A3852D /* AdvertScrollView.m */,
+				13A52C07217D9B7800A3852D /* HJHomeHeaderView.h */,
+				13A52C08217D9B7800A3852D /* HJHomeHeaderView.m */,
+				13A52C26217DADAA00A3852D /* HJHomeLimitKillView.h */,
+				13A52C27217DADAA00A3852D /* HJHomeLimitKillView.m */,
+				13A52C2B217DBC5100A3852D /* HJHomeLiveOnlineView.h */,
+				13A52C2C217DBC5100A3852D /* HJHomeLiveOnlineView.m */,
+				13A52C2E217DC99600A3852D /* HJHomeExclusiveInfoView.h */,
+				13A52C2F217DC99600A3852D /* HJHomeExclusiveInfoView.m */,
+				13A52C31217DE31700A3852D /* HJHomeStuntJudgeStockView.h */,
+				13A52C32217DE31700A3852D /* HJHomeStuntJudgeStockView.m */,
+				13A52C34217DEC1E00A3852D /* HJHomeTeacherRecommendedView.h */,
+				13A52C35217DEC1E00A3852D /* HJHomeTeacherRecommendedView.m */,
+				13A52C37217DF0D400A3852D /* HJHomeCourseRecommendedView.h */,
+				13A52C38217DF0D400A3852D /* HJHomeCourseRecommendedView.m */,
+				13A52C40217EB87200A3852D /* HJHomeLatestSatausView.h */,
+				13A52C41217EB87200A3852D /* HJHomeLatestSatausView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13A52C05217D9B6000A3852D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				131D732B2177302F00DC94C7 /* HomePageViewController.h */,
+				131D732C2177302F00DC94C7 /* HomePageViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13A52C06217D9B6000A3852D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C0C217DA3A700A3852D /* HJHomeViewModel.h */,
+				13A52C0D217DA3A700A3852D /* HJHomeViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		13A52C0F217DA73000A3852D /* SDCycleScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C10217DA73000A3852D /* PageControl */,
+				13A52C19217DA73000A3852D /* SDCollectionViewCell.h */,
+				13A52C1A217DA73000A3852D /* SDCollectionViewCell.m */,
+				13A52C1B217DA73000A3852D /* SDCycleScrollView.h */,
+				13A52C1C217DA73000A3852D /* SDCycleScrollView.m */,
+				13A52C1D217DA73000A3852D /* UIView+SDExtension.h */,
+				13A52C1E217DA73000A3852D /* UIView+SDExtension.m */,
+			);
+			path = SDCycleScrollView;
+			sourceTree = "<group>";
+		};
+		13A52C10217DA73000A3852D /* PageControl */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C11217DA73000A3852D /* TAAbstractDotView.h */,
+				13A52C12217DA73000A3852D /* TAAbstractDotView.m */,
+				13A52C13217DA73000A3852D /* TAAnimatedDotView.h */,
+				13A52C14217DA73000A3852D /* TAAnimatedDotView.m */,
+				13A52C15217DA73000A3852D /* TADotView.h */,
+				13A52C16217DA73000A3852D /* TADotView.m */,
+				13A52C17217DA73000A3852D /* TAPageControl.h */,
+				13A52C18217DA73000A3852D /* TAPageControl.m */,
+			);
+			path = PageControl;
+			sourceTree = "<group>";
+		};
+		13A52C48217EF71F00A3852D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C4F217EF77900A3852D /* HJSchoolSearchView.h */,
+				13A52C50217EF77900A3852D /* HJSchoolSearchView.m */,
+				13A52C5D217F3C7900A3852D /* HJSchoolSementView.h */,
+				13A52C5E217F3C7900A3852D /* HJSchoolSementView.m */,
+				13A52C60217F480800A3852D /* HJSchoolClassCell.h */,
+				13A52C61217F480800A3852D /* HJSchoolClassCell.m */,
+				13A52C64217FFC4E00A3852D /* HJSchoolClassSelectToolView.h */,
+				13A52C65217FFC4E00A3852D /* HJSchoolClassSelectToolView.m */,
+				13A52C682180148700A3852D /* HJSchoolLiveToolView.h */,
+				13A52C692180148700A3852D /* HJSchoolLiveToolView.m */,
+				13A52C6B2180154100A3852D /* HJSchoolLiveCell.h */,
+				13A52C6C2180154100A3852D /* HJSchoolLiveCell.m */,
+				13A52C73218049A500A3852D /* HJSchoolClassSelectView.h */,
+				13A52C74218049A500A3852D /* HJSchoolClassSelectView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13A52C49217EF71F00A3852D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		13A52C4A217EF72000A3852D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13A52C4B217EF72000A3852D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C4C217EF73B00A3852D /* HJSchoolViewController.h */,
+				13A52C4D217EF73B00A3852D /* HJSchoolViewController.m */,
+				13A52C57217F172200A3852D /* HJSchoolClassViewController.h */,
+				13A52C58217F172200A3852D /* HJSchoolClassViewController.m */,
+				13A52C5A217F174000A3852D /* HJSchoolLiveViewController.h */,
+				13A52C5B217F174000A3852D /* HJSchoolLiveViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13A52C7621805D3A00A3852D /* ShopCar */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C7721805D3A00A3852D /* Controller */,
+				13A52C7821805D3A00A3852D /* Model */,
+				13A52C7921805D3A00A3852D /* View */,
+				13A52C7A21805D3A00A3852D /* ViewModel */,
+			);
+			path = ShopCar;
+			sourceTree = "<group>";
+		};
+		13A52C7721805D3A00A3852D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C7B21805F9000A3852D /* HJShopCarViewController.h */,
+				13A52C7C21805F9000A3852D /* HJShopCarViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13A52C7821805D3A00A3852D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13A52C7921805D3A00A3852D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C7E218060BE00A3852D /* HJShopCarListCell.h */,
+				13A52C7F218060BE00A3852D /* HJShopCarListCell.m */,
+				13A52C812180670F00A3852D /* HJShopCarTotalMoneyCell.h */,
+				13A52C822180670F00A3852D /* HJShopCarTotalMoneyCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13A52C7A21805D3A00A3852D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		13A52C842180704800A3852D /* ConfirmOrder */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C852180704800A3852D /* Controller */,
+				13A52C862180704800A3852D /* Model */,
+				13A52C872180704800A3852D /* View */,
+				13A52C882180704800A3852D /* ViewModel */,
+			);
+			path = ConfirmOrder;
+			sourceTree = "<group>";
+		};
+		13A52C852180704800A3852D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C892180706600A3852D /* HJConfirmOrderViewController.h */,
+				13A52C8A2180706600A3852D /* HJConfirmOrderViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13A52C862180704800A3852D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13A52C872180704800A3852D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13A52C8C2180712300A3852D /* HJConfirmOrderListCell.h */,
+				13A52C8D2180712300A3852D /* HJConfirmOrderListCell.m */,
+				13A52C8F218071F700A3852D /* HJConfirmOrderTotalMoneyCell.h */,
+				13A52C90218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13A52C882180704800A3852D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		4B130A4220454EBC00CBE31C /* Recovered References */ = {
@@ -1598,7 +1938,6 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HuiJingSchool/Pods-HuiJingSchool-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/GCCycleScrollView/GCCycleScrollView.bundle",
 				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_ROOT}/NIMSDK/NIMAVChat/Resources/NMCVideoFilter.bundle",
@@ -1608,7 +1947,6 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GCCycleScrollView.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IQKeyboardManager.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/NMCVideoFilter.bundle",
@@ -1650,14 +1988,20 @@
 				131D73BB2177302F00DC94C7 /* TeacherTableViewCell.m in Sources */,
 				131D73CD2177302F00DC94C7 /* CardViewController.m in Sources */,
 				131D74482177308E00DC94C7 /* HACursor.m in Sources */,
+				13A52C56217F15B000A3852D /* TopButtonView.m in Sources */,
 				135E5864217814850050641D /* SQButtonTagView.m in Sources */,
 				135E5865217814850050641D /* TXCheckVersion.m in Sources */,
+				13A52C51217EF77900A3852D /* HJSchoolSearchView.m in Sources */,
+				13A52C36217DEC1E00A3852D /* HJHomeTeacherRecommendedView.m in Sources */,
 				131D74552177308E00DC94C7 /* AdJumpViewController.m in Sources */,
+				13A52C24217DA73000A3852D /* SDCycleScrollView.m in Sources */,
 				131D73F12177302F00DC94C7 /* AlertTableViewCell.m in Sources */,
+				13A52C8B2180706600A3852D /* HJConfirmOrderViewController.m in Sources */,
 				135E584C2178131E0050641D /* UIBarButtonItem+TXAdditions.m in Sources */,
 				135E58B2217821220050641D /* BaseLoadingTitleView.m in Sources */,
 				135E58BC217821220050641D /* BaseView.m in Sources */,
 				131D73C12177302F00DC94C7 /* PlanViewController.m in Sources */,
+				13A52C5F217F3C7900A3852D /* HJSchoolSementView.m in Sources */,
 				131D73E62177302F00DC94C7 /* MePageViewController.m in Sources */,
 				131D73EC2177302F00DC94C7 /* orderModel.m in Sources */,
 				131D74BF2177506100DC94C7 /* NotificationConst.m in Sources */,
@@ -1666,7 +2010,9 @@
 				131D73CE2177302F00DC94C7 /* CardTableViewCell.m in Sources */,
 				135E58BD217821220050641D /* BaseViewController.m in Sources */,
 				131D73EE2177302F00DC94C7 /* OrderInfoViewController.m in Sources */,
+				13A52C75218049A500A3852D /* HJSchoolClassSelectView.m in Sources */,
 				131D73B92177302F00DC94C7 /* RestoreTableViewCell.m in Sources */,
+				139201DD217D6290007C133A /* UserInfoSingleObject.m in Sources */,
 				131D73F42177302F00DC94C7 /* PayBottonView.m in Sources */,
 				131D73C52177302F00DC94C7 /* TeacherViewController.m in Sources */,
 				135E584F2178135B0050641D /* UITabBar+TXAdditions.m in Sources */,
@@ -1676,14 +2022,18 @@
 				135E58AF217821220050641D /* BaseCollectionViewCell.m in Sources */,
 				131D73AF2177302F00DC94C7 /* DiagnoseTableViewCell.m in Sources */,
 				135E5863217814850050641D /* TXAlertView.m in Sources */,
+				13A52C62217F480800A3852D /* HJSchoolClassCell.m in Sources */,
+				13A52C09217D9B7800A3852D /* HJHomeHeaderView.m in Sources */,
 				135E58B4217821220050641D /* BaseNavigationViewController.m in Sources */,
 				131D73BF2177302F00DC94C7 /* FollowViewController.m in Sources */,
 				131D73E72177302F00DC94C7 /* MyCardViewController.m in Sources */,
 				135E58B3217821220050641D /* BaseModel.m in Sources */,
 				131D73D42177302F00DC94C7 /* FreeLiveViewController.m in Sources */,
+				13A52C66217FFC4E00A3852D /* HJSchoolClassSelectToolView.m in Sources */,
 				13E8852D2179A025002598AD /* HJPasswordLoginViewController.m in Sources */,
 				135E58BA217821220050641D /* BaseTableViewController.m in Sources */,
 				131D73FD2177303000DC94C7 /* ScreenViewController.m in Sources */,
+				13A52C7D21805F9000A3852D /* HJShopCarViewController.m in Sources */,
 				131D73C02177302F00DC94C7 /* HomePageViewController.m in Sources */,
 				131D73F02177302F00DC94C7 /* shoppingCartViewController.m in Sources */,
 				135E58F1217897BC0050641D /* HJSetPasswordViewController.m in Sources */,
@@ -1691,31 +2041,47 @@
 				131D744A2177308E00DC94C7 /* HARootScrollView.m in Sources */,
 				4BB9FAB4206BB62B002243B5 /* YJAPPNetwork.m in Sources */,
 				131D73BE2177302F00DC94C7 /* DiaInfoViewController.m in Sources */,
+				13A52C22217DA73000A3852D /* TAPageControl.m in Sources */,
+				13A52C25217DA73000A3852D /* UIView+SDExtension.m in Sources */,
 				131D73F82177302F00DC94C7 /* SchoolTableViewCell.m in Sources */,
 				135E586D2178149D0050641D /* YYWeakProxy.m in Sources */,
 				13E885342179B54D002598AD /* HJLocalCodeView.m in Sources */,
+				139201E1217D6693007C133A /* MBProgressHUD+HJHud.m in Sources */,
+				13A52C6A2180148700A3852D /* HJSchoolLiveToolView.m in Sources */,
+				13A52C4E217EF73B00A3852D /* HJSchoolViewController.m in Sources */,
+				13A52C91218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m in Sources */,
 				135E586C2178149D0050641D /* YYFPSLabel.m in Sources */,
 				135E58B1217821220050641D /* BaseDoubleTitleView.m in Sources */,
 				13E885372179C02C002598AD /* HJReSetPwdViewController.m in Sources */,
 				131D744D2177308E00DC94C7 /* HAScrollNavBar.m in Sources */,
+				13A52C832180670F00A3852D /* HJShopCarTotalMoneyCell.m in Sources */,
+				13A52C33217DE31700A3852D /* HJHomeStuntJudgeStockView.m in Sources */,
+				13A52C59217F172200A3852D /* HJSchoolClassViewController.m in Sources */,
 				135E5879217814C50050641D /* UILabel+LJLabel.m in Sources */,
+				13A52C3F217EB82F00A3852D /* AdvertScrollView.m in Sources */,
 				131D74412177308E00DC94C7 /* AppDelegate.m in Sources */,
 				131D74512177308E00DC94C7 /* UIColor+RGBA.m in Sources */,
 				135E5871217814AF0050641D /* LJAvatarBrowser.m in Sources */,
 				131D74582177308E00DC94C7 /* NSString+Extension.m in Sources */,
+				13A52C21217DA73000A3852D /* TADotView.m in Sources */,
 				131D74B521774CAE00DC94C7 /* UIView+NEPlayer.m in Sources */,
 				131D73EA2177302F00DC94C7 /* OrderViewCell.m in Sources */,
 				131D745C2177308E00DC94C7 /* YJShareCategory.m in Sources */,
+				13A52C28217DADAA00A3852D /* HJHomeLimitKillView.m in Sources */,
 				131D73E82177302F00DC94C7 /* MyClassViewController.m in Sources */,
 				135E5856217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m in Sources */,
 				135E58E621782C810050641D /* UIViewController+TXDealloc.m in Sources */,
 				131D73D22177302F00DC94C7 /* DredgeVipViewController.m in Sources */,
 				135E5878217814C50050641D /* UIButton+LJButton.m in Sources */,
+				13A52C20217DA73000A3852D /* TAAnimatedDotView.m in Sources */,
 				135E58BE217821220050641D /* BaseViewModel.m in Sources */,
 				131D73CC2177302F00DC94C7 /* BuyVipViewController.m in Sources */,
+				13A52C45217EE73D00A3852D /* HJHomeCourseRecommendedModel.m in Sources */,
 				131D73AD2177302F00DC94C7 /* ClassCollectionViewCell.m in Sources */,
+				13A52C39217DF0D400A3852D /* HJHomeCourseRecommendedView.m in Sources */,
 				135E58F72178AC720050641D /* HJDelateTextField.m in Sources */,
 				131D745F2177308E00DC94C7 /* YAZLNavigationController.m in Sources */,
+				13A52C1F217DA73000A3852D /* TAAbstractDotView.m in Sources */,
 				135E5901217977510050641D /* HJInviteCodeViewController.m in Sources */,
 				131D73C42177302F00DC94C7 /* TeacherInfoViewController.m in Sources */,
 				131D73D52177302F00DC94C7 /* LiveAncientlyViewControllerViewController.m in Sources */,
@@ -1730,8 +2096,9 @@
 				131D73D92177302F00DC94C7 /* CordLoginViewController.m in Sources */,
 				131D73DB2177302F00DC94C7 /* ForgetPWDViewController.m in Sources */,
 				131D744F2177308E00DC94C7 /* HASortItemView.m in Sources */,
+				13A52C30217DC99600A3852D /* HJHomeExclusiveInfoView.m in Sources */,
 				131D73D02177302F00DC94C7 /* NowTableViewCell.m in Sources */,
-				1332D42221797966009190A6 /* UserInfoSingleObject.m in Sources */,
+				13A52C722180377200A3852D /* HJHomeStuntJudgeStockModel.m in Sources */,
 				131D73B12177302F00DC94C7 /* FollowTableViewCell.m in Sources */,
 				131D73B72177302F00DC94C7 /* ReceiveTableViewCell.m in Sources */,
 				131D73DA2177302F00DC94C7 /* DiscoverInfoViewController.m in Sources */,
@@ -1744,19 +2111,26 @@
 				131D73C62177302F00DC94C7 /* ViewPointViewController.m in Sources */,
 				13E885312179AC12002598AD /* HJForgetPwdNavigationController.m in Sources */,
 				131D73E12177302F00DC94C7 /* MeCardTableViewCell.m in Sources */,
+				13A52C80218060BE00A3852D /* HJShopCarListCell.m in Sources */,
 				131D73E32177302F00DC94C7 /* ClassAppraiseViewController.m in Sources */,
 				131D73CB2177302F00DC94C7 /* InformationPageViewController.m in Sources */,
 				131D73E52177302F00DC94C7 /* InviteViewController.m in Sources */,
 				135E58FB2179636C0050641D /* HJPasswordView.m in Sources */,
 				131D73FC2177303000DC94C7 /* SchoolPageViewController.m in Sources */,
 				131D74462177308E00DC94C7 /* FSTextView.m in Sources */,
+				13A52C42217EB87200A3852D /* HJHomeLatestSatausView.m in Sources */,
+				13A52C5C217F174000A3852D /* HJSchoolLiveViewController.m in Sources */,
 				131D73F62177302F00DC94C7 /* AppraiseTableViewCell.m in Sources */,
 				131D73DE2177302F00DC94C7 /* AboutViewController.m in Sources */,
+				13A52C6D2180154100A3852D /* HJSchoolLiveCell.m in Sources */,
 				131D73B52177302F00DC94C7 /* PlanTableViewCell.m in Sources */,
+				13A52C23217DA73000A3852D /* SDCollectionViewCell.m in Sources */,
 				131D74562177308E00DC94C7 /* APPUserDataIofo.m in Sources */,
 				131D73D82177302F00DC94C7 /* PayViewsucceedController.m in Sources */,
+				13A52C0E217DA3A700A3852D /* HJHomeViewModel.m in Sources */,
 				131D73DC2177302F00DC94C7 /* LoginViewController.m in Sources */,
 				1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */,
+				13A52C8E2180712300A3852D /* HJConfirmOrderListCell.m in Sources */,
 				131D73FB2177302F00DC94C7 /* RegistCodeViewController.m in Sources */,
 				131D74522177308E00DC94C7 /* UIView+Extension.m in Sources */,
 				135E58C3217821590050641D /* JSLoadingView.m in Sources */,
@@ -1766,6 +2140,7 @@
 				131D73BD2177302F00DC94C7 /* DiagnoseViewController.m in Sources */,
 				131D73E42177302F00DC94C7 /* FeedBackViewController.m in Sources */,
 				131D73C72177302F00DC94C7 /* VipTacticsInfoViewController.m in Sources */,
+				13A52C2D217DBC5100A3852D /* HJHomeLiveOnlineView.m in Sources */,
 				1332D42E217986EE009190A6 /* WelcomeViewController.m in Sources */,
 				131D745D2177308E00DC94C7 /* YJShareTool.m in Sources */,
 				131D73D62177302F00DC94C7 /* LivePageViewController.m in Sources */,
@@ -1779,7 +2154,6 @@
 				131D74B421774CAE00DC94C7 /* NELivePlayerVC.m in Sources */,
 				131D745A2177308E00DC94C7 /* UILabel+LabelHeightAndWidth.m in Sources */,
 				131D74592177308E00DC94C7 /* UIColor+ColorChange.m in Sources */,
-				131D74602177308E00DC94C7 /* YJTabBarViewController.m in Sources */,
 				135E58BB217821220050641D /* BaseTableViewModel.m in Sources */,
 				131D73DF2177302F00DC94C7 /* ImgLabelAndLabelTableViewCell.m in Sources */,
 				131D73ED2177302F00DC94C7 /* AllOrderListViewController.m in Sources */,

@@ -27,7 +27,7 @@
     LoginViewController *loginvc = [[LoginViewController alloc]init];
     loginvc.type = type;
     loginvc.view.frame = CGRectMake(0, 0, kW, kH);
-    [loginvc.navigationController setNavigationBarHidden:YES];
+//    [loginvc.navigationController setNavigationBarHidden:YES];
     
     [whichvc.navigationController  pushViewController:loginvc animated:YES];
     

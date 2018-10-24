@@ -88,24 +88,26 @@
             //登陆
             if(self.isResister){
 //                登陆
+                ShowHint(@"");
                 [YJAPPNetwork LoginPwdWithPhonenum:phone code:text success:^(NSDictionary *responseObject) {
                     NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
                     if (code == 200) {
                         //登陆成功
-                        [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+//                        [SVProgressHUD showSuccessWithStatus:@"登录成功"];
                         NSDictionary *dic = [responseObject objectForKey:@"data"];
-                        [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"UserName"];
+                        [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"Us"];
                         [[NSUserDefaults standardUserDefaults] synchronize];
                         [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
                         [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-
+                        
                         CustomTabbarController *customTabbar = [[CustomTabbarController alloc]init];
                         [UIApplication sharedApplication].keyWindow.rootViewController = customTabbar;
                     } else {
                         [ConventionJudge NetCode:code vc:self type:@"1"];
                     }
                 } failure:^(NSString *error) {
-                    SVshowInfo(netError);
+//                    SVshowInfo(netError);
+                    ShowError(netError);
                 }];
             } else {
                 //注册跳转
@@ -238,8 +240,11 @@
 - (void)hj_loadData {
     NSDictionary *para = self.params;
     NSString *phone = para[@"phone"];
+    ShowHint(@"");
     [YJAPPNetwork checkReggedWithPhonenum:phone  success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+//        [MBProgressHUD hideHUDForView:VisibleViewController().view animated:YES];
+        hideHud();
         if (code == 200) {
             self.isResister = [responseObject[@"data"] integerValue];
             [self sendCode];
@@ -247,7 +252,8 @@
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+//        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 
@@ -261,12 +267,15 @@
             NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
             if (code == 200) {
                 //发送成功
-                [SVProgressHUD showInfoWithStatus:@"验证码发送成功"];
+                ShowMessage(@"验证码发送成功");
+//                [SVProgressHUD showInfoWithStatus:@"验证码发送成功"];
+//                [MBProgressHUD  ];
             }else{
                 [ConventionJudge NetCode:code vc:self type:@"1"];
             }
         } failure:^(NSString *error) {
-            SVshowInfo(netError);
+//            SVshowInfo(netError);
+            ShowError(error);
         }];
     } else {
 //        //没有注册 发送注册验证码
@@ -274,12 +283,13 @@
             //注册验证码
             NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
             if (code == 200) {
-               [SVProgressHUD showInfoWithStatus:@"验证码发送成功"];
+                ShowMessage(@"验证码发送成功");
             }else{
                 [ConventionJudge NetCode:code vc:self type:@"1"];
             }
         } failure:^(NSString *error) {
-            SVshowInfo(netError);
+//            SVshowInfo(netError);
+            ShowError(error);
         }];
     }
 

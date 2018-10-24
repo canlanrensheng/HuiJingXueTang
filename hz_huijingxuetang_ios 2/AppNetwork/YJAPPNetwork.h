@@ -330,4 +330,5 @@
  首页轮播
  **/
 +(void)getAdSuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
 @end

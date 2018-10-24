@@ -53,7 +53,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = Background_Color;
     [self.view addSubview:self.tableView];
-    [self tx_refreshData];
+    [self hj_refreshData];
     
    
     [self.view updateConstraintsIfNeeded];
@@ -73,7 +73,7 @@
 #endif
 }
 
-- (void)tx_refreshData{};
+- (void)hj_refreshData{};
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

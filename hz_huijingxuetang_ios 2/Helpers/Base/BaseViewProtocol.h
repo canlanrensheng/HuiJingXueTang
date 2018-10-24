@@ -14,10 +14,12 @@
 
 @optional
 
-- (instancetype)initWithViewModel:(BaseViewModel *)viewModel;
+//- (instancetype)initWithViewModel:(BaseViewModel *)viewModel;
 
-- (void)tx_bindViewModel;
+- (void)setViewModel:(BaseViewModel *)viewModel;
 
-- (void)tx_configSubViews;
+- (void)hj_bindViewModel;
+
+- (void)hj_configSubViews;
 
 @end

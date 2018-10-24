@@ -8,7 +8,7 @@
 
 #import "ConventionJudge.h"
 #import <CoreLocation/CoreLocation.h>
-
+#import "LoginViewController.h"
 @implementation ConventionJudge
 /**
  判断手机
@@ -217,88 +217,118 @@
     
     switch (code) {
         case 1:
-            [SVProgressHUD showInfoWithStatus:@"您输入的电话号码有误请重新输入"];
+            ShowError(@"您输入的电话号码有误请重新输入");
+//            [SVProgressHUD showInfoWithStatus:@"您输入的电话号码有误请重新输入"];
             break;
             
         case 2:
-            [SVProgressHUD showInfoWithStatus:@"当前手机号码已被注册"];
+            ShowError(@"当前手机号码已被注册");
+//            [SVProgressHUD showInfoWithStatus:@"当前手机号码已被注册"];
             break;
             
         case 3:
-            [SVProgressHUD showInfoWithStatus:@"短信发送失败"];
+            ShowError(@"短信发送失败");
+//            [SVProgressHUD showInfoWithStatus:@"短信发送失败"];
             break;
             
         case 4:
-            [SVProgressHUD showInfoWithStatus:@"请输入验证码"];
+            ShowError(@"请输入验证码");
+//            [SVProgressHUD showInfoWithStatus:@"请输入验证码"];
             break;
             
         case 5:
-            [SVProgressHUD showInfoWithStatus:@"验证码不正确"];
+            ShowError(@"验证码不正确");
+//            [SVProgressHUD showInfoWithStatus:@"验证码不正确"];
             break;
             
         case 6:
-            [SVProgressHUD showInfoWithStatus:@"用户注册失败，请稍后重试"];
+            ShowError(@"用户注册失败，请稍后重试");
+//            [SVProgressHUD showInfoWithStatus:@"用户注册失败，请稍后重试"];
             break;
             
         case 7:
-            [SVProgressHUD showInfoWithStatus:@"当前手机号码未注册"];
+            ShowError(@"当前手机号码未注册");
+//            [SVProgressHUD showInfoWithStatus:@"当前手机号码未注册"];
             break;
             
         case 8:
-            [SVProgressHUD showInfoWithStatus:@"账号或密码不正确"];
+            ShowError(@"账号或密码不正确");
+//            [SVProgressHUD showInfoWithStatus:@"账号或密码不正确"];
             break;
             
         case 9:
-            [SVProgressHUD showInfoWithStatus:@"请输入您的姓名"];
+            ShowError(@"请输入您的姓名");
+//            [SVProgressHUD showInfoWithStatus:@"请输入您的姓名"];
             break;
-        case 10:
-            [SVProgressHUD showInfoWithStatus:@"您还未登录"];
-            [YJShareCategory JumploginWhichVC:vc andtype:type];
-
+        case 10:{
+            ShowError(@"您还未登录");
+            for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
+                DLog(@"获取到的名称是:%@",NSStringFromClass([vc class]));
+                if([vc isKindOfClass:[LoginViewController class]]) {
+                    break;
+                }
+            }
+            LoginViewController *loginvc = [[LoginViewController alloc]init];
+            [VisibleViewController().navigationController pushViewController:loginvc animated:YES];
             break;
+        }
         case 11:
-            [SVProgressHUD showInfoWithStatus:@"当前手机号码的信息已提交"];
+            ShowError(@"当前手机号码的信息已提交");
+//            [SVProgressHUD showInfoWithStatus:@"当前手机号码的信息已提交"];
             break;
         case 12:
-            [SVProgressHUD showInfoWithStatus:@"未查询到当前套餐信息"];
+            ShowError(@"未查询到当前套餐信息");
+//            [SVProgressHUD showInfoWithStatus:@"未查询到当前套餐信息"];
             break;
         case 13:
-            [SVProgressHUD showInfoWithStatus:@"未查询到当前代金券信息"];
+            ShowError(@"未查询到当前代金券信息");
+//            [SVProgressHUD showInfoWithStatus:@"未查询到当前代金券信息"];
             break;
         case 14:
-            [SVProgressHUD showInfoWithStatus:@"未查询到订单信息"];
+            ShowError(@"未查询到订单信息");
+//            [SVProgressHUD showInfoWithStatus:@"未查询到订单信息"];
             break;
         case 15:
-            [SVProgressHUD showInfoWithStatus:@"未知的支付类型"];
+            ShowError(@"未知的支付类型");
+//            [SVProgressHUD showInfoWithStatus:@"未知的支付类型"];
             break;
         case 16:
-            [SVProgressHUD showInfoWithStatus:@"当前代金券已过期"];
+            ShowError(@"当前代金券已过期");
+//            [SVProgressHUD showInfoWithStatus:@"当前代金券已过期"];
             break;
         case 17:
-            [SVProgressHUD showInfoWithStatus:@"原密码不正确"];
+            ShowError(@"原密码不正确");
+//            [SVProgressHUD showInfoWithStatus:@"原密码不正确"];
             break;
         case 18:
-            [SVProgressHUD showInfoWithStatus:@"两次输入的新密码不相同"];
+            ShowError(@"两次输入的新密码不相同");
+//            [SVProgressHUD showInfoWithStatus:@"两次输入的新密码不相同"];
             break;
         case 19:
-            [SVProgressHUD showInfoWithStatus:@"新旧密码不能相同"];
+            ShowError(@"新旧密码不能相同");
+//            [SVProgressHUD showInfoWithStatus:@"新旧密码不能相同"];
             break;
         case 20:
-            [SVProgressHUD showInfoWithStatus:@"存在相同名称"];
+            ShowError(@"存在相同名称");
+//            [SVProgressHUD showInfoWithStatus:@"存在相同名称"];
             break;
         case 21:
-            [SVProgressHUD showInfoWithStatus:@"邀请码无效"];
+            ShowError(@"邀请码无效");
+//            [SVProgressHUD showInfoWithStatus:@"邀请码无效"];
             break;
         case 30:
-            [SVProgressHUD showInfoWithStatus:@"当前直播未开始"];
+            ShowError(@"当前直播未开始");
+//            [SVProgressHUD showInfoWithStatus:@"当前直播未开始"];
             [vc.navigationController popViewControllerAnimated:YES];
 
             break;
         case 500:
-            [SVProgressHUD showInfoWithStatus:@"服务器忙"];
+            ShowError(@"服务器忙");
+//            [SVProgressHUD showInfoWithStatus:@"服务器忙"];
             break;
         case 501:
-            [SVProgressHUD showInfoWithStatus:@"参数错误"];
+            ShowError(@"参数错误");
+//            [SVProgressHUD showInfoWithStatus:@"参数错误"];
             break;
     }
 }

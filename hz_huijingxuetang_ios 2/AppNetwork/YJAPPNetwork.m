@@ -38,10 +38,9 @@
  **/
 +(void)HomeViewNewsuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/dynamicnews",API_BASEURL];
- 
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+        DLog(@"%@ %@",[NSString convertToJsonData:dic],url);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -63,6 +62,7 @@
     }];
 }
 
+//获取课程列表
 +(void)HomeViewFreeAndType:(NSString *)type success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/indexcourselist",API_BASEURL];
     NSDictionary *parameters = @{
@@ -70,7 +70,7 @@
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+//        DLog(@"获取课程列表：%@ %@",[NSString convertToJsonData:dic],url);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -117,7 +117,7 @@
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+        NSLog(@"注册获取验证码的借口是:%@",[NSString convertToJsonData:dic]);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -164,7 +164,7 @@
 //                                 };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        DLog(@"获取到的结果的数据是:%@ %@",dic,url );
+        DLog(@"获取到的结果的数据是:%@ %@",[NSString convertToJsonData:dic],url );
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -1146,7 +1146,6 @@
     
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
         success(dic);
     } fail:^(id error) {
         failure(error);

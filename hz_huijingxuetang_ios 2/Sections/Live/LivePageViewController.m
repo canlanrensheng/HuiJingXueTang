@@ -235,6 +235,7 @@
 -(void)getnav{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kW, SafeAreaTopHeight)];
     view.backgroundColor = NavAndBtnColor;
+    
     [self.view addSubview:view];
     
     NSInteger btny = 25.5+SafeAreaTopHeight - 64;

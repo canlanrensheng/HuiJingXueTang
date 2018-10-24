@@ -12,7 +12,7 @@
 
 @optional
 
-- (void)tx_refreshData;
+- (void)hj_refreshData;
 
 - (void)configTableViewCell:(UITableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 

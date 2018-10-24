@@ -19,5 +19,6 @@
 #import "UIViewController+TXSystemBackButtonHandler.h"
 #import "NSString+TXCategory.h"
 #import "UIImage+Category.h"
+#import "MBProgressHUD+HJHud.h"
 
 #endif /* CategoryHeader_h */

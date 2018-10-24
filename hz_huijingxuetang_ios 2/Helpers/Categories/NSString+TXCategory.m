@@ -342,6 +342,33 @@
     return  newStr;
 }
 
+//富文本
+-(NSAttributedString *)fuWenBenWithStr:(NSString * )str withColor:(UIColor *)color withFont:(UIFont *)font
+{
+    NSRange range = [self rangeOfString:str];
+    NSMutableAttributedString * newStr = [[NSMutableAttributedString alloc] initWithString:self];
+    [newStr addAttribute:NSForegroundColorAttributeName value:color range:range];
+    [newStr addAttribute:NSFontAttributeName value:font range:range];
+    //[newStr addAttribute: NSLinkAttributeName value: [NSURL URLWithString:[NSString stringWithFormat:@"%@",[arr objectAtIndex:index]]] range:range];
+    return  newStr;
+}
+
+-(NSAttributedString *)fuWenBenWithStr:(NSString * )str withColor:(UIColor *)color withFont:(UIFont *)font space:(CGFloat)space
+{
+    NSRange range = [self rangeOfString:str];
+    NSMutableAttributedString * newStr = [[NSMutableAttributedString alloc] initWithString:self];
+    
+    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:space];
+    [newStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [self length])];
+    
+    [newStr addAttribute:NSForegroundColorAttributeName value:color range:range];
+    [newStr addAttribute:NSFontAttributeName value:font range:range];
+    //[newStr addAttribute: NSLinkAttributeName value: [NSURL URLWithString:[NSString stringWithFormat:@"%@",[arr objectAtIndex:index]]] range:range];
+    return  newStr;
+    
+}
+
 - (NSString *)encodePercentEscapeString{
     NSString *outputStr =
     (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, /* allocator */

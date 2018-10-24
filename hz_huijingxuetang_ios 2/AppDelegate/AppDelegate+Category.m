@@ -15,7 +15,7 @@
 @implementation AppDelegate (Category)
 
 - (void)setRootViewController:(UIApplication *)application{
-//    application.statusBarStyle = UIStatusBarStyleLightContent;
+    application.statusBarStyle = UIStatusBarStyleLightContent;
     NSString *key = @"CFBundleShortVersionString";
     // 取出沙盒中存储的上次使用软件的版本号
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -23,7 +23,7 @@
     // 获得当前软件的版本号
 //    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[key];
 //    if ([currentVersion isEqualToString:lastVersion]) {
-//        if ([[UserInfoSingleObject shareInstance] GetUserInfo] != nil) {
+//        if ([APPUserDataIofo UserIsLogin]) {
             //显示状态栏
             application.statusBarHidden = NO;
             CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];

@@ -13,12 +13,15 @@ pod 'ZFPlayer'
 pod 'NIMSDK'
 pod 'WechatOpenSDK'
 pod 'UMCShare/UI'
-pod 'GCCycleScrollView'
+#pod 'GCCycleScrollView'
 
 pod 'DZNEmptyDataSet', '~> 1.8.1'
 pod 'IQKeyboardManager'
 pod 'FDFullscreenPopGesture', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'DCURLRouter', '~> 0.81'
+pod 'MBProgressHUD', '~> 1.1.0'
+pod 'MJExtension', '~> 3.0.13'
+#pod 'SDCycleScrollView', '~> 1.74'
 
 end

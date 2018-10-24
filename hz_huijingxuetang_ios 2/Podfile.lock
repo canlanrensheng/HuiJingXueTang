@@ -17,9 +17,10 @@ PODS:
   - DCURLRouter (0.81)
   - DZNEmptyDataSet (1.8.1)
   - FDFullscreenPopGesture (1.1)
-  - GCCycleScrollView (0.1.1)
   - IQKeyboardManager (6.2.0)
   - Masonry (1.1.0)
+  - MBProgressHUD (1.1.0)
+  - MJExtension (3.0.15.1)
   - MJRefresh (3.1.15.3)
   - NIMSDK (5.0.1)
   - Reachability (3.2)
@@ -43,9 +44,10 @@ DEPENDENCIES:
   - DCURLRouter (~> 0.81)
   - DZNEmptyDataSet (~> 1.8.1)
   - FDFullscreenPopGesture (~> 1.1)
-  - GCCycleScrollView
   - IQKeyboardManager
   - Masonry
+  - MBProgressHUD (~> 1.1.0)
+  - MJExtension (~> 3.0.13)
   - MJRefresh
   - NIMSDK
   - Reachability (~> 3.2)
@@ -62,9 +64,10 @@ SPEC REPOS:
     - DCURLRouter
     - DZNEmptyDataSet
     - FDFullscreenPopGesture
-    - GCCycleScrollView
     - IQKeyboardManager
     - Masonry
+    - MBProgressHUD
+    - MJExtension
     - MJRefresh
     - NIMSDK
     - Reachability
@@ -81,9 +84,10 @@ SPEC CHECKSUMS:
   DCURLRouter: 6bb8d5c85390f5ce5a9966ad68e0e994a3e89b25
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
-  GCCycleScrollView: 0449a1a6587f54bd43e42f5bfc9cac7e8e03d128
   IQKeyboardManager: 6194101620b73af5e67900b8f89707a99de0b804
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
   MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
   NIMSDK: 5dd9182d3c3a2c50504db47465b7da4d1f556fd5
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
@@ -95,6 +99,6 @@ SPEC CHECKSUMS:
   WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
   ZFPlayer: 833cb3974b619bfd01a0ec1ebaabfe6f629e85b4
 
-PODFILE CHECKSUM: 745226a42932e89130b3c5bb2bd387f6a3fc7129
+PODFILE CHECKSUM: b7fd023ad91930c4d8afabb91b43df16a3b30f57
 
 COCOAPODS: 1.5.3

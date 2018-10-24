@@ -60,6 +60,10 @@ typedef NS_ENUM(NSInteger,ImageSizeType) {
 - (NSAttributedString *)attributeWithStr:(NSString * )str color:(UIColor *)color font:(UIFont *)font;
 - (NSAttributedString *)attributeWithStr:(NSString * )str color:(UIColor *)color font:(UIFont *)font withLastStringColor:(UIColor *)otherColor font:(UIFont *)otherFont;
 
+//富文本操作
+-(NSAttributedString *)fuWenBenWithStr:(NSString * )str withColor:(UIColor *)color withFont:(UIFont *)font;
+-(NSAttributedString *)fuWenBenWithStr:(NSString * )str withColor:(UIColor *)color withFont:(UIFont *)font space:(CGFloat)space;
+
 //unicode编码/解码
 - (NSString *)encodePercentEscapeString;
 - (NSString *)decodePercentEscapeString;

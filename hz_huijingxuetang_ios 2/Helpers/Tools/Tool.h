@@ -11,6 +11,6 @@
 
 
 #import "HudTool.h"
-#import "UserInfoSingleObject.h"
+#import "YJNetWorkTool.h"
 
 #endif /* Tool_h */

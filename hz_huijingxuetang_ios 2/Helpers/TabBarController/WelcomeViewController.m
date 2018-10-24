@@ -97,7 +97,7 @@ static const NSInteger ImageCount  = 3;
 }
 
 -(void)startButton:(UIButton *)button{
-    if ([[UserInfoSingleObject shareInstance] GetUserInfo] != nil) {
+    if ([APPUserDataIofo UserIsLogin]) {
         CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];
         [UIApplication sharedApplication].keyWindow.rootViewController = tabbarVC;
     }else {

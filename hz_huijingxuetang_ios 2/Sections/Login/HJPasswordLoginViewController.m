@@ -302,16 +302,20 @@ static NSString *UserName = @"UserName";
 
 -(void)loginaction{
     if (!self.phoneTf.text.length) {
-        return SVshowInfo(@"请输入手机号");
+        return ShowError(@"请输入手机号");
     }
     if(![self validatePassWord:self.pwdTf.text]) {
-        return SVshowInfo(@"请输入8~16位数字、字母或符号组合");
+        return ShowError(@"请输入8~16位数字、字母或符号组合");
     }
     
+    ShowHint(@"");
+//    [MBProgressHUD showHUD:VisibleViewController().view];
     [YJAPPNetwork LoginPwdWithPhonenum:self.phoneTf.text code:self.pwdTf.text success:^(NSDictionary *responseObject) {
+        hideHud();
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
-            [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+//            [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+            ShowSuccess(@"登陆成功");
             NSDictionary *dic = [responseObject objectForKey:@"data"];
             [[NSUserDefaults standardUserDefaults] setObject:self.phoneTf.text forKey:UserName];
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -324,7 +328,8 @@ static NSString *UserName = @"UserName";
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+//        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 

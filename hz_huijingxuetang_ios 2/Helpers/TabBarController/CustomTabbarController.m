@@ -7,12 +7,13 @@
 //
 
 #import "CustomTabbarController.h"
-#import "YAZLNavigationController.h"
+//#import "YAZLNavigationController.h"
 #import "HomePageViewController.h"
 #import "InformationPageViewController.h"
 #import "MePageViewController.h"
 #import "LivePageViewController.h"
-#import "SchoolPageViewController.h"
+//#import "SchoolPageViewController.h"
+#import "HJSchoolViewController.h"
 
 #import "BaseNavigationViewController.h"
 
@@ -31,35 +32,36 @@
         // 2.通过标识符找到对应的页面
         HomePageViewController *vc = [[HomePageViewController alloc] init];
         //    HomePageViewController *vc1 = [[HomePageViewController alloc]init];
-        YAZLNavigationController *nvc1 = [[YAZLNavigationController alloc]initWithRootViewController:vc];
+        BaseNavigationViewController *nvc1 = [[BaseNavigationViewController alloc]initWithRootViewController:vc];
         nvc1.tabBarItem.title=@"首页";
         vc.view.backgroundColor=ALLViewBgColor;
         nvc1.tabBarItem.image = [UIImage imageNamed:@"image1"];
         nvc1.tabBarItem.selectedImage = [UIImage imageNamed:@"image2"];
         [vc.navigationController setNavigationBarHidden:YES];
         
-        LivePageViewController *vc2 = [[LivePageViewController alloc]init];
-        YAZLNavigationController *nvc2 = [[YAZLNavigationController alloc]initWithRootViewController:vc2];
-        vc2.view.backgroundColor=ALLViewBgColor;
-        nvc2.tabBarItem.title = @"直播";
-        nvc2.tabBarItem.image = [UIImage imageNamed:@"image3"];
-        nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
         
+        //学堂
+        HJSchoolViewController *vc2 = [[HJSchoolViewController alloc]init];
+        BaseNavigationViewController *nvc2 = [[BaseNavigationViewController alloc]initWithRootViewController:vc2];
+        vc2.view.backgroundColor=ALLViewBgColor;
+        nvc2.tabBarItem.title=@"学堂";
+        nvc2.tabBarItem.image = [UIImage imageNamed:@"image5"];
+        nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
         [vc2.navigationController setNavigationBarHidden:YES];
         
-        
-        
-        SchoolPageViewController *vc3 = [[SchoolPageViewController alloc]init];
-        YAZLNavigationController *nvc3 = [[YAZLNavigationController alloc]initWithRootViewController:vc3];
+        //发现
+        LivePageViewController *vc3 = [[LivePageViewController alloc]init];
+        BaseNavigationViewController *nvc3 = [[BaseNavigationViewController alloc]initWithRootViewController:vc3];
         vc3.view.backgroundColor=ALLViewBgColor;
-        nvc3.tabBarItem.title=@"学堂";
-        nvc3.tabBarItem.image = [UIImage imageNamed:@"image5"];
-        nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
+        nvc3.tabBarItem.title = @"发现";
+        nvc3.tabBarItem.image = [UIImage imageNamed:@"image3"];
+        nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
+        
         [vc3.navigationController setNavigationBarHidden:YES];
         
         // 2.通过标识符找到对应的页面
         UIViewController *vc4 = [[InformationPageViewController alloc] init];
-        YAZLNavigationController *nvc4 = [[YAZLNavigationController alloc]initWithRootViewController:vc4];
+        BaseNavigationViewController *nvc4 = [[BaseNavigationViewController alloc]initWithRootViewController:vc4];
         vc4.view.backgroundColor=ALLViewBgColor;
         nvc4.tabBarItem.title=@"资讯";
         nvc4.tabBarItem.image = [UIImage imageNamed:@"image7"];
@@ -68,7 +70,7 @@
         
         
         MePageViewController *vc5 = [[MePageViewController alloc]init];
-        YAZLNavigationController *nvc5 = [[YAZLNavigationController alloc]initWithRootViewController:vc5];
+        BaseNavigationViewController *nvc5 = [[BaseNavigationViewController alloc]initWithRootViewController:vc5];
         nvc5.tabBarItem.title=@"我的";
         nvc5.tabBarItem.selectedImage = [UIImage imageNamed:@"image10"];
         nvc5.tabBarItem.image = [UIImage imageNamed:@"image9"];
@@ -84,7 +86,7 @@
     [super viewDidLoad];
     self.delegate = self;
     self.fd_prefersNavigationBarHidden = YES;
-    self.tabBar.tintColor = NavAndBtnColor;
+    self.tabBar.tintColor = HEXColor(@"#22476B");
     
     self.viewControllers = self.controllers;
 }

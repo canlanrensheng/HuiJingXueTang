@@ -16,6 +16,10 @@
 		<string>HJInviteCodeViewController</string>
 		<key>route://reSetPwdVC</key>
 		<string>HJReSetPwdViewController</string>
+		<key>route://shopCarVC</key>
+		<string>HJShopCarViewController</string>
+		<key>route://confirmOrderVC</key>
+		<string>HJConfirmOrderViewController</string>
 	</dict>
 </dict>
 </plist>

@@ -6,8 +6,8 @@
 //  Copyright © 2018年 Junier. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseTableViewController.h"
 
-@interface SchoolPageViewController : UIViewController
+@interface SchoolPageViewController : BaseTableViewController
 
 @end

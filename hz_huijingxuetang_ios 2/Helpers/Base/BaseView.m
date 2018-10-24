@@ -22,8 +22,8 @@
     @weakify(baseView);
     [[baseView rac_signalForSelector:@selector(initWithFrame:)] subscribeNext:^(id x) {
         @strongify(baseView)
-        [baseView tx_configSubViews];
-        [baseView tx_bindViewModel];
+        [baseView hj_configSubViews];
+        [baseView hj_bindViewModel];
     }];
     return baseView;
 }
@@ -35,17 +35,21 @@
     return self;
 }
 
-- (instancetype)initWithViewModel:(BaseViewModel *)viewModel {
-    self.viewModel = viewModel;
-    self = [super init];
-    if (self) {
-        
-    }
-    return self;
+//- (instancetype)initWithViewModel:(BaseViewModel *)viewModel {
+//    self.viewModel = viewModel;
+//    self = [super init];
+//    if (self) {
+//        
+//    }
+//    return self;
+//}
+
+- (void)setViewModel:(BaseViewModel *)viewModel {
+    
 }
 
-- (void)tx_configSubViews{};
+- (void)hj_configSubViews{};
 
-- (void)tx_bindViewModel{};
+- (void)hj_bindViewModel{};
 
 @end

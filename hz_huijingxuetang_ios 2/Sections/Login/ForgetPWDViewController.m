@@ -33,7 +33,7 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:HEXColor(@"#141E2F")] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:NavigationBar_Color] forBarMetrics:UIBarMetricsDefault];
 }
 
 -(void)dealloc{
@@ -204,13 +204,13 @@
 //下一步操作
 - (void)nextClick{
     if (!self.phoneTf.text.length) {
-        return SVshowInfo(@"请输入11位手机号");
+        return ShowError(@"请输入11位手机号");
     }
     if (!self.picCodeTf.text.length) {
-        return SVshowInfo(@"请输入图片验证码");
+        return ShowError(@"请输入图片验证码");
     }
     if (!self.codeTf.text.length) {
-        return SVshowInfo(@"请输入验证码");
+        return ShowError(@"请输入验证码");
     }
     NSDictionary *paraDict = @{@"code" : self.codeTf.text ,@"phone" : self.phoneTf.text};
     [DCURLRouter pushURLString:@"route://reSetPwdVC" query:paraDict animated:YES];
@@ -218,18 +218,19 @@
 
 - (void)getCode{
     if (!self.phoneTf.text.length) {
-        return SVshowInfo(@"请输入11位手机号");
+        return ShowError(@"请输入11位手机号");
     }
     if (!self.picCodeTf.text.length) {
-        return SVshowInfo(@"请输入图片验证码");
+        return ShowError(@"请输入图片验证码");
     }
     if (![self.localCodeView.charString isEqualToString:self.picCodeTf.text]) {
-        return SVshowInfo(@"请输入正确的图片验证码");
+        return ShowError(@"请输入正确的图片验证码");
     }
     [YJAPPNetwork GetCodeForgetWithPhonenum:self.phoneTf.text success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
-            [SVProgressHUD showSuccessWithStatus:@"验证码发送成功"];
+//            [SVProgressHUD showSuccessWithStatus:@"验证码发送成功"];
+            ShowMessage(@"验证码发送成功");
             _getCodeBtn.selected = YES;
             _getCodeBtn.layer.borderColor = [TextColor CGColor];
             _getCodeBtn.userInteractionEnabled = NO;
@@ -242,7 +243,7 @@
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 

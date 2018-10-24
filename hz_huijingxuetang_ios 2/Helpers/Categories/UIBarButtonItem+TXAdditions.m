@@ -18,6 +18,7 @@ static const void *TXBarButtonItemBlockKey = &TXBarButtonItemBlockKey;
                                      action:(void (^)(id))action {
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 60, 40);
+    button.contentHorizontalAlignment =  UIControlContentHorizontalAlignmentRight;
     button.titleLabel.font = [UIFont systemFontOfSize:15];
     if(title) {
         [button setTitle:title forState:UIControlStateNormal];

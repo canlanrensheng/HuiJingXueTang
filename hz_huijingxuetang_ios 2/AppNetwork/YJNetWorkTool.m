@@ -36,11 +36,11 @@
     self.requestSerializer.timeoutInterval = 30.0;//设置网络超时
 
     //设置带蒙版
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
-    [SVProgressHUD setMinimumDismissTimeInterval:2.0];
-    [SVProgressHUD setBackgroundColor:RGBA(206, 206, 206, 0.9)];
-    SVShow;
+//    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+//    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
+//    [SVProgressHUD setMinimumDismissTimeInterval:2.0];
+//    [SVProgressHUD setBackgroundColor:RGBA(206, 206, 206, 0.9)];
+//    SVShow;
     
     //判断请求方法是GET还是POST
     if ([method isEqualToString:@"GET"]) {
@@ -52,12 +52,32 @@
                 
 //                return SVshowInfo(NOTNETMESSAGE);
             }
-            //如果请求成功，则回调responseObject
+            NSString  *url = URLString;
+            if(parameters) {
+                NSUInteger paraCount = parameters.allKeys.count;
+                if(paraCount > 0) {
+                    if( paraCount == 1) {
+                        for (NSString * key in parameters.allKeys){
+                            url = [NSString stringWithFormat:@"%@?%@=%@",URLString,key,[parameters objectForKey:key]];
+                        }
+                    } else {
+                        for ( int i = 0;i < paraCount; i++){
+                            NSString *key = parameters.allKeys[i];
+                            if(i == 0) {
+                                url = [NSString stringWithFormat:@"%@?%@=%@",URLString,key,[parameters objectForKey:key]];
+                            } else {
+                                url = [NSString stringWithFormat:@"%@&%@=%@",url,key,[parameters objectForKey:key]];
+                            }
+                        }
+                    }
+                }
+            }
+            DLog(@"获取到的请求的url是:%@",url);
             callBack(responseObject);
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             //如果请求失败，控制台打印错误信息
-            erorblock(error);
-            NSLog(@"%@",error);
+            erorblock(error.localizedDescription);
+//            DLog(@"%@",error.localizedDescription);
         }];
     }
     
@@ -89,12 +109,12 @@
     
     self.requestSerializer.timeoutInterval = 30.0;//设置网络超时
     
-    //设置带蒙版
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
-    [SVProgressHUD setMinimumDismissTimeInterval:2.0];
-    [SVProgressHUD setBackgroundColor:RGBA(206, 206, 206, 0.9)];
-    SVShow;
+//    //设置带蒙版
+//    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+//    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
+//    [SVProgressHUD setMinimumDismissTimeInterval:2.0];
+//    [SVProgressHUD setBackgroundColor:RGBA(206, 206, 206, 0.9)];
+//    SVShow;
     self.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",
                                                           @"text/html",
                                                           @"image/jpeg",

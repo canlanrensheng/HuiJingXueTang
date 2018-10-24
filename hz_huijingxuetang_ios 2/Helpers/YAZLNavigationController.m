@@ -35,7 +35,7 @@
     
 //    [self.navigationBar setBackgroundImage:[UUPubLogicHelper createImageWithColor:C2BC693 cornerRadius:0] forBarMetrics:UIBarMetricsDefault];
     
-    [self.navigationBar setBackgroundImage:[UUPubLogicHelper createImageWithColor:NavAndBtnColor cornerRadius:0] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationBar setBackgroundImage:[UUPubLogicHelper createImageWithColor:NavigationBar_Color cornerRadius:0] forBarMetrics:UIBarMetricsDefault];
 
     self.navigationBar.shadowImage = [[UIImage alloc]init];
     

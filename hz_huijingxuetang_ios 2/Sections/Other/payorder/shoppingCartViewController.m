@@ -71,7 +71,7 @@
     }];
 }
 
--(void)getAllprice{
+- (void)getAllprice{
     double allprice = 0;
     for (NSString *cid in selMuarr) {
         for (NSDictionary *dic in dataarr1) {
@@ -89,8 +89,6 @@
     pricelb.frame = CGRectMake(kW -100*SW - w - 10, 0, w, 50*SW);
     
     heji.frame = CGRectMake(pricelb.minX - 50*SW, 0, 50*SW, 50*SW);
-    
-
     
 }
 

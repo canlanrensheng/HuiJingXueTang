@@ -12,7 +12,7 @@
 
 @optional
 
-- (void)tx_configSubViews;
+- (void)hj_configSubViews;
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath;
 

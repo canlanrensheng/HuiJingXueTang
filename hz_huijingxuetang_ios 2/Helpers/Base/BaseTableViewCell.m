@@ -12,12 +12,12 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self tx_configSubViews];
+        [self hj_configSubViews];
     }
     return self;
 }
 
-- (void)tx_configSubViews{}
+- (void)hj_configSubViews{}
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath{}
 

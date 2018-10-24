@@ -38,7 +38,7 @@
                                     [UIFont boldSystemFontOfSize:font(18)],
                                     NSFontAttributeName ,nil]];
     navBar.tintColor = white_color;
-    [navBar setBackgroundImage:[UIImage imageWithColor:HEXColor(@"#141E2F")] forBarMetrics:UIBarMetricsDefault];
+    [navBar setBackgroundImage:[UIImage imageWithColor:NavigationBar_Color] forBarMetrics:UIBarMetricsDefault];
     [navBar setShadowImage:[UIImage new]];
     
 }

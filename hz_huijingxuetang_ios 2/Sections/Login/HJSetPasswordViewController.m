@@ -174,7 +174,8 @@
 
 - (void)sureClick{
     if(![self validatePassWord:self.passwordTf.text]) {
-       return SVshowInfo(@"请输入8~16位数字、字母或符号组合");
+        ShowError(@"请输入8~16位数字、字母或符号组合");
+        return;
     }
     NSDictionary *para = self.params;
     NSDictionary *paraDict = @{ @"code" : para[@"code"], @"pwd" : self.passwordTf.text ,@"phone" : para[@"phone"]};

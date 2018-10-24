@@ -110,11 +110,11 @@
 
 - (void)finishClick{
     if (![self validatePassWord:self.pwdTf.text]) {
-        return SVshowInfo(@"请输入8~16位 数字、字母或符号组合");
+        return ShowError(@"请输入8~16位 数字、字母或符号组合");
     } else if (!self.surePwdTf.text.length){
-        return SVshowInfo(@"请输入重复密码");
+        return ShowError(@"请输入重复密码");
     } else if (![self.pwdTf.text isEqualToString:self.surePwdTf.text]){
-        return SVshowInfo(@"前后两次密码不相等");
+        return ShowError(@"前后两次密码不相等");
     }
     //验证码
     NSDictionary *paraDict = self.params;
@@ -122,14 +122,15 @@
     [YJAPPNetwork ForgetPWDWithPhonenum:paraDict[@"phone"] code:paraDict[@"code"] pwd:self.pwdTf.text rpwd:self.surePwdTf.text success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
-            [SVProgressHUD showSuccessWithStatus:@"密码重置成功"];
+//            [SVProgressHUD showSuccessWithStatus:@"密码重置成功"];
+            ShowSuccess(@"密码重置成功");
 //            [self.navigationController popViewControllerAnimated:YES];
             [DCURLRouter popTwiceViewControllerAnimated:YES];
-        }else{
+        } else {
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 
@@ -139,7 +140,6 @@
     NSPredicate *regextestmobile = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", MOBILE];
     return [regextestmobile evaluateWithObject:passwordStr];
 }
-
 
 
 @end

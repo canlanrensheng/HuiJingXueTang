@@ -19,6 +19,8 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <DCURLRouter/DCURLRouter.h>
 #import "UIViewController+DCURLRouter.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <MJExtension/MJExtension.h>
 
 
 
@@ -30,6 +32,7 @@
 
 //工具类
 #import "UUPubLogicHelper.h"
+//#import "YAZLNavigationController.h"
 #import "YAZLNavigationController.h"
 #import "UIColor+ColorChange.h"
 #import "UIView+YJMethods.h"
@@ -44,7 +47,7 @@
 
 
 ////正式环境
-#define API_BASEURL @"https://api.huijingschool.com/"
+#define API_BASEURL @"http://api.huijingschool.com/"
 
 //测试环境
 //#define API_BASEURL @"http://test.huijingschool.com/"
@@ -75,7 +78,7 @@
 #define RGB(r,g,b) RGBA(r,g,b,1.0f)
 
 //导航栏及常用按钮浅蓝色
-#define NavAndBtnColor RGB(54, 112, 245)
+#define NavAndBtnColor NavigationBar_Color
 
 #define WColor [UIColor whiteColor]
 
@@ -115,7 +118,7 @@
 #define WYColorMain UIColorFromRGB(0x5596e6)
 
 //网络状况
-#define netError @"网络不给力"
+#define netError @"网络错误"
 
 //提示框
 #define SVShow \

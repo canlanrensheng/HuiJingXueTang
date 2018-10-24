@@ -11,7 +11,7 @@
 
 
 //蓝色
-#define NavigationBar_Color RGBCOLOR(255,154,13)
+#define NavigationBar_Color HEXColor(@"#141E2F")
 /**
  *  黑色文字 16 16 16
  */
@@ -351,6 +351,7 @@ alpha:1.0]
 /* ************************************************************************************************* */
 
 #define MediumFont(FONTSIZE) [UIFont fontWithName:@"PingFangSC-Medium" size:(FONTSIZE)]
+#define BoldFont(FONTSIZE)   [UIFont fontWithName:@"PingFangSC-Semibold" size:(FONTSIZE)]
 #define HEXColor(color) [UIColor colorWithHexString:color]
 
 ///正常字体

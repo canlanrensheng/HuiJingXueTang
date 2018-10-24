@@ -144,15 +144,17 @@
 }
 -(void)loginaction{
     if (!textf.text.length) {
-        return SVshowInfo(@"请输入手机号");
+        return ShowError(@"请输入手机号");
     }
     if (!pwdtextf.text.length) {
-        return SVshowInfo(@"请输入验证码");
+        return ShowError(@"请输入验证码");
     }
+    ShowHint(@"");
     [YJAPPNetwork LoginPwdWithPhonenum:textf.text code:pwdtextf.text success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
-            [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+//            [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+            ShowSuccess(@"登陆成功");
             NSDictionary *dic = [responseObject objectForKey:@"data"];
             [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
             [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
@@ -169,13 +171,13 @@
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 
 -(void)getcode{
     if (!textf.text.length) {
-        return SVshowInfo(@"请输入手机号");
+        return ShowError(@"请输入手机号");
     }
     [YJAPPNetwork GetCodeLoginWithPhonenum:textf.text success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
@@ -194,7 +196,7 @@
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
-        SVshowInfo(netError);
+        ShowError(netError);
     }];
 }
 
