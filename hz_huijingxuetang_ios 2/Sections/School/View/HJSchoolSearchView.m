@@ -82,7 +82,7 @@
 
 
 - (void)tapClick {
-    
+    [self.searchSubject sendNext:@(0)];
 }
 
 @end

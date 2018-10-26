@@ -7,11 +7,14 @@
 //
 
 #import "HJHomeTeacherRecommendedView.h"
-
+#import "HJHomeViewModel.h"
+#import "HJRecommentTeacherModel.h"
 
 @interface HJHomeTeacherRecommendedView ()
 
 @property (nonatomic,strong) UIScrollView *scrollView;
+
+@property (nonatomic,strong) HJHomeViewModel *listViewModel;
 
 @end
 
@@ -79,14 +82,14 @@
     }];
     
     
-    [self reloadScrollViewWithImageArr:@[@"1",@"2",@"3",@"1",@"2",@"3"]];
+    
 }
 
 - (void)reloadScrollViewWithImageArr:(NSArray *)assets{
     [[self.scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     NSUInteger assetCount = assets.count;
     CGFloat width = kWidth(76);
-    CGFloat height = kHeight(126);
+    CGFloat height = kHeight(108);
     CGFloat padding = kWidth(10.0);
     for (NSInteger i = 0; i < assetCount; i++) {
         UIView *backView = [[UIView alloc] init];
@@ -94,9 +97,11 @@
         backView.backgroundColor = white_color;
         [self.scrollView addSubview:backView];
         
+        HJRecommentTeacherModel *model = assets[i];
+        
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
-        imaV.image = V_IMAGE(@"");
+        [imaV sd_setImageWithURL:URL(model.teacherurl) placeholderImage:V_IMAGE(@"默认头像")];
         imaV.backgroundColor = Background_Color;
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -108,6 +113,7 @@
         //live
         UIImageView *liveImageV = [[UIImageView alloc] init];
         liveImageV.image = V_IMAGE(@"特级");
+        liveImageV.hidden = model.isspecialgrade ? NO : YES;
         [backView addSubview:liveImageV];
         [liveImageV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(imaV.mas_right).offset(-kWidth(29.0 / 2 + 3.0));
@@ -117,7 +123,7 @@
         
         //标题
         UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(@"何晶莹",BoldFont(font(13)),HEXColor(@"#333333"));
+            label.ljTitle_font_textColor(model.realname,BoldFont(font(13)),HEXColor(@"#333333"));
             label.textAlignment = NSTextAlignmentCenter;
             [label sizeToFit];
         }];
@@ -131,7 +137,7 @@
         
         //职位
         UILabel *jobLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(@"股票分析师",MediumFont(font(11)),HEXColor(@"#999999"));
+            label.ljTitle_font_textColor(model.teacprofessional,MediumFont(font(11)),HEXColor(@"#999999"));
             label.textAlignment = NSTextAlignmentCenter;
             [label sizeToFit];
         }];
@@ -148,6 +154,13 @@
     
 }
 
+
+- (void)setViewModel:(BaseViewModel *)viewModel {
+    self.listViewModel = (HJHomeViewModel *)viewModel;
+    if (self.listViewModel.recommongCourceDataArray.count > 0){
+        [self reloadScrollViewWithImageArr:self.listViewModel.recommongCourceDataArray];;
+    }
+}
 
 
 @end

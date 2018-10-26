@@ -1,1 +1,1 @@
-../../../ZFPlayer/ZFPlayer/Category/UIImageView+ZFCache.h
+../../../ZFPlayer/ZFPlayer/Classes/ControlView/UIImageView+ZFCache.h

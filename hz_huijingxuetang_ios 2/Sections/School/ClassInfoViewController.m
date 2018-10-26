@@ -11,13 +11,16 @@
 #import "NowTableViewCell.h"
 #import "AppraiseTableViewCell.h"
 #import "RegistCodeViewController.h"
-#import <ZFPlayer.h>
+//#import <ZFPlayer.h>
+#import <ZFPlayer/ZFPlayer.h>
 #import "GiftView.h"
 #import "PayBottonView.h"
 #import "YJShareTool.h"
-@interface ClassInfoViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,ZFPlayerDelegate>
+@interface ClassInfoViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
+
 @property (nonatomic, strong) NSMutableArray *titleArray;
 @property (nonatomic, strong) ZFPlayerView *playerView;
+
 @end
 
 @implementation ClassInfoViewController
@@ -43,7 +46,7 @@
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
-    [self.playerView pause];
+//    [self.playerView pause];
 
 }
 
@@ -66,6 +69,7 @@
 
     // Do any additional setup after loading the view.
 }
+
 -(void)pageview{
     
     _titleArray=[[NSMutableArray alloc]init];
@@ -249,16 +253,16 @@
         [liveimgview addSubview:self.playerView];
         
         // 初始化控制层view(可自定义)
-        ZFPlayerControlView *controlView = [[ZFPlayerControlView alloc] init];
-        // 初始化播放模型
-        ZFPlayerModel *playerModel = [[ZFPlayerModel alloc]init];
-        playerModel.fatherView = liveimgview;
-        playerModel.title = @"";
-        playerModel.videoURL = [NSURL URLWithString:[datadic objectForKey:@"videourl"]];
-        [self.playerView playerControlView:controlView playerModel:playerModel];
-        // 设置代理
-        self.playerView.delegate = self;
-        [self.playerView autoPlayTheVideo];
+//        ZFPlayerControlView *controlView = [[ZFPlayerControlView alloc] init];
+//        // 初始化播放模型
+//        ZFPlayerModel *playerModel = [[ZFPlayerModel alloc]init];
+//        playerModel.fatherView = liveimgview;
+//        playerModel.title = @"";
+//        playerModel.videoURL = [NSURL URLWithString:[datadic objectForKey:@"videourl"]];
+//        [self.playerView playerControlView:controlView playerModel:playerModel];
+//        // 设置代理
+//        self.playerView.delegate = self;
+//        [self.playerView autoPlayTheVideo];
     }else{
         UIImageView *topimgview = [[UIImageView alloc]initWithFrame:liveimgview.bounds];
         NSURL *imgurl = [datadic objectForKey:@"videoppicurl"];
@@ -299,7 +303,6 @@
     namelb.font = FONT(14);
     [titleview addSubview:namelb];
     
-
     
     UIButton *assist = [[UIButton alloc]initWithFrame:CGRectMake(kW - 70*SW, 0, 60*SW, 40*SW)];
     [assist setImage:[UIImage imageNamed:@"63_"] forState:UIControlStateNormal];
@@ -344,8 +347,6 @@
     namelb2.text = [datadic objectForKey:@"introduction"];
     namelb2.font = FONT(14);
     [infoview addSubview:namelb2];
-    
-
 }
 
 -(void)getPayBottonView{
@@ -362,7 +363,6 @@
 
 -(void)assistAction:(UIButton *)sender{
     NSString *accesstoken = [APPUserDataIofo AccessToken];
-    
     [YJAPPNetwork zanwithAccesstoken:accesstoken Id:self.courseId success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
@@ -377,6 +377,7 @@
         [SVProgressHUD showInfoWithStatus:netError];
     }];
 }
+
 //免费课程
 -(void)freecourse{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 315*SW, kW, 200*SW)];
@@ -403,7 +404,6 @@
         NSURL *url = [NSURL URLWithString:[dic objectForKey:@"coursepic"]];
         [showview sd_setImageWithURL:url];
         [freeview addSubview:showview];
-        
         
         
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 100*SW, freeview.width, 25*SW)];
@@ -448,14 +448,13 @@
     [menbanview removeFromSuperview];
 }
 
--(void)freebtnAction:(UIButton *)sender{
+- (void)freebtnAction:(UIButton *)sender{
     NSInteger index = sender.tag - 86123;
     NSDictionary *dic  = recommentArr[index];
     self.courseId = [dic objectForKey:@"courseid"];
     [self loaddata];
-
-    
 }
+
 //点击了注册
 -(void)registAction{
     RegistCodeViewController*rcvc = [[RegistCodeViewController alloc]init];

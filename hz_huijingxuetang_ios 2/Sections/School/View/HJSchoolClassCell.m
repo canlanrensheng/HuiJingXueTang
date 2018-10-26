@@ -120,22 +120,6 @@
         make.height.mas_equalTo(kHeight(12.0));
     }];
     
-    //价格
-    UILabel *priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥12800",BoldFont(font(15)),HEXColor(@"#FF4400"));
-        label.textAlignment = NSTextAlignmentRight;
-        [label sizeToFit];
-    }];
-    //        NSString *price = [NSString stringWithFormat:@"¥ %.0f",model.coursemoney];
-    //        priceLabel.attributedText = [price attributeWithStr:@"¥" color:HEXColor(@"#666666") font:BoldFont(font(13))];
-    [self addSubview:priceLabel];
-    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self).offset(-kWidth(10.0));
-        make.centerY.equalTo(teacherLabel);
-        make.height.mas_equalTo(kHeight(12.0));
-    }];
-    self.priceLabel = priceLabel;
-    
     //天数
     UILabel *dayLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"/180天",MediumFont(font(11)),HEXColor(@"#FF4400"));
@@ -148,6 +132,24 @@
         make.centerY.equalTo(teacherLabel);
         make.height.mas_equalTo(kHeight(12.0));
     }];
+    
+    //价格
+    UILabel *priceLabel = [UILabel creatLabel:^(UILabel *label) {
+        label.ljTitle_font_textColor(@"￥12800",BoldFont(font(15)),HEXColor(@"#FF4400"));
+        label.textAlignment = NSTextAlignmentRight;
+        [label sizeToFit];
+    }];
+    //        NSString *price = [NSString stringWithFormat:@"¥ %.0f",model.coursemoney];
+    //        priceLabel.attributedText = [price attributeWithStr:@"¥" color:HEXColor(@"#666666") font:BoldFont(font(13))];
+    [self addSubview:priceLabel];
+    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(dayLabel.mas_left);
+        make.centerY.equalTo(teacherLabel);
+        make.height.mas_equalTo(kHeight(12.0));
+    }];
+    self.priceLabel = priceLabel;
+    
+    
 
     //原来的价格
     UILabel *originPriceLabel = [UILabel creatLabel:^(UILabel *label) {

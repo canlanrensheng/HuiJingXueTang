@@ -66,12 +66,7 @@
         UIImageView *starImageView = [[UIImageView alloc] init];
         starImageView.frame = CGRectMake((kWidth(2 + 11) * i), 0, kWidth(11), kWidth(11));
         starImageView.backgroundColor = white_color;
-        if(i <= 3) {
-            starImageView.image = V_IMAGE(@"评价星亮色");
-        } else {
-            starImageView.image = V_IMAGE(@"评价星 暗色");
-        }
-        //        starImageView.image = V_IMAGE(@"评价星星");
+        starImageView.image = V_IMAGE(@"热度ICON");
         [starView addSubview:starImageView];
     }
     

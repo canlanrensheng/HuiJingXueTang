@@ -191,8 +191,8 @@
 //    [self.window makeKeyAndVisible];
 //}
 
--(void)autoLogin{
-    if (![[APPUserDataIofo AccessToken]isEqualToString:@""]) {
+- (void)autoLogin{
+    if (![[APPUserDataIofo AccessToken] isEqualToString:@""]) {
         [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
             NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
             if (code == 200) {

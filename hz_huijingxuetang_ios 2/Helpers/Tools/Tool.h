@@ -12,5 +12,6 @@
 
 #import "HudTool.h"
 #import "YJNetWorkTool.h"
+#import "TXAlertView.h"
 
 #endif /* Tool_h */

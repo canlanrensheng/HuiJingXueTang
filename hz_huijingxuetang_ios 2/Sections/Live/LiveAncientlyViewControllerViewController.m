@@ -12,7 +12,7 @@
 #import "NowTableViewCell.h"
 #import "AppraiseTableViewCell.h"
 #import "RegistCodeViewController.h"
-#import <ZFPlayer.h>
+#import <ZFPlayer/ZFPlayer.h>
 #import "GiftView.h"
 #import "PayBottonView.h"
 #import "ClassCollectionViewCell.h"
@@ -20,7 +20,7 @@
 #import "TeacherInfoViewController.h"
 
 #define topiewH SafeAreaTopHeight - 64
-@interface LiveAncientlyViewControllerViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,ZFPlayerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface LiveAncientlyViewControllerViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
 @property (nonatomic, strong) NSMutableArray *titleArray;
 @property (nonatomic, strong) ZFPlayerView *playerView;
 @property (nonatomic, strong) UICollectionView *collectionview2;
@@ -59,7 +59,7 @@
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
-    [self.playerView pause];
+//    [self.playerView pause];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -163,17 +163,17 @@
         [liveimgview addSubview:self.playerView];
         
         // 初始化控制层view(可自定义)
-        ZFPlayerControlView *controlView = [[ZFPlayerControlView alloc] init];
-        // 初始化播放模型
-        ZFPlayerModel *playerModel = [[ZFPlayerModel alloc]init];
-        playerModel.fatherView = liveimgview;
-        playerModel.title = @"";
-        playerModel.videoURL = [NSURL URLWithString:[coursedic objectForKey:@"videourl"]];
-        [self.playerView playerControlView:controlView playerModel:playerModel];
-        // 设置代理
-        self.playerView.delegate = self;
+//        ZFPlayerControlView *controlView = [[ZFPlayerControlView alloc] init];
+//        // 初始化播放模型
+//        ZFPlayerModel *playerModel = [[ZFPlayerModel alloc]init];
+//        playerModel.fatherView = liveimgview;
+//        playerModel.title = @"";
+//        playerModel.videoURL = [NSURL URLWithString:[coursedic objectForKey:@"videourl"]];
+//        [self.playerView playerControlView:controlView playerModel:playerModel];
+//        // 设置代理
+//        self.playerView.delegate = self;
     }else{
-        [self.playerView resetPlayer];
+//        [self.playerView resetPlayer];
 
         UIImageView *topimgview = [[UIImageView alloc]initWithFrame:liveimgview.bounds];
         NSURL *imgurl = [coursedic objectForKey:@"coursepic"];

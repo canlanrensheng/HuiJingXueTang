@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSMutableArray *stuntJudgeStockArray;
 - (void)stuntJudgeStockWithType:(NSString *)type page:(NSString *)page success:(void (^)(void))success;
 
+//推荐老师的数据
+@property (nonatomic,strong) NSMutableArray *recommentTeacherArray;
+- (void)recommentTeacherWithPage:(NSString *)page success:(void (^)(void))success;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

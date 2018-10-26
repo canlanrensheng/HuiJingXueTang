@@ -36,8 +36,13 @@ PODS:
     - UMCCommon
     - UMCShare/Core
   - WechatOpenSDK (1.8.2)
-  - ZFPlayer (2.1.6):
-    - Masonry
+  - ZFPlayer (3.2.0):
+    - ZFPlayer/Core (= 3.2.0)
+  - ZFPlayer/AVPlayer (3.2.0):
+    - ZFPlayer/Core
+  - ZFPlayer/ControlView (3.2.0):
+    - ZFPlayer/Core
+  - ZFPlayer/Core (3.2.0)
 
 DEPENDENCIES:
   - AFNetworking
@@ -56,7 +61,9 @@ DEPENDENCIES:
   - SVProgressHUD
   - UMCShare/UI
   - WechatOpenSDK
-  - ZFPlayer
+  - ZFPlayer (~> 3.0)
+  - ZFPlayer/AVPlayer (~> 3.0)
+  - ZFPlayer/ControlView (~> 3.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -97,8 +104,8 @@ SPEC CHECKSUMS:
   UMCCommon: 82d21f4bb9532a5472cc533bbd8ed48aff376a14
   UMCShare: 4d20cb77e085bcc9f8f2c81d24777d7dc6638b16
   WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
-  ZFPlayer: 833cb3974b619bfd01a0ec1ebaabfe6f629e85b4
+  ZFPlayer: 0cfddb7efe22b54213e517fc50f12856a1144805
 
-PODFILE CHECKSUM: b7fd023ad91930c4d8afabb91b43df16a3b30f57
+PODFILE CHECKSUM: f72fd8acd064bd5cf707a58a29e64a106733e68f
 
 COCOAPODS: 1.5.3

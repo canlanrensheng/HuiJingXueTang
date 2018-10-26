@@ -169,7 +169,7 @@
 - (void)hj_setNavagation {
      self.title = @"慧鲸学堂";
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:nil image:V_IMAGE(@"搜索ICON") action:^(id sender) {
-        
+        [DCURLRouter pushURLString:@"route://searchResultVC" animated:YES];
     }];
 }
 
@@ -284,6 +284,11 @@
     //加载绝技诊股
     [self.viewModel stuntJudgeStockWithType:@"1" page:@"1" success:^{
         [self.stuntJudgeStockView setViewModel:self.viewModel];
+    }];
+    
+    //获取推荐老师
+    [self.viewModel recommentTeacherWithPage:@"1" success:^{
+        [self.teacherRecommendedView setViewModel:self.viewModel];
     }];
 }
 

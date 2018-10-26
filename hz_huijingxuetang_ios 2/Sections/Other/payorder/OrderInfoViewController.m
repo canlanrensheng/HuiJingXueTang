@@ -336,7 +336,6 @@
     [YJAPPNetwork OrderPayAccesstoken:[APPUserDataIofo AccessToken] orderid:self.orderid couponid:couponid paytype:paytype mch:@"app" success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
         if (code == 200) {
-            
             if ([paytype isEqualToString:@"alipay"]) {
                 //支付宝支付
                 NSString *orderdata = [responseObject objectForKey:@"data"];
@@ -421,4 +420,5 @@
     Discountlb.text = [NSString stringWithFormat:@"%.2f",[[datadic objectForKey:@"money"]doubleValue] -[[dic objectForKey:@"price"]doubleValue]];
 
 }
+
 @end

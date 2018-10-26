@@ -11,6 +11,7 @@
 #import "HJConfirmOrderListCell.h"
 #import "HJConfirmOrderTotalMoneyCell.h"
 
+#import "HJPayTypeAlert.h"
 
 @interface HJConfirmOrderViewController ()
 
@@ -35,7 +36,6 @@
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(45.0), 0, kHeight(49.0), 0));
     }];
-    
 }
 
 - (void)createTopView {
@@ -91,7 +91,10 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            [DCURLRouter pushURLString:@"route://confirmOrderVC" animated:YES];
+            HJPayTypeAlert *alert = [[HJPayTypeAlert alloc] initWithBlock:^(PayType payType) {
+                
+            }];
+            [alert show];
         }];
     }];
     [self.bottomView addSubview:buyButton];

@@ -12,7 +12,7 @@
 #import "HJSchoolSementView.h"
 #import "HJSchoolSearchView.h"
 
-
+//#import "shoppingCartViewController.h"
 @interface HJSchoolViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
 @property (nonatomic, weak) UICollectionView *collectionMain;
@@ -56,6 +56,9 @@
         make.right.equalTo(navView).offset(-kWidth(37));
         make.height.mas_equalTo(kHeight(28.0));
     }];
+    [self.searchView.searchSubject subscribeNext:^(id  _Nullable x) {
+        [DCURLRouter pushURLString:@"route://searchResultVC" animated:YES];
+    }];
     
     UIButton *carBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",nil,white_color,0);
@@ -64,6 +67,8 @@
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
 //            @strongify(self);
             [DCURLRouter pushURLString:@"route://shopCarVC" animated:YES];
+//            shoppingCartViewController *shopVC = [[shoppingCartViewController alloc] init];
+//            [VisibleViewController().navigationController pushViewController:shopVC animated:YES];
         }];
     }];
     [navView addSubview:carBtn];

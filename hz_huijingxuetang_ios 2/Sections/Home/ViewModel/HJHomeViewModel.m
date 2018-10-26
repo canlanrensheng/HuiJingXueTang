@@ -9,6 +9,7 @@
 #import "HJHomeViewModel.h"
 #import "HJHomeStuntJudgeStockModel.h"
 #import "HJHomeCourseRecommendedModel.h"
+#import "HJRecommentTeacherModel.h"
 @implementation HJHomeViewModel
 
 - (NSMutableArray *)headerDataArray {
@@ -53,6 +54,27 @@
             NSDictionary *dataDict = dic[@"data"];
             NSMutableArray *stocklistArr = dataDict[@"stocklist"];
             self.stuntJudgeStockArray = [HJHomeStuntJudgeStockModel mj_objectArrayWithKeyValuesArray:stocklistArr];
+            success();
+        } else {
+            ShowError([dic objectForKey:@"msg"]);
+        }
+    } fail:^(id error) {
+        ShowError(error);
+    }];
+}
+
+//推荐老师的列表
+- (void)recommentTeacherWithPage:(NSString *)page success:(void (^)(void))success {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/recommendteacher",API_BASEURL];
+    NSDictionary *parameters = @{
+                                 @"page":page
+                                 };
+    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        NSInteger code = [[dic objectForKey:@"code"]integerValue];
+        if (code == 200) {
+            NSMutableArray *dataArr = dic[@"data"];
+            self.recommongCourceDataArray = [HJRecommentTeacherModel mj_objectArrayWithKeyValuesArray:dataArr];
             success();
         } else {
             ShowError([dic objectForKey:@"msg"]);

@@ -40,9 +40,6 @@
     priceBtn.titleLabel.font = MediumFont(font(13.0));
     [self addSubview:priceBtn];
     
-    
-    
-    
     [selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.equalTo(self);
         make.width.mas_equalTo(Screen_Width / 2);

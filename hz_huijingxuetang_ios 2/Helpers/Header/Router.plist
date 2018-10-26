@@ -20,6 +20,14 @@
 		<string>HJShopCarViewController</string>
 		<key>route://confirmOrderVC</key>
 		<string>HJConfirmOrderViewController</string>
+		<key>route://classDetailVC</key>
+		<string>HJClassDetailViewController</string>
+		<key>route://postEvaluationVC</key>
+		<string>HJPostEvaluationViewController</string>
+		<key>route://searchResultVC</key>
+		<string>HJSearchResultViewController</string>
+		<key>route://MoreResultVC</key>
+		<string>HJMoreResultViewController</string>
 	</dict>
 </dict>
 </plist>

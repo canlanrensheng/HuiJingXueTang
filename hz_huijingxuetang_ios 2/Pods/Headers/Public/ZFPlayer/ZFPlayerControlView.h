@@ -1,1 +1,1 @@
-../../../ZFPlayer/ZFPlayer/ZFPlayerControlView.h
+../../../ZFPlayer/ZFPlayer/Classes/ControlView/ZFPlayerControlView.h
