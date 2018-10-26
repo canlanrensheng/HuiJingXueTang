@@ -1,14 +1,15 @@
 //
-//  HJSelectJiListCell.m
+//  HJSchoolDetailReviewPastCell.m
 //  HuiJingSchool
 //
-//  Created by 张金山 on 2018/10/25.
+//  Created by 张金山 on 2018/10/26.
 //  Copyright © 2018年 Junier. All rights reserved.
 //
 
-#import "HJSelectJiListCell.h"
+#import "HJSchoolDetailReviewPastCell.h"
 
-@implementation HJSelectJiListCell
+
+@implementation HJSchoolDetailReviewPastCell
 
 - (void)hj_configSubViews {
     UILabel *jiNameLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -80,3 +81,4 @@
 }
 
 @end
+

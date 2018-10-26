@@ -28,6 +28,8 @@
 		<string>HJSearchResultViewController</string>
 		<key>route://MoreResultVC</key>
 		<string>HJMoreResultViewController</string>
+		<key>route://schoolDetailLiveVC</key>
+		<string>HJSchoolDetailLiveViewController</string>
 	</dict>
 </dict>
 </plist>

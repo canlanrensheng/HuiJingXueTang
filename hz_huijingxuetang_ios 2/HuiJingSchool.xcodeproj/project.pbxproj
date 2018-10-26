@@ -140,6 +140,14 @@
 		1332D42521797B74009190A6 /* HJInviteCodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42421797B74009190A6 /* HJInviteCodeView.m */; };
 		1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42A21798664009190A6 /* AppDelegate+Category.m */; };
 		1332D42E217986EE009190A6 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1332D42C217986ED009190A6 /* WelcomeViewController.m */; };
+		1341096E2183266900287F93 /* HJSchoolDetailLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1341096D2183266900287F93 /* HJSchoolDetailLiveViewController.m */; };
+		134109712183275F00287F93 /* HJSchoolDetailChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109702183275F00287F93 /* HJSchoolDetailChatViewController.m */; };
+		134109742183279E00287F93 /* HJSchoolDetailReviewPastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109732183279E00287F93 /* HJSchoolDetailReviewPastViewController.m */; };
+		134109772183286F00287F93 /* HJSchoolDetailAliveToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109762183286F00287F93 /* HJSchoolDetailAliveToolView.m */; };
+		1341097A2183298400287F93 /* HJSchoolDetailTeacherInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109792183298400287F93 /* HJSchoolDetailTeacherInfoView.m */; };
+		1341097D21832C1C00287F93 /* HJPicAndTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1341097C21832C1C00287F93 /* HJPicAndTextButton.m */; };
+		13410980218330AF00287F93 /* HJSchoolDetailReviewPastCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1341097F218330AF00287F93 /* HJSchoolDetailReviewPastCell.m */; };
+		13410983218331DA00287F93 /* HJSchoolDetailChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13410982218331DA00287F93 /* HJSchoolDetailChatCell.m */; };
 		135E584C2178131E0050641D /* UIBarButtonItem+TXAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E584A2178131E0050641D /* UIBarButtonItem+TXAdditions.m */; };
 		135E584F2178135B0050641D /* UITabBar+TXAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E584E2178135B0050641D /* UITabBar+TXAdditions.m */; };
 		135E5856217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 135E5855217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m */; };
@@ -529,6 +537,22 @@
 		1332D42A21798664009190A6 /* AppDelegate+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Category.m"; sourceTree = "<group>"; };
 		1332D42C217986ED009190A6 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		1332D42D217986EE009190A6 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		1341096C2183266900287F93 /* HJSchoolDetailLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailLiveViewController.h; sourceTree = "<group>"; };
+		1341096D2183266900287F93 /* HJSchoolDetailLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailLiveViewController.m; sourceTree = "<group>"; };
+		1341096F2183275F00287F93 /* HJSchoolDetailChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailChatViewController.h; sourceTree = "<group>"; };
+		134109702183275F00287F93 /* HJSchoolDetailChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailChatViewController.m; sourceTree = "<group>"; };
+		134109722183279E00287F93 /* HJSchoolDetailReviewPastViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailReviewPastViewController.h; sourceTree = "<group>"; };
+		134109732183279E00287F93 /* HJSchoolDetailReviewPastViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailReviewPastViewController.m; sourceTree = "<group>"; };
+		134109752183286F00287F93 /* HJSchoolDetailAliveToolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailAliveToolView.h; sourceTree = "<group>"; };
+		134109762183286F00287F93 /* HJSchoolDetailAliveToolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailAliveToolView.m; sourceTree = "<group>"; };
+		134109782183298400287F93 /* HJSchoolDetailTeacherInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailTeacherInfoView.h; sourceTree = "<group>"; };
+		134109792183298400287F93 /* HJSchoolDetailTeacherInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailTeacherInfoView.m; sourceTree = "<group>"; };
+		1341097B21832C1C00287F93 /* HJPicAndTextButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJPicAndTextButton.h; sourceTree = "<group>"; };
+		1341097C21832C1C00287F93 /* HJPicAndTextButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPicAndTextButton.m; sourceTree = "<group>"; };
+		1341097E218330AF00287F93 /* HJSchoolDetailReviewPastCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailReviewPastCell.h; sourceTree = "<group>"; };
+		1341097F218330AF00287F93 /* HJSchoolDetailReviewPastCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailReviewPastCell.m; sourceTree = "<group>"; };
+		13410981218331DA00287F93 /* HJSchoolDetailChatCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailChatCell.h; sourceTree = "<group>"; };
+		13410982218331DA00287F93 /* HJSchoolDetailChatCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailChatCell.m; sourceTree = "<group>"; };
 		135E5847217811170050641D /* GeneralParamsMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneralParamsMacro.h; sourceTree = "<group>"; };
 		135E5848217812350050641D /* UIColor_TXHexColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIColor_TXHexColor.h; sourceTree = "<group>"; };
 		135E58492178125F0050641D /* CategoryHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryHeader.h; sourceTree = "<group>"; };
@@ -1127,6 +1151,7 @@
 		131D739D2177302F00DC94C7 /* School */ = {
 			isa = PBXGroup;
 			children = (
+				134109672183264000287F93 /* SchoolDetailLiveDetail */,
 				13A0CB0F2182B93A00028DE0 /* SearchResullt */,
 				13A52C98218152CB00A3852D /* ClassDetail */,
 				13A52C842180704800A3852D /* ConfirmOrder */,
@@ -1425,6 +1450,59 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		134109672183264000287F93 /* SchoolDetailLiveDetail */ = {
+			isa = PBXGroup;
+			children = (
+				134109682183264000287F93 /* Controller */,
+				134109692183264000287F93 /* Model */,
+				1341096A2183264000287F93 /* View */,
+				1341096B2183264000287F93 /* ViewModel */,
+			);
+			path = SchoolDetailLiveDetail;
+			sourceTree = "<group>";
+		};
+		134109682183264000287F93 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1341096C2183266900287F93 /* HJSchoolDetailLiveViewController.h */,
+				1341096D2183266900287F93 /* HJSchoolDetailLiveViewController.m */,
+				1341096F2183275F00287F93 /* HJSchoolDetailChatViewController.h */,
+				134109702183275F00287F93 /* HJSchoolDetailChatViewController.m */,
+				134109722183279E00287F93 /* HJSchoolDetailReviewPastViewController.h */,
+				134109732183279E00287F93 /* HJSchoolDetailReviewPastViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		134109692183264000287F93 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1341096A2183264000287F93 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				134109752183286F00287F93 /* HJSchoolDetailAliveToolView.h */,
+				134109762183286F00287F93 /* HJSchoolDetailAliveToolView.m */,
+				134109782183298400287F93 /* HJSchoolDetailTeacherInfoView.h */,
+				134109792183298400287F93 /* HJSchoolDetailTeacherInfoView.m */,
+				1341097E218330AF00287F93 /* HJSchoolDetailReviewPastCell.h */,
+				1341097F218330AF00287F93 /* HJSchoolDetailReviewPastCell.m */,
+				13410981218331DA00287F93 /* HJSchoolDetailChatCell.h */,
+				13410982218331DA00287F93 /* HJSchoolDetailChatCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1341096B2183264000287F93 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		135E585A217814540050641D /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1446,6 +1524,8 @@
 				135E5862217814850050641D /* TXDataManage.h */,
 				135E5861217814850050641D /* TXDataManage.m */,
 				135E58E821784B9C0050641D /* ViewHeader.h */,
+				1341097B21832C1C00287F93 /* HJPicAndTextButton.h */,
+				1341097C21832C1C00287F93 /* HJPicAndTextButton.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2224,6 +2304,7 @@
 				131D73CD2177302F00DC94C7 /* CardViewController.m in Sources */,
 				131D74482177308E00DC94C7 /* HACursor.m in Sources */,
 				13A52C56217F15B000A3852D /* TopButtonView.m in Sources */,
+				134109742183279E00287F93 /* HJSchoolDetailReviewPastViewController.m in Sources */,
 				135E5864217814850050641D /* SQButtonTagView.m in Sources */,
 				135E5865217814850050641D /* TXCheckVersion.m in Sources */,
 				13A52C51217EF77900A3852D /* HJSchoolSearchView.m in Sources */,
@@ -2254,6 +2335,7 @@
 				131D73F42177302F00DC94C7 /* PayBottonView.m in Sources */,
 				131D73C52177302F00DC94C7 /* TeacherViewController.m in Sources */,
 				135E584F2178135B0050641D /* UITabBar+TXAdditions.m in Sources */,
+				13410980218330AF00287F93 /* HJSchoolDetailReviewPastCell.m in Sources */,
 				131D73D72177302F00DC94C7 /* PayViewController.m in Sources */,
 				131D744C2177308E00DC94C7 /* HARootScrollViewManager.m in Sources */,
 				1332D42121797966009190A6 /* HudTool.m in Sources */,
@@ -2292,6 +2374,7 @@
 				13A52C4E217EF73B00A3852D /* HJSchoolViewController.m in Sources */,
 				13A52C91218071F700A3852D /* HJConfirmOrderTotalMoneyCell.m in Sources */,
 				135E586C2178149D0050641D /* YYFPSLabel.m in Sources */,
+				1341097D21832C1C00287F93 /* HJPicAndTextButton.m in Sources */,
 				13A52CBA2181A90E00A3852D /* HJSelectJiListCell.m in Sources */,
 				135E58B1217821220050641D /* BaseDoubleTitleView.m in Sources */,
 				13E885372179C02C002598AD /* HJReSetPwdViewController.m in Sources */,
@@ -2304,9 +2387,11 @@
 				131D74412177308E00DC94C7 /* AppDelegate.m in Sources */,
 				131D74512177308E00DC94C7 /* UIColor+RGBA.m in Sources */,
 				135E5871217814AF0050641D /* LJAvatarBrowser.m in Sources */,
+				1341096E2183266900287F93 /* HJSchoolDetailLiveViewController.m in Sources */,
 				131D74582177308E00DC94C7 /* NSString+Extension.m in Sources */,
 				13A52C21217DA73000A3852D /* TADotView.m in Sources */,
 				131D74B521774CAE00DC94C7 /* UIView+NEPlayer.m in Sources */,
+				1341097A2183298400287F93 /* HJSchoolDetailTeacherInfoView.m in Sources */,
 				131D73EA2177302F00DC94C7 /* OrderViewCell.m in Sources */,
 				131D745C2177308E00DC94C7 /* YJShareCategory.m in Sources */,
 				13A52C28217DADAA00A3852D /* HJHomeLimitKillView.m in Sources */,
@@ -2341,6 +2426,7 @@
 				131D74E32177513200DC94C7 /* UITableView+Register.m in Sources */,
 				131D73EF2177302F00DC94C7 /* PayInfoViewController.m in Sources */,
 				131D73D92177302F00DC94C7 /* CordLoginViewController.m in Sources */,
+				134109712183275F00287F93 /* HJSchoolDetailChatViewController.m in Sources */,
 				131D73DB2177302F00DC94C7 /* ForgetPWDViewController.m in Sources */,
 				13A0CB1F2182E97F00028DE0 /* HJSearchResultTeacherCell.m in Sources */,
 				13A52C9621808F2800A3852D /* HJPayTypeAlert.m in Sources */,
@@ -2369,6 +2455,7 @@
 				131D73CB2177302F00DC94C7 /* InformationPageViewController.m in Sources */,
 				131D73E52177302F00DC94C7 /* InviteViewController.m in Sources */,
 				135E58FB2179636C0050641D /* HJPasswordView.m in Sources */,
+				134109772183286F00287F93 /* HJSchoolDetailAliveToolView.m in Sources */,
 				131D73FC2177303000DC94C7 /* SchoolPageViewController.m in Sources */,
 				13A52CC92181BE9900A3852D /* HJPostEvaluationViewController.m in Sources */,
 				131D74462177308E00DC94C7 /* FSTextView.m in Sources */,
@@ -2389,6 +2476,7 @@
 				13A52C8E2180712300A3852D /* HJConfirmOrderListCell.m in Sources */,
 				131D73FB2177302F00DC94C7 /* RegistCodeViewController.m in Sources */,
 				131D74522177308E00DC94C7 /* UIView+Extension.m in Sources */,
+				13410983218331DA00287F93 /* HJSchoolDetailChatCell.m in Sources */,
 				135E58C3217821590050641D /* JSLoadingView.m in Sources */,
 				131D73C32177302F00DC94C7 /* TacticsViewController.m in Sources */,
 				131D745B2177308E00DC94C7 /* UUPubLogicHelper.m in Sources */,
