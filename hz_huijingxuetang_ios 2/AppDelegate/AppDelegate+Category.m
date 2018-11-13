@@ -21,24 +21,17 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *lastVersion = [defaults stringForKey:key];
     // 获得当前软件的版本号
-//    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[key];
-//    if ([currentVersion isEqualToString:lastVersion]) {
-//        if ([APPUserDataIofo UserIsLogin]) {
+////    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[key];
+////    if ([currentVersion isEqualToString:lastVersion]) {
             //显示状态栏
             application.statusBarHidden = NO;
             CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];
             self.window.rootViewController = tabbarVC;
-//        }else{
-//            // 显示状态栏
-//            application.statusBarHidden = NO;
-//            LoginViewController *logInController = [[LoginViewController alloc] initWithParams:nil];
-//            self.window.rootViewController = logInController;
-//        }
-//    }else {
-//        // 新版本
-//        [UIApplication sharedApplication].statusBarHidden = YES;
-//        self.window.rootViewController = [[WelcomeViewController alloc] init];
-//    }
+////    }else {
+////        // 新版本
+////        [UIApplication sharedApplication].statusBarHidden = YES;
+////        self.window.rootViewController = [[WelcomeViewController alloc] init];
+////    }
 }
 
 - (void)setup3DTouch:(UIApplication *)application{

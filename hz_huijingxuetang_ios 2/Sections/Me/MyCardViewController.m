@@ -7,7 +7,6 @@
 //
 
 #import "MyCardViewController.h"
-#import "HACursor.h"
 #import "MeCardTableViewCell.h"
 
 @interface MyCardViewController ()<UITableViewDataSource,UITableViewDelegate>
@@ -19,7 +18,7 @@
 
 @implementation MyCardViewController
 {
-    HACursor*cursor;
+//    HACursor*cursor;
     NSArray *dataarr1;
     NSArray *dataarr2;
     NSInteger page1;
@@ -67,33 +66,33 @@
     _titleArray=[[NSMutableArray alloc]init];
     [_titleArray addObject:@"体验券"];
     [_titleArray addObject:@"代金券"];
-
-    cursor = [[HACursor alloc]init];
-    cursor.itemTitleBtnWidth=kW/2;
-    cursor.frame = CGRectMake(0, 0, kW, 45);
-    cursor.scrollNavBar.linecoler = NavAndBtnColor;
-    cursor.titles =_titleArray;
-    cursor.pageViews = [self createPageViews];
-    cursor.backgroundColor= CWHITE;
-    //设置根滚动视图的高度
-    cursor.rootScrollViewHeight = kH -45-64;
-    //    cursor.rootScrollView.backgroundColor=Background_Color;
-    //默认值是白色
-    cursor.titleNormalColor = TextNoColor;
-    //默认值是白色
-    cursor.titleSelectedColor = NavAndBtnColor;
-    //        cursor.titleSelectedColor = WYColorMain;
-    //是否显示排序按钮
-    cursor.showSortbutton = NO;
-    //    cursor.rootScrollView.rootScrollViewDateSource = self;
-    //默认的最小值是5，小于默认值的话按默认值设置
-    cursor.minFontSize = 14;
-    //默认的最大值是25，小于默认值的话按默认值设置，大于默认值按设置的值处理
-    cursor.maxFontSize = 17;
-    //cursor.isGraduallyChangFont = NO;
-    //在isGraduallyChangFont为NO的时候，isGraduallyChangColor不会有效果
-    //cursor.isGraduallyChangColor = NO;
-    [self.view addSubview:cursor];
+//
+//    cursor = [[HACursor alloc]init];
+//    cursor.itemTitleBtnWidth=kW/2;
+//    cursor.frame = CGRectMake(0, 0, kW, 45);
+//    cursor.scrollNavBar.linecoler = NavAndBtnColor;
+//    cursor.titles =_titleArray;
+//    cursor.pageViews = [self createPageViews];
+//    cursor.backgroundColor= CWHITE;
+//    //设置根滚动视图的高度
+//    cursor.rootScrollViewHeight = kH -45-64;
+//    //    cursor.rootScrollView.backgroundColor=Background_Color;
+//    //默认值是白色
+//    cursor.titleNormalColor = TextNoColor;
+//    //默认值是白色
+//    cursor.titleSelectedColor = NavAndBtnColor;
+//    //        cursor.titleSelectedColor = WYColorMain;
+//    //是否显示排序按钮
+//    cursor.showSortbutton = NO;
+//    //    cursor.rootScrollView.rootScrollViewDateSource = self;
+//    //默认的最小值是5，小于默认值的话按默认值设置
+//    cursor.minFontSize = 14;
+//    //默认的最大值是25，小于默认值的话按默认值设置，大于默认值按设置的值处理
+//    cursor.maxFontSize = 17;
+//    //cursor.isGraduallyChangFont = NO;
+//    //在isGraduallyChangFont为NO的时候，isGraduallyChangColor不会有效果
+//    //cursor.isGraduallyChangColor = NO;
+//    [self.view addSubview:cursor];
 
 }
 

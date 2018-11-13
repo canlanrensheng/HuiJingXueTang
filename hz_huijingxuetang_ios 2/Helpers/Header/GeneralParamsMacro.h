@@ -19,7 +19,7 @@
 /**
  *  弱 背景色 248 248 248
  */
-#define Background_Color RGBCOLOR(248,248,248)
+#define Background_Color HEXColor(@"#F5F5F5")
 
 /**
  *  弱 背景色 242 242 242
@@ -28,7 +28,7 @@
 /**
  *  分割线 225 225 225
  */
-#define Line_Color [UIColor getColor: @"#e1e1e1"]
+#define Line_Color HEXColor(@"#EAEAEA")
 
 #define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self
 #define SS(strongSelf)  __strong __typeof(&*weakSelf)strongSelf = weakSelf

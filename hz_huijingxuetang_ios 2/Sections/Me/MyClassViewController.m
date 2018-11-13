@@ -7,11 +7,9 @@
 //
 
 #import "MyClassViewController.h"
-#import "SchoolTableViewCell.h"
-#import "ClassAppraiseViewController.h"
 #import <MJRefresh/MJRefresh.h>
-#import "ClassInfoViewController.h"
 #import "LoginViewController.h"
+#import "SchoolTableViewCell.h"
 @interface MyClassViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @end
@@ -104,10 +102,7 @@
 }
 
 -(void)btnAction:(UIButton *)sender{
-    NSDictionary *dic = dataarr1[sender.tag - 91235];
-    ClassAppraiseViewController *vc = [[ClassAppraiseViewController alloc]init];
-    vc.datadic = dic;
-    [self.navigationController pushViewController:vc animated:YES];
+   
 }
 
 -(void)selAction:(UIButton *)sender{
@@ -209,10 +204,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    ClassInfoViewController* civc = [[ClassInfoViewController alloc]init];
-    NSDictionary *dic = dataarr1[indexPath.section];
-    civc.courseId = [dic objectForKey:@"courseid"];
-    [self.navigationController pushViewController:civc animated:YES];
+   
 }
 @end

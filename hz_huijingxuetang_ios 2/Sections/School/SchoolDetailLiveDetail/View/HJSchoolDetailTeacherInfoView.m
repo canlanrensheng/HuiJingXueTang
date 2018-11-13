@@ -55,10 +55,12 @@
     //关注的按钮
     HJPicAndTextButton *careButton = [HJPicAndTextButton buttonWithType:UIButtonTypeCustom withSpace:kHeight(5.0)];
     careButton.buttonStyle = ButtonImageTop;
-    [careButton setImage:V_IMAGE(@"hot标签") forState:UIControlStateNormal];
-    [careButton setTitle:@"已关注" forState:UIControlStateNormal];
-    [careButton setTitleColor:HEXColor(@"#1D3043") forState:UIControlStateNormal];
+    [careButton setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
+    [careButton setTitle:@"关注" forState:UIControlStateNormal];
+    [careButton setTitleColor:HEXColor(@"#e3763d") forState:UIControlStateNormal];
+    [careButton setTitleColor:HEXColor(@"#999999") forState:UIControlStateSelected];
     careButton.titleLabel.font = MediumFont(font(10));
+    [careButton addTarget:self action:@selector(carBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:careButton];
     [careButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self);
@@ -74,6 +76,17 @@
         make.left.right.bottom.equalTo(self);
         make.height.mas_equalTo(kHeight(5.0));
     }];
+}
+
+- (void)carBtnClick:(UIButton *)btn {
+    btn.selected = !btn.selected;
+    if(btn.selected) {
+        [btn setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
+        [btn setTitle:@"已关注" forState:UIControlStateNormal];
+    } else {
+        [btn setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
+        [btn setTitle:@"关注" forState:UIControlStateNormal];
+    }
 }
 
 @end

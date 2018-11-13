@@ -22,7 +22,7 @@
     
     self.backgroundColor = Background_Color;
     
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];
@@ -50,7 +50,12 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            
+            if([APPUserDataIofo AccessToken].length <= 0) {
+                ShowMessage(@"您还未登录");
+                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                return;
+            }
+            [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
         }];
     }];
     [self addSubview:moreBtn];
@@ -68,7 +73,7 @@
         make.left.equalTo(lineView);
         make.right.equalTo(self);
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(20.0));
-        make.height.mas_equalTo(kHeight(275));
+        make.height.mas_equalTo(kHeight(275 + 5.0));
     }];
 }
 
@@ -86,13 +91,14 @@
         
         HJHomeStuntJudgeStockModel *model = assets[i];
         
-        backView.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1];
         backView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
         backView.layer.shadowOffset = CGSizeMake(0,1);
         backView.layer.shadowOpacity = 1;
         backView.layer.shadowRadius = 5;
         backView.layer.cornerRadius = 5;
-        backView.clipsToBounds = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+        [backView addGestureRecognizer:tap];
         
         //头像图片
         UIImageView *iconImageV = [[UIImageView alloc] init];
@@ -212,7 +218,7 @@
         
         //时间
         UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.answertime,MediumFont(font(10)),HEXColor(@"#999999"));
+           label.ljTitle_font_textColor(model.answertime,MediumFont(font(10)),HEXColor(@"#999999"));
             label.textAlignment = NSTextAlignmentLeft;
             [label sizeToFit];
         }];
@@ -235,6 +241,17 @@
         //查看详情
         UIButton *loodDetailBtn = [UIButton creatButton:^(UIButton *button) {
             button.ljTitle_font_titleColor_state(@"查看详情",MediumFont(font(13)),HEXColor(@"#1D3043"),0);
+            //查看详情
+            @weakify(self);
+            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
+//                if(indexPath.row < self.viewModel.stuntJuageRecommendArray.count) {
+//                    HJStuntJudgeListModel *model = self.viewModel.stuntJuageRecommendArray[indexPath.row];
+//                    NSDictionary *para = @{@"model" : model};
+//                    [DCURLRouter pushURLString:@"route://stuntJudgeDetailVC" query:para animated:YES];
+//                }
+
+            }];
         }];
         [backView addSubview:loodDetailBtn];
         [loodDetailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -253,6 +270,15 @@
     if(self.listViewModel.stuntJudgeStockArray.count > 0) {
         [self reloadScrollViewWithImageArr:self.listViewModel.stuntJudgeStockArray];
     }
+}
+
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    if([APPUserDataIofo AccessToken].length <= 0) {
+        ShowMessage(@"您还未登录");
+        [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+        return;
+    }
+    [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
 }
 
 

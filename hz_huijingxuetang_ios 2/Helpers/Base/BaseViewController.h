@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "BaseViewControllerProtocol.h"
+
 
 @interface BaseViewController : UIViewController<BaseViewControllerProtocol>
 //instead delegate

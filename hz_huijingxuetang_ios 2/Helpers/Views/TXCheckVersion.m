@@ -94,7 +94,7 @@ static TXCheckVersion *checkManager = nil;
                 //appStore的链接
                 [userDefault setObject:resultDic[@"trackViewUrl"] forKey:APP_TRACK_VIEW_URL];
                 //应用内模态AppStore需要的应用id
-                [userDefault setObject:[resultDic[@"trackId"] stringValue] forKey:TRACK_ID];
+                [userDefault setObject:resultDic[@"trackId"] forKey:TRACK_ID];
                 if ([resultDic[@"version"] isEqualToString:CURRENT_VERSION] || ![[userDefault objectForKey:SKIP_VERSION] isEqualToString:resultDic[@"version"]]) {
                     [userDefault setBool:NO forKey:SKIP_CURRENT_VERSION];
                 }

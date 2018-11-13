@@ -657,7 +657,7 @@
                                  };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+        DLog(@"%@",dic);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -1143,8 +1143,8 @@
  **/
 +(void)getAdSuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/mp/bannerlist",API_BASEURL];
-    
-    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
+    NSDictionary *para = @{@"type" : @"2"};
+    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:para method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         success(dic);
     } fail:^(id error) {

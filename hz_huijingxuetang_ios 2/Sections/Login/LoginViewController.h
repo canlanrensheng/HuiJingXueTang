@@ -10,6 +10,7 @@
 
 @interface LoginViewController : BaseViewController
 
-@property (nonatomic,copy) NSString *type;
+//type = 1 点加其他页面跳转到登陆页面的，登陆成功之后回到之前的页面并且刷新数据
+@property (nonatomic,assign) NSInteger type;
 
 @end

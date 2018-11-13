@@ -18,11 +18,9 @@
 }
 
 - (void)changeFrameForY:(CGFloat)y{
-    
     CGRect frame = self.frame;
     frame.origin.y = y;
     self.frame = frame;
-    
 }
 
 - (void)changeFrameForWidth:(CGFloat)width{

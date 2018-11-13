@@ -30,7 +30,7 @@
         make.height.mas_equalTo(kHeight(10.0));
     }];
     
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];
@@ -94,16 +94,30 @@
         backView.frame = CGRectMake(0, height * i, width, height);
         backView.backgroundColor = white_color;
         [self.scrollView addSubview:backView];
+        
+//        //分割线
+//        UIView *lineView = [[UIView alloc] init];
+//        lineView.backgroundColor = HEXColor(@"#EAEAEA");
+//        [backView addSubview:lineView];
+//        [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.right.bottom.equalTo(backView);
+//            make.height.mas_equalTo(kHeight(1.0));;
+//        }];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+        [backView addGestureRecognizer:tap];
+        [self.scrollView addSubview:backView];
 
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
-//        imaV.image = V_IMAGE(@"");
         [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
         imaV.backgroundColor = Background_Color;
+        imaV.userInteractionEnabled = YES;
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(backView);
-            make.left.equalTo(backView).offset(kWidth(10.0));
+//            make.top.equalTo(backView);
+            make.centerY.equalTo(backView);
+            make.left.equalTo(backView);
             make.width.mas_equalTo(kWidth(140));
             make.height.mas_equalTo(kHeight(90));
         }];
@@ -200,6 +214,10 @@
     //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
 
+}
+
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    [DCURLRouter pushURLString:@"route://classDetailVC" animated:YES];
 }
 
 

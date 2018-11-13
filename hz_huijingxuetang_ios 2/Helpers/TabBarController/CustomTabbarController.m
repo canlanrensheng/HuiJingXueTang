@@ -7,14 +7,12 @@
 //
 
 #import "CustomTabbarController.h"
-//#import "YAZLNavigationController.h"
 #import "HomePageViewController.h"
-#import "InformationPageViewController.h"
-#import "MePageViewController.h"
-#import "LivePageViewController.h"
-//#import "SchoolPageViewController.h"
-#import "HJSchoolViewController.h"
 
+#import "HJMineViewController.h"
+#import "HJSchoolViewController.h"
+#import "HJFindViewController.h"
+#import "HJInfoViewController.h"
 #import "BaseNavigationViewController.h"
 
 @interface CustomTabbarController ()<UITabBarControllerDelegate>
@@ -27,56 +25,37 @@
 
 - (NSMutableArray *)controllers{
     if (!_controllers) {
-        
-//        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        // 2.通过标识符找到对应的页面
+        //首页
         HomePageViewController *vc = [[HomePageViewController alloc] init];
-        //    HomePageViewController *vc1 = [[HomePageViewController alloc]init];
         BaseNavigationViewController *nvc1 = [[BaseNavigationViewController alloc]initWithRootViewController:vc];
-        nvc1.tabBarItem.title=@"首页";
-        vc.view.backgroundColor=ALLViewBgColor;
-        nvc1.tabBarItem.image = [UIImage imageNamed:@"image1"];
-        nvc1.tabBarItem.selectedImage = [UIImage imageNamed:@"image2"];
+        nvc1.tabBarItem = [self setTabbarItemWithTitle:@"首页" withImage:@"首页未选中" withSelectImage:@"首页选中"];
         [vc.navigationController setNavigationBarHidden:YES];
-        
         
         //学堂
         HJSchoolViewController *vc2 = [[HJSchoolViewController alloc]init];
         BaseNavigationViewController *nvc2 = [[BaseNavigationViewController alloc]initWithRootViewController:vc2];
-        vc2.view.backgroundColor=ALLViewBgColor;
-        nvc2.tabBarItem.title=@"学堂";
-        nvc2.tabBarItem.image = [UIImage imageNamed:@"image5"];
-        nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
+        nvc2.tabBarItem = [self setTabbarItemWithTitle:@"学堂" withImage:@"学堂未选中" withSelectImage:@"学堂选中"];
         [vc2.navigationController setNavigationBarHidden:YES];
         
         //发现
-        LivePageViewController *vc3 = [[LivePageViewController alloc]init];
+        HJFindViewController *vc3 = [[HJFindViewController alloc]init];
         BaseNavigationViewController *nvc3 = [[BaseNavigationViewController alloc]initWithRootViewController:vc3];
-        vc3.view.backgroundColor=ALLViewBgColor;
-        nvc3.tabBarItem.title = @"发现";
-        nvc3.tabBarItem.image = [UIImage imageNamed:@"image3"];
-        nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
-        
+        nvc3.tabBarItem = [self setTabbarItemWithTitle:@"发现" withImage:@"发现未选中" withSelectImage:@"发现选中"];
         [vc3.navigationController setNavigationBarHidden:YES];
         
-        // 2.通过标识符找到对应的页面
-        UIViewController *vc4 = [[InformationPageViewController alloc] init];
+        //资讯
+        HJInfoViewController *vc4 = [[HJInfoViewController alloc] init];
         BaseNavigationViewController *nvc4 = [[BaseNavigationViewController alloc]initWithRootViewController:vc4];
-        vc4.view.backgroundColor=ALLViewBgColor;
-        nvc4.tabBarItem.title=@"资讯";
-        nvc4.tabBarItem.image = [UIImage imageNamed:@"image7"];
-        nvc4.tabBarItem.selectedImage = [UIImage imageNamed:@"image8"];
+        nvc4.tabBarItem = [self setTabbarItemWithTitle:@"资讯" withImage:@"资讯下未选中" withSelectImage:@"资讯选中"];
         [vc4.navigationController setNavigationBarHidden:YES];
         
-        
-        MePageViewController *vc5 = [[MePageViewController alloc]init];
+        //我的
+        HJMineViewController *vc5 = [[HJMineViewController alloc]init];
         BaseNavigationViewController *nvc5 = [[BaseNavigationViewController alloc]initWithRootViewController:vc5];
-        nvc5.tabBarItem.title=@"我的";
-        nvc5.tabBarItem.selectedImage = [UIImage imageNamed:@"image10"];
-        nvc5.tabBarItem.image = [UIImage imageNamed:@"image9"];
-        vc5.navigationItem.title = @"个人中心";
+        nvc5.tabBarItem = [self setTabbarItemWithTitle:@"我的" withImage:@"我的未选中" withSelectImage:@"我的选中"];
         vc5.view.backgroundColor = ALLViewBgColor;
         
+       
         _controllers = [NSMutableArray arrayWithArray:@[nvc1,nvc2,nvc3,nvc4,nvc5]];
     }
     return _controllers;
@@ -86,14 +65,23 @@
     [super viewDidLoad];
     self.delegate = self;
     self.fd_prefersNavigationBarHidden = YES;
-    self.tabBar.tintColor = HEXColor(@"#22476B");
+    self.tabBar.tintColor = NavigationBar_Color;
     
     self.viewControllers = self.controllers;
+    
+    [self.tabBar showBadgeValueAtIndex:4 value:@""];
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
     self.tabBar.hidden = NO;
     
+//    if(self.selectedIndex == 4){
+//        if([APPUserDataIofo AccessToken].length <= 0) {
+//            ShowMessage(@"您还未登录");
+//            [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+//            return;
+//        }
+//    }
 }
 
 - (UITabBarItem *)setTabbarItemWithTitle:(NSString *)title withImage:(NSString *)image withSelectImage:(NSString *)selectImage{

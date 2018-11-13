@@ -9,7 +9,7 @@
 #import "HJPasswordLoginViewController.h"
 #import "ForgetPWDViewController.h"
 #import "HJForgetPwdNavigationController.h"
-#import "CustomTabbarController.h"
+
 static NSString *UserName = @"UserName";
 
 @interface HJPasswordLoginViewController ()
@@ -322,8 +322,7 @@ static NSString *UserName = @"UserName";
             [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
             [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
 
-            CustomTabbarController *customTabbar = [[CustomTabbarController alloc]init];
-            [UIApplication sharedApplication].keyWindow.rootViewController = customTabbar;
+            [DCURLRouter popTwiceViewControllerAnimated:YES];
         }else{
             [ConventionJudge NetCode:code vc:self type:@"1"];
         }

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSchoolClassSelectToolView : BaseView
 
+@property (nonatomic,strong) UIButton *selectButton;
 @property (nonatomic,strong) RACSubject *clickSubject;
 
 @end

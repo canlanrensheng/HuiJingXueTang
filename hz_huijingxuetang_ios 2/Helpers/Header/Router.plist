@@ -4,8 +4,26 @@
 <dict>
 	<key>route</key>
 	<dict>
+		<key>route://infoDetailVC</key>
+		<string>HJInfoDetailViewController</string>
+		<key>route://myCardVoucherVC</key>
+		<string>HJMyCardVoucherViewController</string>
+		<key>route://watchHistoryVC</key>
+		<string>HJWatchHistoryViewController</string>
+		<key>route://myCourceVC</key>
+		<string>HJMyCourceViewController</string>
+		<key>route://myCareVC</key>
+		<string>HJMyCareViewController</string>
+		<key>route://teacherRecommondVC</key>
+		<string>HJTeacherRecommondViewController</string>
+		<key>route://messageDetailVC</key>
+		<string>HJMessageDetailViewController</string>
+		<key>route://messageVC</key>
+		<string>HJMessageViewController</string>
 		<key>route://passwordLoginVC</key>
 		<string>HJPasswordLoginViewController</string>
+		<key>route://loginVC</key>
+		<string>LoginViewController</string>
 		<key>route://codeLoginVC</key>
 		<string>CordLoginViewController</string>
 		<key>route://inputCodeVC</key>
@@ -30,6 +48,22 @@
 		<string>HJMoreResultViewController</string>
 		<key>route://schoolDetailLiveVC</key>
 		<string>HJSchoolDetailLiveViewController</string>
+		<key>route://stuntJudgeVC</key>
+		<string>HJStuntJudgeViewController</string>
+		<key>route://stuntJudgeAddReplyVC</key>
+		<string>HJStuntJudgeAddReplyViewController</string>
+		<key>route://stuntJudgeDetailVC</key>
+		<string>HJStuntJudgeDetailViewController</string>
+		<key>route://schoolVC</key>
+		<string>HJSchoolViewController</string>
+		<key>route://limitTimeKillVC</key>
+		<string>HJLimitTimeKillViewController</string>
+		<key>route://teachBestVC</key>
+		<string>HJTeachBestViewController</string>
+		<key>route://teachBestDetailVC</key>
+		<string>HJTeachTestDetailViewController</string>
+		<key>route://teacherDetailVC</key>
+		<string>HJTeacherDetailViewController</string>
 	</dict>
 </dict>
 </plist>

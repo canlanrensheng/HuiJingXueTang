@@ -7,7 +7,7 @@
 //
 
 #import "FeedBackViewController.h"
-#import "FSTextView.h"
+//#import "FSTextView.h"
 @interface FeedBackViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @end
@@ -17,7 +17,7 @@
     UIButton *button;
     UIImageView *btnimg;
     NSString *imgurl;
-    FSTextView *remaktext1;
+//    FSTextView *remaktext1;
     NSString *remark;
     UITextField *textf;
 }
@@ -32,67 +32,67 @@
     UIBarButtonItem *releaseButtonItem = [[UIBarButtonItem alloc] initWithCustomView:releaseButton];
     self.navigationItem.rightBarButtonItem = releaseButtonItem;
     
-    remaktext1 = [[FSTextView alloc]initWithFrame:CGRectMake(0, 10*SW, kW, 215*SW)];
-    remaktext1.backgroundColor= [UIColor whiteColor];
-    remaktext1.placeholder = @"请输入反馈，我们将不断改进";
-    remaktext1.maxLength = 100;
-    [remaktext1 addTextDidChangeHandler:^(FSTextView *textView) {
-        // 文本改变后的相应操作.
-        remark = remaktext1.text;
-    }];
-    [self.view addSubview:remaktext1];
+//    remaktext1 = [[FSTextView alloc]initWithFrame:CGRectMake(0, 10*SW, kW, 215*SW)];
+//    remaktext1.backgroundColor= [UIColor whiteColor];
+//    remaktext1.placeholder = @"请输入反馈，我们将不断改进";
+//    remaktext1.maxLength = 100;
+//    [remaktext1 addTextDidChangeHandler:^(FSTextView *textView) {
+//        // 文本改变后的相应操作.
+//        remark = remaktext1.text;
+//    }];
+//    [self.view addSubview:remaktext1];
+//
+//    UIView *ln = [[UIView alloc]initWithFrame:CGRectMake(0,remaktext1.maxY, kW, 0.5*SW)];
+//    ln.backgroundColor = LnColor;
+//    [self.view addSubview:ln];
     
-    UIView *ln = [[UIView alloc]initWithFrame:CGRectMake(0,remaktext1.maxY, kW, 0.5*SW)];
-    ln.backgroundColor = LnColor;
-    [self.view addSubview:ln];
-    
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, ln.maxY, kW, 85*SW)];
-    view.backgroundColor = CWHITE;
-    [self.view addSubview:view];
-    
-    btnimg = [[UIImageView alloc]initWithFrame:CGRectMake(15*SW, 15*SW, 85*SW, 55*SW)];
-    [view addSubview:btnimg];
-    
-    button = [[UIButton alloc]initWithFrame:CGRectMake(15*SW, 15*SW, 85*SW, 55*SW)];
-    [button setImage:[UIImage imageNamed:@"34_"] forState:UIControlStateNormal];
-    button.layer.borderColor = [LnColor CGColor];
-    button.layer.borderWidth = 1;
-    [button addTarget:self action:@selector(Iconaction) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:button];
-    
-    UILabel *titlb = [[UILabel alloc]initWithFrame:CGRectMake(15*SW, view.maxY, 200*SW, 40*SW)];
-    titlb.text = @"你的联系方式";
-    [self.view addSubview:titlb];
-    
-    UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, titlb.maxY, kW, 40*SW)];
-    view1.backgroundColor = CWHITE;
-    [self.view addSubview:view1];
-    
-    textf = [[UITextField alloc]initWithFrame:CGRectMake(15*SW, 0, kW -30*SW, 40*SW)];
-    textf.placeholder = @"单行输入";
-    textf.keyboardType = UIKeyboardTypeNumberPad;
-    [view1 addSubview:textf];
-    
-    UIButton *btn1 = [[UIButton alloc]init];
-    btn1.frame = CGRectMake( 20*SW, view1.maxY +100*SW, kW-40*SW, 50*SW);
-    btn1.backgroundColor = NavAndBtnColor;
-    btn1.layer.cornerRadius = 5*SW;
-    btn1.layer.masksToBounds = YES;
-    [btn1 addTarget:self action:@selector(releaseInfo) forControlEvents:UIControlEventTouchUpInside];
-    [btn1 setTitle:@"提交" forState:UIControlStateNormal];
-    [self.view addSubview:btn1];
-    
-    //添加手势
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyboardHide)];
-    //设置成NO表示当前控件响应后会传播到其他控件上，默认为YES。
-    tapGestureRecognizer.cancelsTouchesInView = NO;
-    //将触摸事件添加到当前view
-    [self.view addGestureRecognizer:tapGestureRecognizer];
-    
-    //上滑手势
-    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(keyboardHide)];
-    [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
-    [self.view addGestureRecognizer:recognizer];
+//    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, ln.maxY, kW, 85*SW)];
+//    view.backgroundColor = CWHITE;
+//    [self.view addSubview:view];
+//
+//    btnimg = [[UIImageView alloc]initWithFrame:CGRectMake(15*SW, 15*SW, 85*SW, 55*SW)];
+//    [view addSubview:btnimg];
+//
+//    button = [[UIButton alloc]initWithFrame:CGRectMake(15*SW, 15*SW, 85*SW, 55*SW)];
+//    [button setImage:[UIImage imageNamed:@"34_"] forState:UIControlStateNormal];
+//    button.layer.borderColor = [LnColor CGColor];
+//    button.layer.borderWidth = 1;
+//    [button addTarget:self action:@selector(Iconaction) forControlEvents:UIControlEventTouchUpInside];
+//    [view addSubview:button];
+//
+//    UILabel *titlb = [[UILabel alloc]initWithFrame:CGRectMake(15*SW, view.maxY, 200*SW, 40*SW)];
+//    titlb.text = @"你的联系方式";
+//    [self.view addSubview:titlb];
+//
+//    UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, titlb.maxY, kW, 40*SW)];
+//    view1.backgroundColor = CWHITE;
+//    [self.view addSubview:view1];
+//
+//    textf = [[UITextField alloc]initWithFrame:CGRectMake(15*SW, 0, kW -30*SW, 40*SW)];
+//    textf.placeholder = @"单行输入";
+//    textf.keyboardType = UIKeyboardTypeNumberPad;
+//    [view1 addSubview:textf];
+//
+//    UIButton *btn1 = [[UIButton alloc]init];
+//    btn1.frame = CGRectMake( 20*SW, view1.maxY +100*SW, kW-40*SW, 50*SW);
+//    btn1.backgroundColor = NavAndBtnColor;
+//    btn1.layer.cornerRadius = 5*SW;
+//    btn1.layer.masksToBounds = YES;
+//    [btn1 addTarget:self action:@selector(releaseInfo) forControlEvents:UIControlEventTouchUpInside];
+//    [btn1 setTitle:@"提交" forState:UIControlStateNormal];
+//    [self.view addSubview:btn1];
+//
+//    //添加手势
+//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyboardHide)];
+//    //设置成NO表示当前控件响应后会传播到其他控件上，默认为YES。
+//    tapGestureRecognizer.cancelsTouchesInView = NO;
+//    //将触摸事件添加到当前view
+//    [self.view addGestureRecognizer:tapGestureRecognizer];
+//
+//    //上滑手势
+//    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(keyboardHide)];
+//    [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+//    [self.view addGestureRecognizer:recognizer];
     
 }
 -(void)releaseInfo{
@@ -108,22 +108,22 @@
     if (!imgurl.length) {
         imgurl = @"";
     }
-    [YJAPPNetwork FeedBackAccesstoken:[APPUserDataIofo AccessToken] content:remark img:imgurl phone:textf.text success:^(NSDictionary *responseObject) {
-        NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-        if (code == 200) {
-            SVShowSuccess(@"提交成功！感谢您的反馈，我们将不断改进");
-            remaktext1.text = @"";
-            textf.text = @"";
-            imgurl = @"";
-            btnimg.image = nil;
-            [self keyboardHide];
-        }else{
-            [ConventionJudge NetCode:code vc:self type:@"1"];
-        }
-    } failure:^(NSString *error) {
-        [SVProgressHUD showInfoWithStatus:netError];
-        
-    }];
+//    [YJAPPNetwork FeedBackAccesstoken:[APPUserDataIofo AccessToken] content:remark img:imgurl phone:textf.text success:^(NSDictionary *responseObject) {
+//        NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+//        if (code == 200) {
+//            SVShowSuccess(@"提交成功！感谢您的反馈，我们将不断改进");
+//            remaktext1.text = @"";
+//            textf.text = @"";
+//            imgurl = @"";
+//            btnimg.image = nil;
+//            [self keyboardHide];
+//        }else{
+//            [ConventionJudge NetCode:code vc:self type:@"1"];
+//        }
+//    } failure:^(NSString *error) {
+//        [SVProgressHUD showInfoWithStatus:netError];
+//
+//    }];
 }
 
 -(void)Iconaction{
@@ -199,7 +199,7 @@
 
 
 -(void)keyboardHide{
-    [remaktext1 endEditing:YES];
+//    [remaktext1 endEditing:YES];
     [textf endEditing:YES];
 }
 @end

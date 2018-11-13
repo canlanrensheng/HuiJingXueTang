@@ -73,7 +73,10 @@
 #endif
 }
 
-- (void)hj_refreshData{};
+- (void)hj_refreshData{
+    
+    
+};
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

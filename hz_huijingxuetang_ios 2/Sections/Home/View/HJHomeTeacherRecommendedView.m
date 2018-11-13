@@ -32,7 +32,7 @@
         make.height.mas_equalTo(kHeight(25.0));
     }];
     
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];
@@ -60,7 +60,8 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            
+//            201810
+            [DCURLRouter pushURLString:@"route://teacherRecommondVC" animated:YES];
         }];
     }];
     [self addSubview:moreBtn];
@@ -80,9 +81,6 @@
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(15.0));
         make.height.mas_equalTo(kHeight(126));
     }];
-    
-    
-    
 }
 
 - (void)reloadScrollViewWithImageArr:(NSArray *)assets{
@@ -97,11 +95,14 @@
         backView.backgroundColor = white_color;
         [self.scrollView addSubview:backView];
         
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+        [backView addGestureRecognizer:tap];
+        
         HJRecommentTeacherModel *model = assets[i];
         
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
-        [imaV sd_setImageWithURL:URL(model.teacherurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [imaV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
         imaV.backgroundColor = Background_Color;
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -144,23 +145,28 @@
         [backView addSubview:jobLabel];
         [jobLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(7.0));
-            make.left.equalTo(nameLabel);
+            make.centerX.equalTo(imaV);
             make.height.mas_equalTo(kHeight(11.0));
         }];
         
     }
     //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
-    
 }
 
 
 - (void)setViewModel:(BaseViewModel *)viewModel {
     self.listViewModel = (HJHomeViewModel *)viewModel;
-    if (self.listViewModel.recommongCourceDataArray.count > 0){
-        [self reloadScrollViewWithImageArr:self.listViewModel.recommongCourceDataArray];;
+    if (self.listViewModel.recommentTeacherArray.count > 0){
+        [self reloadScrollViewWithImageArr:self.listViewModel.recommentTeacherArray];;
     }
 }
+
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    [DCURLRouter pushURLString:@"route://teacherDetailVC" animated:YES];
+}
+
+
 
 
 @end

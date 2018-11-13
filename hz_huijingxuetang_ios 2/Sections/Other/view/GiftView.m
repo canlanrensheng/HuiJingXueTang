@@ -7,9 +7,8 @@
 //
 
 #import "GiftView.h"
-#import "FSTextView.h"
-#import <AlipaySDK/AlipaySDK.h>
-#import <WXApi.h>
+//#import "FSTextView.h"
+
 @interface GiftView ()<UITextFieldDelegate>
 
 @end
@@ -255,24 +254,24 @@
                 NSDictionary *dic = [responseObject objectForKey:@"data"];
 //                //调起微信支付
 //                //需要创建这个支付对象
-                PayReq *req   = [[PayReq alloc] init];
-//                //由用户微信号和AppID组成的唯一标识，用于校验微信用户
-                req.openID =  [dic objectForKey:@"appid"];
-//                // 商家id，在注册的时候给的
-                req.partnerId = [dic objectForKey:@"partnerid"];
-//                // 预支付订单这个是后台跟微信服务器交互后，微信服务器传给你们服务器的，你们服务器再传给你
-                req.prepayId  = [dic objectForKey:@"prepayid"];
-//                // 根据财付通文档填写的数据和签名
-                req.package  = [dic objectForKey:@"package"];
-//                // 随机编码，为了防止重复的，在后台生成
-                req.nonceStr  = [dic objectForKey:@"noncestr"];
-//                // 这个是时间戳，也是在后台生成的，为了验证支付的
-                NSString * stamp = [dic objectForKey:@"timestamp"];
-                req.timeStamp = stamp.intValue;
-//                // 这个签名也是后台做的
-                req.sign = [dic objectForKey:@"sign"];
-                //发送请求到微信，等待微信返回onResp
-                [WXApi sendReq:req];
+//                PayReq *req   = [[PayReq alloc] init];
+////                //由用户微信号和AppID组成的唯一标识，用于校验微信用户
+//                req.openID =  [dic objectForKey:@"appid"];
+////                // 商家id，在注册的时候给的
+//                req.partnerId = [dic objectForKey:@"partnerid"];
+////                // 预支付订单这个是后台跟微信服务器交互后，微信服务器传给你们服务器的，你们服务器再传给你
+//                req.prepayId  = [dic objectForKey:@"prepayid"];
+////                // 根据财付通文档填写的数据和签名
+//                req.package  = [dic objectForKey:@"package"];
+////                // 随机编码，为了防止重复的，在后台生成
+//                req.nonceStr  = [dic objectForKey:@"noncestr"];
+////                // 这个是时间戳，也是在后台生成的，为了验证支付的
+//                NSString * stamp = [dic objectForKey:@"timestamp"];
+//                req.timeStamp = stamp.intValue;
+////                // 这个签名也是后台做的
+//                req.sign = [dic objectForKey:@"sign"];
+//                //发送请求到微信，等待微信返回onResp
+//                [WXApi sendReq:req];
 
             }
             SVDismiss;
@@ -459,23 +458,23 @@
 
 -(void)alipay:(NSString *)orderstr{
     //应用注册scheme,在AliSDKDemo-Info.plist定义URL types
-    NSString *appScheme = @"alipay9815485a129";
-    NSString * orderString = orderstr;
-    // NOTE: 调用支付结果开始支付
-    [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-        NSLog(@"reslut = %@",resultDic);
-        NSString * memo = resultDic[@"memo"];
-        NSLog(@"===memo:%@", memo);
-        if ([resultDic[@"ResultStatus"] isEqualToString:@"9000"]) {
-            //支付成功回调
-            [SVProgressHUD showSuccessWithStatus:@"支付成功"];
-            UIViewController *vc = [self getCurrentViewController];
-            [vc.navigationController popViewControllerAnimated:YES];
-        }else{
-            [SVProgressHUD showErrorWithStatus:memo];
-        }
-        
-    }];
+//    NSString *appScheme = @"alipay9815485a129";
+//    NSString * orderString = orderstr;
+//    // NOTE: 调用支付结果开始支付
+//    [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+//        NSLog(@"reslut = %@",resultDic);
+//        NSString * memo = resultDic[@"memo"];
+//        NSLog(@"===memo:%@", memo);
+//        if ([resultDic[@"ResultStatus"] isEqualToString:@"9000"]) {
+//            //支付成功回调
+//            [SVProgressHUD showSuccessWithStatus:@"支付成功"];
+//            UIViewController *vc = [self getCurrentViewController];
+//            [vc.navigationController popViewControllerAnimated:YES];
+//        }else{
+//            [SVProgressHUD showErrorWithStatus:memo];
+//        }
+//        
+//    }];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{

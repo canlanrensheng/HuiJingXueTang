@@ -8,14 +8,14 @@
 
 #import "AppDelegate.h"
 #import <NIMSDK/NIMSDK.h>
-#import <AlipaySDK/AlipaySDK.h>
-#import <WXApi.h>
-#import <UMShare/UMShare.h>
 
 #import "CustomTabbarController.h"
 #import "AppDelegate+Category.h"
+#import "AppDelegate+Share.h"
 
-@interface AppDelegate ()<WXApiDelegate>
+#import <sys/utsname.h>
+
+@interface AppDelegate ()
 
 @end
 
@@ -27,13 +27,20 @@
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = white_color;
     [self.window makeKeyAndVisible];
-    //设置根试图控制器
+    //设置根视图控制器
     [self setRootViewController:application];
-    
     [self autoLogin];
     [self getNIMSDK];
-    [self getWXApi];
-    [self setUShare];
+    [self registerSharePlatforms];
+    [self location];
+    
+    NSString *deviceModel = [[UIDevice currentDevice] model]; //获取设备的型号 例如：iPhone
+    struct utsname systemInfo;
+    
+    uname(&systemInfo);
+    
+    NSString *platform = [NSString stringWithCString:systemInfo.machine encoding:NSASCIIStringEncoding];
+    DLog(@"获取到的设备的信息是:%@ %@",deviceModel,platform);
     
     if (@available(iOS 11.0, *)) {
         UITableView.appearance.estimatedRowHeight = 0;
@@ -42,6 +49,68 @@
     }
     return YES;
 }
+
+
+- (void)location{
+    self.locationManager = [[CLLocationManager alloc] init];
+    [self.locationManager  requestAlwaysAuthorization];//请求授权
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+        self.locationManager.distanceFilter = 200.0f;
+        [self.locationManager requestAlwaysAuthorization];//位置权限申请
+        [self.locationManager startUpdatingLocation];
+    } else {
+        ShowMessage(@"请开启定位功能！");
+    }
+}
+
+#pragma mark location代理
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"您还未开启定位服务，是否需要开启？" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    UIAlertAction *queren = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *setingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        [[UIApplication sharedApplication]openURL:setingsURL];
+    }];
+    [alert addAction:cancel];
+    [alert addAction:queren];
+    [VisibleViewController().navigationController presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    [self.locationManager stopUpdatingLocation];//停止定位
+    //地理反编码
+    CLLocation *currentLocation = [locations lastObject];
+    CLGeocoder *geoCoder = [[CLGeocoder alloc]init];
+    //当系统设置为其他语言时，可利用此方法获得中文地理名称
+    NSMutableArray
+    *userDefaultLanguages = [[NSUserDefaults standardUserDefaults]objectForKey:@"AppleLanguages"];
+    // 强制 成 简体中文
+    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithObjects:@"zh-hans", nil]forKey:@"AppleLanguages"];
+    [geoCoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        NSString *currentCity = @"";
+        if (placemarks.count > 0) {
+            CLPlacemark *placeMark = placemarks[0];
+            NSDictionary *addressDic = placeMark.addressDictionary;//地址的所有信息
+            NSString *state=[addressDic objectForKey:@"State"];//省。直辖市  江西省
+            NSString *city=[addressDic objectForKey:@"City"];
+            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+            [defa setValue:[NSString stringWithFormat:@"%@%@",state,city] forKey:@"CurrentLocation"];
+            [defa synchronize];
+        } else if (error == nil && placemarks.count == 0 ) {
+            
+        } else if (error) {
+            currentCity = @"⟳定位获取失败,点击重试";
+        }
+        // 还原Device 的语言
+        [[NSUserDefaults
+          standardUserDefaults] setObject:userDefaultLanguages
+         forKey:@"AppleLanguages"];
+    }];
+}
+
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -70,138 +139,16 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    if ([url.host isEqualToString:@"safepay"]) {
-        // 支付跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-        }];
-        
-        // 授权跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-            // 解析 auth code
-            NSString *result = resultDic[@"result"];
-            NSString *authCode = nil;
-            if (result.length>0) {
-                NSArray *resultArr = [result componentsSeparatedByString:@"&"];
-                for (NSString *subResult in resultArr) {
-                    if (subResult.length > 10 && [subResult hasPrefix:@"auth_code="]) {
-                        authCode = [subResult substringFromIndex:10];
-                        break;
-                    }
-                }
-            }
-            NSLog(@"授权结果 authCode = %@", authCode?:@"");
-        }];
-    }
-    // 在此方法中做如下判断，因为还有可能有其他的支付，如支付宝就是@"safepay"
-    if ([url.host isEqualToString:@"pay"]) {
-        return [WXApi handleOpenURL:url delegate:self];
-    }
-    return YES;
-}
-
-// NOTE: 9.0以后使用新API接口
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
-{
-    if ([url.host isEqualToString:@"safepay"]) {
-        // 支付跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-        }];
-        
-        // 授权跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-            // 解析 auth code
-            NSString *result = resultDic[@"result"];
-            NSString *authCode = nil;
-            if (result.length>0) {
-                NSArray *resultArr = [result componentsSeparatedByString:@"&"];
-                for (NSString *subResult in resultArr) {
-                    if (subResult.length > 10 && [subResult hasPrefix:@"auth_code="]) {
-                        authCode = [subResult substringFromIndex:10];
-                        break;
-                    }
-                }
-            }
-            NSLog(@"授权结果 authCode = %@", authCode?:@"");
-        }];
-    }
-    return YES;
-}
-
-//-(void)getmain{
-//    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-//    UITabBarController *tb=[[UITabBarController alloc]init];
-//    
-//    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    // 2.通过标识符找到对应的页面
-//    UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"HomePageViewController"];
-////    HomePageViewController *vc1 = [[HomePageViewController alloc]init];
-//    YAZLNavigationController *nvc1 = [[YAZLNavigationController alloc]initWithRootViewController:vc];
-//    nvc1.tabBarItem.title=@"首页";
-//    vc.view.backgroundColor=ALLViewBgColor;
-//    nvc1.tabBarItem.image = [UIImage imageNamed:@"image1"];
-//    nvc1.tabBarItem.selectedImage = [UIImage imageNamed:@"image2"];
-//    [vc.navigationController setNavigationBarHidden:YES];
-//
-//    LivePageViewController *vc2 = [[LivePageViewController alloc]init];
-//    YAZLNavigationController *nvc2 = [[YAZLNavigationController alloc]initWithRootViewController:vc2];
-//    vc2.view.backgroundColor=ALLViewBgColor;
-//    nvc2.tabBarItem.title=@"直播";
-//    nvc2.tabBarItem.image = [UIImage imageNamed:@"image3"];
-//    nvc2.tabBarItem.selectedImage = [UIImage imageNamed:@"image4"];
-//    
-//    [vc2.navigationController setNavigationBarHidden:YES];
-//
-//    
-//    
-//    SchoolPageViewController *vc3 = [[SchoolPageViewController alloc]init];
-//    YAZLNavigationController *nvc3 = [[YAZLNavigationController alloc]initWithRootViewController:vc3];
-//    vc3.view.backgroundColor=ALLViewBgColor;
-//    nvc3.tabBarItem.title=@"学堂";
-//    nvc3.tabBarItem.image = [UIImage imageNamed:@"image5"];
-//    nvc3.tabBarItem.selectedImage = [UIImage imageNamed:@"image6"];
-//    [vc3.navigationController setNavigationBarHidden:YES];
-//
-//    // 2.通过标识符找到对应的页面
-//    UIViewController *vc4 = [storyBoard instantiateViewControllerWithIdentifier:@"InformationPageViewController"];
-//    YAZLNavigationController *nvc4 = [[YAZLNavigationController alloc]initWithRootViewController:vc4];
-//    vc4.view.backgroundColor=ALLViewBgColor;
-//    nvc4.tabBarItem.title=@"资讯";
-//    nvc4.tabBarItem.image = [UIImage imageNamed:@"image7"];
-//    nvc4.tabBarItem.selectedImage = [UIImage imageNamed:@"image8"];
-//    [vc4.navigationController setNavigationBarHidden:YES];
-//
-//    
-//    MePageViewController *vc5 = [[MePageViewController alloc]init];
-//    YAZLNavigationController *nvc5 = [[YAZLNavigationController alloc]initWithRootViewController:vc5];
-//    nvc5.tabBarItem.title=@"我的";
-//    nvc5.tabBarItem.selectedImage = [UIImage imageNamed:@"image10"];
-//    nvc5.tabBarItem.image = [UIImage imageNamed:@"image9"];
-//    vc5.navigationItem.title = @"个人中心";
-//    vc5.view.backgroundColor = ALLViewBgColor;
-//    
-//    tb.viewControllers=@[nvc1,nvc2,nvc3,nvc4,nvc5];
-//    tb.tabBar.tintColor= NavAndBtnColor;
-//    self.window.rootViewController = tb;
-//    [self.window makeKeyAndVisible];
-//}
-
 - (void)autoLogin{
-    if (![[APPUserDataIofo AccessToken] isEqualToString:@""]) {
+    if ([APPUserDataIofo AccessToken].length > 0) {
         [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
             NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
             if (code == 200) {
                 NSDictionary *dic = [responseObject objectForKey:@"data"];
                 [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
                 [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-
-                SVDismiss;
             }else{
+                ShowError([responseObject objectForKey:@"msg"]);
             }
         } failure:^(NSString *error) {
             [SVProgressHUD showInfoWithStatus:netError];
@@ -209,61 +156,59 @@
     }
 }
 
--(void)getNIMSDK{
+//网易云信
+- (void)getNIMSDK{
     [[NIMSDK sharedSDK]registerWithAppID:@"2b5791890612603d6bedb3ddef616ea9" cerName:@"developerPush"];
 }
 
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
     [[NIMSDK sharedSDK] updateApnsToken:deviceToken];
 }
 
 
--(void)getWXApi{
-    [WXApi registerApp:@"wx9da5846d2c469754"];
-}
-
--(UIImage *)getnewimage:(UIImage *)image{
-    UIImage *image1 = image;
-    UIGraphicsBeginImageContext(CGSizeMake(17, 17));
-    [image1 drawInRect:CGRectMake(0.0f, 0.0f, 17, 17)];
-    image1 = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image1;
-}
-
-// iOS9.0以前调用此方法
-- (BOOL)application:(UIApplication *)application  handleOpenURL:(NSURL *)url {
-    if ([url.host isEqualToString:@"pay"]) {
-        return [WXApi handleOpenURL:url delegate:self];
-    }
-    return YES;
-}
-
-
-
-
-
-- (void)onResp:(BaseResp *)resp{
-    if ([resp isKindOfClass:[PayResp class]]) {
-        // 微信支付
-        PayResp*response=(PayResp*)resp;
-        switch(response.errCode){
-            case 0:
-                NSLog(@"支付成功");
-                break;
-            case -1:
-                NSLog(@"支付失败！");
-                break;
-            case -2:
-                NSLog(@"支付失败！");
-                break;
-            default:
-                NSLog(@"支付失败！");
-                break;
-                  }
-              }
-          }
+//-(void)getWXApi{
+//    [WXApi registerApp:@"wx9da5846d2c469754"];
+//}
+//
+//-(UIImage *)getnewimage:(UIImage *)image{
+//    UIImage *image1 = image;
+//    UIGraphicsBeginImageContext(CGSizeMake(17, 17));
+//    [image1 drawInRect:CGRectMake(0.0f, 0.0f, 17, 17)];
+//    image1 = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return image1;
+//}
+//
+//// iOS9.0以前调用此方法
+//- (BOOL)application:(UIApplication *)application  handleOpenURL:(NSURL *)url {
+//    if ([url.host isEqualToString:@"pay"]) {
+//        return [WXApi handleOpenURL:url delegate:self];
+//    }
+//    return YES;
+//}
+//
+//
+//
+//- (void)onResp:(BaseResp *)resp{
+//    if ([resp isKindOfClass:[PayResp class]]) {
+//        // 微信支付
+//        PayResp*response=(PayResp*)resp;
+//        switch(response.errCode){
+//            case 0:
+//                NSLog(@"支付成功");
+//                break;
+//            case -1:
+//                NSLog(@"支付失败！");
+//                break;
+//            case -2:
+//                NSLog(@"支付失败！");
+//                break;
+//            default:
+//                NSLog(@"支付失败！");
+//                break;
+//                  }
+//              }
+//          }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
     if (self.isForceLandscape) {
@@ -274,14 +219,5 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)setUShare{
-    // 设置友盟AppKey
-    [[UMSocialManager defaultManager] setUmSocialAppkey:@"5aee369bb27b0a6dd10007a9"];
-    /* 微信聊天 */
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:@"wx9da5846d2c469754" appSecret:@"461c1efa58d8ac25fc2172afdc7c6f4b" redirectURL:@"http://api.huijingschool.com/"];
-    
-    /* 微信朋友圈 */
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatTimeLine appKey:@"wx9da5846d2c469754" appSecret:@"461c1efa58d8ac25fc2172afdc7c6f4b" redirectURL:@"http://api.huijingschool.com/"];
-}
 
 @end

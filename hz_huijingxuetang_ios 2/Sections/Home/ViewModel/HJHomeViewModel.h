@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //推荐老师的数据
 @property (nonatomic,strong) NSMutableArray *recommentTeacherArray;
+
 - (void)recommentTeacherWithPage:(NSString *)page success:(void (^)(void))success;
 
 

@@ -7,10 +7,11 @@
 //
 
 #import "HJSchoolClassSelectToolView.h"
-#import "ScreenViewController.h"
+#import "HJPicAndTextButton.h"
 @interface HJSchoolClassSelectToolView ()
 
 @property (nonatomic,strong) UIButton *lastSelectBtn;
+@property (nonatomic,strong) UIButton *priceBtn;
 
 @end
 
@@ -26,48 +27,42 @@
     selectBtn.titleLabel.font = MediumFont(font(13.0));
     [selectBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
     [selectBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
-    [selectBtn setImage:V_IMAGE(@"筛选") forState:UIControlStateNormal];
+    [selectBtn setImage:V_IMAGE(@"筛选未启用") forState:UIControlStateNormal];
+    [selectBtn setImage:V_IMAGE(@"筛选") forState:UIControlStateSelected];
     [self addSubview:selectBtn];
+    self.selectButton = selectBtn;
     
-    UIButton *priceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [priceBtn setTitle:@"价格" forState:UIControlStateNormal];
+    //关注的按钮
+    HJPicAndTextButton *priceBtn = [HJPicAndTextButton buttonWithType:UIButtonTypeCustom withSpace:kHeight(5.0)];
+    priceBtn.buttonStyle = ButtonImageRight;
     priceBtn.tag = 1;
-    [priceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [priceBtn setTitle:@"价格排序" forState:UIControlStateNormal];
+    [priceBtn setImage:V_IMAGE(@"箭头默认") forState:UIControlStateNormal];
     [priceBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
-    [priceBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
     priceBtn.titleLabel.font = MediumFont(font(13.0));
+    [priceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:priceBtn];
-    
-    priceBtn.selected = YES;
-    self.lastSelectBtn = priceBtn;
-    
-    
+    self.priceBtn = priceBtn;
+
     UIButton *buyerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [buyerBtn setTitle:@"购买人数" forState:UIControlStateNormal];
+    [buyerBtn setTitle:@"销量排序" forState:UIControlStateNormal];
     buyerBtn.tag = 2;
     [buyerBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [buyerBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
     [buyerBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
     buyerBtn.titleLabel.font = MediumFont(font(13.0));
     [self addSubview:buyerBtn];
-    
+
     //限时特惠
     UIButton *limitTeHuiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [limitTeHuiBtn setTitle:@"限时特惠" forState:UIControlStateNormal];
+    [limitTeHuiBtn setTitle:@"评分排序" forState:UIControlStateNormal];
     limitTeHuiBtn.tag = 3;
     [limitTeHuiBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [limitTeHuiBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
     [limitTeHuiBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
     limitTeHuiBtn.titleLabel.font = MediumFont(font(13.0));
     [self addSubview:limitTeHuiBtn];
-    
-    UIImageView *hotImageView = [UIImageView new];
-    hotImageView.image = V_IMAGE(@"hot标签");
-    [limitTeHuiBtn addSubview:hotImageView];
-    [hotImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(kHeight(10.0));
-        make.right.equalTo(self).offset(-kWidth(10.0));
-    }];
+
     
     [selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.equalTo(self);
@@ -101,27 +96,38 @@
     }];
 }
 
+//点击筛选的操作
 - (void)btnClick:(UIButton *)btn {
-    self.lastSelectBtn.selected = NO;
-    btn.selected = YES;
-    self.lastSelectBtn.titleLabel.font = MediumFont(font(13));
-    btn.titleLabel.font = MediumFont(font(13));
-    self.lastSelectBtn = btn;
-//    if(btn.tag == 0) {
-//        ScreenViewController *vc = [[ScreenViewController alloc]init];
-//        [VisibleViewController().navigationController pushViewController:vc animated:YES];
-//    }
-//    if (btn.tag == 1) {
-//
-//    }
-//    if (btn.tag == 2) {
-//
-//    }
-//    if (btn.tag == 3) {
-//
-//    }
-    
-    [self.clickSubject sendNext:@(btn.tag)];
+    if(btn.tag == 1) {
+        if(self.lastSelectBtn == btn) {
+            btn.selected = !btn.selected;
+            if (btn.selected) {
+                [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+                [btn setImage:V_IMAGE(@"箭头选中从高到低") forState:UIControlStateNormal];
+            } else {
+                [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+                [btn setImage:V_IMAGE(@"箭头选中从低到高") forState:UIControlStateNormal];
+            }
+            self.lastSelectBtn = btn;
+            [self.clickSubject sendNext:@(btn.tag)];
+        } else {
+            self.lastSelectBtn.selected = NO;
+            [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+            [btn setImage:V_IMAGE(@"箭头选中从高到低") forState:UIControlStateNormal];
+            btn.selected = YES;
+            self.lastSelectBtn = btn;
+            [self.clickSubject sendNext:@(btn.tag)];
+        }
+    } else {
+        [self.priceBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
+        [self.priceBtn setImage:V_IMAGE(@"箭头默认") forState:UIControlStateNormal];
+        self.lastSelectBtn.selected = NO;
+        btn.selected = YES;
+        self.lastSelectBtn.titleLabel.font = BoldFont(font(13));
+        btn.titleLabel.font = MediumFont(font(13));
+        self.lastSelectBtn = btn;
+        [self.clickSubject sendNext:@(btn.tag)];
+    }
 }
 
 - (RACSubject *)clickSubject {

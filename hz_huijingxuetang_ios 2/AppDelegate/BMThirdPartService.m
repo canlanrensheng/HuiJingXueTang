@@ -82,11 +82,18 @@
 }
 
 
-
 + (void)initKeyBoard{
+//    IQKeyboardManager *manager = [IQKeyboardManager sharedManager];
+//    manager.enable = YES;
+//    manager.enableAutoToolbar = YES; // 控制是否显示键盘上的工具条
+//    manager.shouldResignOnTouchOutside = YES;
+    
     IQKeyboardManager *manager = [IQKeyboardManager sharedManager];
-    manager.enable = YES;
-    manager.shouldResignOnTouchOutside = YES;
+    manager.enable = YES; // 控制整个功能是否启用。
+    manager.shouldResignOnTouchOutside =YES; // 控制点击背景是否收起键盘
+    [[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarByPosition];
+
+
 }
 
 @end

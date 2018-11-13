@@ -7,7 +7,7 @@
 //
 
 #import "APPUserDataIofo.h"
-
+#import "LoginViewController.h"
 
 NSString * const AccessToken  = @"accessToken";
 NSString * const Access  = @"access";
@@ -42,6 +42,7 @@ NSString * const DeviceToken  = @"deviceToken";
     NSString *accesstoken = [[NSUserDefaults standardUserDefaults] stringForKey:AccessToken];
     if (accesstoken == nil) {
         accesstoken = @"";
+        
     }
     return accesstoken;
 }

@@ -32,4 +32,11 @@
     // Configure the view for the selected state
 }
 
+- (RACSubject *)backSubject {
+    if(!_backSubject) {
+        _backSubject = [[RACSubject alloc] init];
+    }
+    return  _backSubject;
+}
+
 @end

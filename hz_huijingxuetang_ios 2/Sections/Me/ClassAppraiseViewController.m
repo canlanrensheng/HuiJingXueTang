@@ -7,7 +7,7 @@
 //
 
 #import "ClassAppraiseViewController.h"
-#import "FSTextView.h"
+//#import "FSTextView.h"
 #import "YJAPPNetwork.h"
 @interface ClassAppraiseViewController ()
 
@@ -16,7 +16,7 @@
 @implementation ClassAppraiseViewController
 {
     NSMutableArray *btnarr;
-    FSTextView *textview;
+//    FSTextView *textview;
     NSString *remark;
 }
 - (void)viewDidLoad {
@@ -58,16 +58,16 @@
         [self.view addSubview:starimg];
         [btnarr addObject:starimg];
     }
-    textview = [[FSTextView alloc]initWithFrame:CGRectMake(15*SW, titlabel1.maxY+15*SW, kW - 30*SW, 300*SW)];
-    textview.backgroundColor= [UIColor whiteColor];
-    textview.placeholder = @"评论描述";
-    textview.maxLength = 100;
-    [textview addTextDidChangeHandler:^(FSTextView *textView) {
-        // 文本改变后的相应操作.
-        remark = textview.text;
-    }];
-    //    textview.text = @"两女生等~";
-    [self.view addSubview:textview];
+//    textview = [[FSTextView alloc]initWithFrame:CGRectMake(15*SW, titlabel1.maxY+15*SW, kW - 30*SW, 300*SW)];
+//    textview.backgroundColor= [UIColor whiteColor];
+//    textview.placeholder = @"评论描述";
+//    textview.maxLength = 100;
+//    [textview addTextDidChangeHandler:^(FSTextView *textView) {
+//        // 文本改变后的相应操作.
+//        remark = textview.text;
+//    }];
+//    //    textview.text = @"两女生等~";
+//    [self.view addSubview:textview];
 
     
 }

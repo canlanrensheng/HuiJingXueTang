@@ -31,6 +31,13 @@
     return self;
 }
 
+- (RACSubject *)backSuject {
+    if(!_backSuject) {
+        _backSuject = [[RACSubject alloc] init];
+    }
+    return _backSuject;
+}
+
 - (void)tx_initialize {};
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {

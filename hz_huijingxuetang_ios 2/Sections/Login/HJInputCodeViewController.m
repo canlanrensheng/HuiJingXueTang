@@ -8,7 +8,6 @@
 
 #import "HJInputCodeViewController.h"
 #import "HJPasswordView.h"
-#import "CustomTabbarController.h"
 @interface HJInputCodeViewController ()
 
 @property (nonatomic,strong) UIButton *getCodeButton;
@@ -100,8 +99,7 @@
                         [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
                         [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
                         
-                        CustomTabbarController *customTabbar = [[CustomTabbarController alloc]init];
-                        [UIApplication sharedApplication].keyWindow.rootViewController = customTabbar;
+                        [DCURLRouter popTwiceViewControllerAnimated:YES];
                     } else {
                         [ConventionJudge NetCode:code vc:self type:@"1"];
                     }

@@ -13,8 +13,8 @@
 @interface HJSchoolClassViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) UITableView *tableView;
-@property (nonatomic,strong) HJSchoolClassSelectView *searchView;
 @property (nonatomic,strong) HJSchoolClassSelectView *selectView;
+@property (nonatomic,strong) HJSchoolClassSelectToolView *toolView;
 
 @end
 
@@ -29,13 +29,14 @@
     if(!_selectView){
         _selectView = [[HJSchoolClassSelectView alloc] initWithFrame:CGRectMake(-Screen_Width, kNavigationBarHeight, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight)];
         _selectView.backgroundColor = white_color;
-        
         @weakify(self);
         [_selectView.backSubject subscribeNext:^(id  _Nullable x) {
             @strongify(self);
-//            [UIView animateWithDuration:0.3 animations:^{
-//                [self.selectView setFrame:CGRectMake(0, kNavigationBarHeight, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight)];
-//            }];
+            if([x integerValue] == 0) {
+                self.toolView.selectButton.selected = NO;
+            } else {
+                self.toolView.selectButton.selected = YES;
+            }
             [self.selectView setFrame:CGRectMake(-Screen_Width, kNavigationBarHeight, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight)];
         }];
     }
@@ -60,9 +61,12 @@
             //点击筛选进行的操作
             [UIView animateWithDuration:0.3 animations:^{
                 [self.selectView setFrame:CGRectMake(0, kNavigationBarHeight, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight)];
+                
             }];
         }
     }];
+    
+    self.toolView = toolView;
 
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {

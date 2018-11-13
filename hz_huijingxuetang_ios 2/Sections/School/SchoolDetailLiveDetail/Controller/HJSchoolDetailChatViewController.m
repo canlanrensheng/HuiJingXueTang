@@ -9,12 +9,12 @@
 #import "HJSchoolDetailChatViewController.h"
 
 #import "HJSchoolDetailChatCell.h"
-#import "HJClassDetailBottomView.h"
+#import "HJSchoolLiveInputView.h"
 
-#define BottomViewHeight kHeight(49)
+#define BottomViewHeight kHeight(40)
 @interface HJSchoolDetailChatViewController ()
 
-@property (nonatomic,strong) HJClassDetailBottomView *bottomView;
+@property (nonatomic,strong) HJSchoolLiveInputView *bottomView;
 
 @end
 
@@ -27,7 +27,7 @@
 }
 
 - (void)hj_configSubViews{
-    self.bottomView = [[HJClassDetailBottomView alloc] init];
+    self.bottomView = [[HJSchoolLiveInputView alloc] init];
     [self.view addSubview:self.bottomView];
     @weakify(self);
     [self.bottomView.backSubject subscribeNext:^(id  _Nullable x) {

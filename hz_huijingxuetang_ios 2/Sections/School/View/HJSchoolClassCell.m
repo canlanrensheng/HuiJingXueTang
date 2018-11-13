@@ -91,6 +91,7 @@
     }
     
     //星级Label
+    CGFloat leftWith = kWidth(11) * 5 + kWidth(2) * 4 + kWidth(12) + kWidth(5.0);
     UILabel *starCountLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor([NSString stringWithFormat:@"4.9 %tu人学过",960],MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
@@ -100,7 +101,7 @@
     [starCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         //            make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(10.0));
         make.centerY.equalTo(starView);
-        make.left.equalTo(imaV.mas_right).offset(kWidth(87.0));
+        make.left.equalTo(imaV.mas_right).offset(leftWith);
         make.height.mas_equalTo(kHeight(13.0));
     }];
     

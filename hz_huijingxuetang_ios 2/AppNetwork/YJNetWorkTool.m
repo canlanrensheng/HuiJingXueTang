@@ -46,12 +46,6 @@
     if ([method isEqualToString:@"GET"]) {
         //调用AFN框架的方法
         [self GET:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
-                
-                erorblock(NOTNETMESSAGE);
-                
-//                return SVshowInfo(NOTNETMESSAGE);
-            }
             NSString  *url = URLString;
             if(parameters) {
                 NSUInteger paraCount = parameters.allKeys.count;
@@ -73,6 +67,13 @@
                 }
             }
             DLog(@"获取到的请求的url是:%@",url);
+            if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
+                
+                erorblock(NOTNETMESSAGE);
+                
+//                return SVshowInfo(NOTNETMESSAGE);
+            }
+            
             callBack(responseObject);
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             //如果请求失败，控制台打印错误信息
@@ -92,7 +93,7 @@
             callBack(responseObject);
 
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            erorblock(error);
+            erorblock(error.localizedDescription);
             NSLog(@"%@",error);
         }];
     }

@@ -34,4 +34,9 @@ typedef NS_ENUM(NSUInteger, BMTitleViewType) {
 
 @property (nonatomic,strong) JSLoadingView *loadingView;
 
+@property (nonatomic,assign) NSInteger totalpage;
+@property (nonatomic,assign) NSInteger currentpage;
+
+@property (nonatomic,strong) RACSubject *backSuject;
+
 @end

@@ -27,7 +27,7 @@
         make.height.mas_equalTo(kHeight(25.0));
     }];
     
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];

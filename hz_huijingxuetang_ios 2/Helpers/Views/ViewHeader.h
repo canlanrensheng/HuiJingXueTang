@@ -9,8 +9,9 @@
 #ifndef ViewHeader_h
 #define ViewHeader_h
 
-
+#import "MKRefreshHeader.h"
 #import "UILabel+LJLabel.h"
 #import "UIButton+LJButton.h"
+#import "HJShareTool.h"
 
 #endif /* ViewHeader_h */

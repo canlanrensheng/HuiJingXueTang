@@ -13,7 +13,6 @@
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
-#import "YJShareTool.h"
 #import "HJSchoolDetailTeacherInfoView.h"
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
 
@@ -115,7 +114,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         button.ljTitle_font_titleColor_state(@"",nil,white_color,0);
         [button setBackgroundImage:V_IMAGE(@"分享") forState:UIControlStateNormal];
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            [YJShareTool ToolShareUrlWithUrl:@"http://mp.huijingschool.com/#/share" title:@"慧鲸学堂" content:@"邀请好友" andViewC:self];
+             [HJShareTool shareWithTitle:@"慧鲸学堂" content:@"邀请好友" images:nil url:@"http://mp.huijingschool.com/#/share"];
         }];
     }];
     [self.view addSubview:carBtn];

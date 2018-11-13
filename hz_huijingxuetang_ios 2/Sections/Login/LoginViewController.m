@@ -200,27 +200,27 @@ static NSString *UserName = @"UserName";
 }
 
 - (void)backBtnClicked {
-    if ([self.type integerValue] == 2) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"back" object:self];
+//    if ([self.type integerValue] == 2) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"back" object:self];
+//        [self.navigationController popViewControllerAnimated:YES];
+//
+//    }else if([self.type integerValue] == 1){
+//        NSInteger count = self.navigationController.viewControllers.count - 3;
+//        UIViewController *viewCtl = self.navigationController.viewControllers[count];
+//
+//        //    ZYLog(@"[viewCtl class] %@",[viewCtl class]);
+//        [self.navigationController popToViewController:viewCtl animated:YES];
+//
+//
+//        for(int i = 0; i < self.navigationController.viewControllers.count; i++)
+//        {
+//            NSLog(@"%d,[vcHome class] %@",i,[self.navigationController.viewControllers[i] class]);
+//        }
+//
+//    }else{
         [self.navigationController popViewControllerAnimated:YES];
 
-    }else if([self.type integerValue] == 1){
-        NSInteger count = self.navigationController.viewControllers.count - 3;
-        UIViewController *viewCtl = self.navigationController.viewControllers[count];
-        
-        //    ZYLog(@"[viewCtl class] %@",[viewCtl class]);
-        [self.navigationController popToViewController:viewCtl animated:YES];
-        
-        
-        for(int i = 0; i < self.navigationController.viewControllers.count; i++)
-        {
-            NSLog(@"%d,[vcHome class] %@",i,[self.navigationController.viewControllers[i] class]);
-        }
-
-    }else{
-        [self.navigationController popViewControllerAnimated:YES];
-
-    }
+//    }
 }
 
 @end

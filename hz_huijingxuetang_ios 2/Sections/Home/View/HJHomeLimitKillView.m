@@ -27,7 +27,7 @@
         make.height.mas_equalTo(kHeight(10.0));
     }];
     
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];
@@ -38,7 +38,7 @@
     }];
     
     UILabel *timeKillLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"限时秒杀",MediumFont(font(15)),HEXColor(@"#22476B"));
+        label.ljTitle_font_textColor(@"限时特惠",MediumFont(font(15)),HEXColor(@"#22476B"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -52,10 +52,10 @@
     UIButton *moreBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
         [button setBackgroundImage:V_IMAGE(@"更多") forState:UIControlStateNormal];
-        @weakify(self);
+//        @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
-            
+//            @strongify(self);
+            [DCURLRouter pushURLString:@"route://limitTimeKillVC" animated:YES];
         }];
     }];
     [self addSubview:moreBtn];
@@ -73,7 +73,7 @@
         make.left.equalTo(lineView);
         make.right.equalTo(self);
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(22.0));
-        make.height.mas_equalTo(kHeight(170));
+        make.height.mas_equalTo(kHeight(173));
     }];
     
     
@@ -85,20 +85,24 @@
     NSUInteger assetCount = assets.count;
     CGFloat width = kWidth(143);
     CGFloat height = kHeight(170);
+    
     CGFloat padding = kWidth(15.0);
     for (NSInteger i = 0; i < assetCount; i++) {
         UIView *backView = [[UIView alloc] init];
         backView.frame = CGRectMake((width + padding) * i, 0, width, height);
         backView.backgroundColor = white_color;
+        backView.tag = i;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+        [backView addGestureRecognizer:tap];
         [self.scrollView addSubview:backView];
-        
         
         backView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
         backView.layer.shadowOffset = CGSizeMake(0,1);
         backView.layer.shadowOpacity = 1;
         backView.layer.shadowRadius = 5;
         backView.layer.cornerRadius = 2.5;
-        backView.clipsToBounds = YES;
+//        backView.clipsToBounds = YES;
+        
         
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
@@ -162,14 +166,15 @@
         }];
         [backView addSubview:leftTimeLabel];
         [leftTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(priceLabel.mas_bottom).offset(kHeight(19.0));
+//            make.top.equalTo(priceLabel.mas_bottom).offset(kHeight(19.0));
+            make.bottom.equalTo(backView).offset(-kHeight(11.0));
             make.left.equalTo(backView).offset(kWidth(5.0));
-            make.height.mas_equalTo(kHeight(14));
+            make.height.mas_equalTo(kHeight(10));
         }];
         
-        //立即秒杀
+        //立即抢购
         UIButton *killBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"立即秒杀",MediumFont(font(11)),white_color,0);
+            button.ljTitle_font_titleColor_state(@"立即抢购",MediumFont(font(11)),white_color,0);
             button.backgroundColor = HEXColor(@"#FF4400");
             [button clipWithCornerRadius:kHeight(2.5) borderColor:nil borderWidth:0];
             @weakify(self);
@@ -181,13 +186,16 @@
         [backView addSubview:killBtn];
         [killBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(backView).offset(-kWidth(5.0));
-            make.centerY.equalTo(leftTimeLabel);
+//            make.centerY.equalTo(leftTimeLabel);
+            make.bottom.equalTo(backView).offset(-kHeight(5.0));
             make.size.mas_equalTo(CGSizeMake(kWidth(58), kHeight(23)));
         }];
     }
-    //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
+}
 
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    [DCURLRouter pushURLString:@"route://classDetailVC" animated:YES];
 }
 
 @end

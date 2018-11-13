@@ -33,6 +33,15 @@
     
     self.lineView.centerX = self.lastSelectButton.centerX;
     
+    
+    //设置滚动到直播的页面
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"SetToLiveVC" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        self.lastSelectButton = self.liveButton;
+        self.lineView.centerX = self.lastSelectButton.centerX;
+        [self.clickSubject sendNext:@(1)];
+    }];
 }
 
 - (UIButton *)classButton{

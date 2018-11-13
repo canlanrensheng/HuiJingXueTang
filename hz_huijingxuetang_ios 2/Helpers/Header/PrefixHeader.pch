@@ -21,6 +21,7 @@
 #import "UIViewController+DCURLRouter.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <MJExtension/MJExtension.h>
+#import "DateTools.h"
 
 
 
@@ -28,12 +29,9 @@
 #import "YJAPPNetwork.h"
 #import "ConventionJudge.h"
 #import "APPUserDataIofo.h"
-#import "YJShareCategory.h"
 
 //工具类
 #import "UUPubLogicHelper.h"
-//#import "YAZLNavigationController.h"
-#import "YAZLNavigationController.h"
 #import "UIColor+ColorChange.h"
 #import "UIView+YJMethods.h"
 #import "UILabel+LabelHeightAndWidth.h"
@@ -44,6 +42,7 @@
 #import "ViewHeader.h"
 #import "CategoryHeader.h"
 #import "GeneralParamsMacro.h"
+#import "LoginViewController.h"
 
 
 ////正式环境

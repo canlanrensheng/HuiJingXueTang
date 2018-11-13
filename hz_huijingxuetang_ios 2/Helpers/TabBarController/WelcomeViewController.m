@@ -97,14 +97,9 @@ static const NSInteger ImageCount  = 3;
 }
 
 -(void)startButton:(UIButton *)button{
-    if ([APPUserDataIofo UserIsLogin]) {
-        CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];
-        [UIApplication sharedApplication].keyWindow.rootViewController = tabbarVC;
-    }else {
-        BaseNavigationViewController *rootNav = [[BaseNavigationViewController alloc]initWithRootViewController:[[LoginViewController alloc] initWithParams:nil]];
-        [UIApplication sharedApplication].keyWindow.rootViewController = rootNav;
-    }
-   
+    CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];
+    [UIApplication sharedApplication].keyWindow.rootViewController = tabbarVC;
+
     NSString *key = @"CFBundleShortVersionString";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     // 获得当前软件的版本号

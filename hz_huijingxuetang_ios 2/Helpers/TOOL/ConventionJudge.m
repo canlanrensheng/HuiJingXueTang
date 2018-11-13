@@ -262,14 +262,14 @@
             break;
         case 10:{
             ShowError(@"您还未登录");
-            for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
-                DLog(@"获取到的名称是:%@",NSStringFromClass([vc class]));
-                if([vc isKindOfClass:[LoginViewController class]]) {
-                    break;
-                }
-            }
-            LoginViewController *loginvc = [[LoginViewController alloc]init];
-            [VisibleViewController().navigationController pushViewController:loginvc animated:YES];
+//            for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
+//                DLog(@"获取到的名称是:%@",NSStringFromClass([vc class]));
+//                if([vc isKindOfClass:[LoginViewController class]]) {
+//                    break;
+//                }
+//            }
+//            LoginViewController *loginvc = [[LoginViewController alloc]init];
+//            [VisibleViewController().navigationController pushViewController:loginvc animated:YES];
             break;
         }
         case 11:

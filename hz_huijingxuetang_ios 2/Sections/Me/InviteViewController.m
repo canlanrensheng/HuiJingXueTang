@@ -7,7 +7,7 @@
 //
 
 #import "InviteViewController.h"
-#import "YJShareTool.h"
+
 @interface InviteViewController ()
 
 @end
@@ -34,7 +34,7 @@
     [self.view addSubview:button];
 }
 - (void)share{
-    [YJShareTool ToolShareUrlWithUrl:@"http://mp.huijingschool.com/#/share" title:@"慧鲸学堂" content:@"邀请好友" andViewC:self];
+     [HJShareTool shareWithTitle:@"慧鲸学堂" content:@"邀请好友" images:nil url:@"http://mp.huijingschool.com/#/share"];
 }
 
 @end

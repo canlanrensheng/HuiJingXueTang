@@ -20,7 +20,7 @@
     
     self.backgroundColor = Background_Color;
 
-    //限时秒杀
+    //限时特惠
     UIView *lineView = [[UIView alloc] init];
     lineView.backgroundColor = HEXColor(@"#22476B");
     [self addSubview:lineView];
@@ -50,7 +50,7 @@
         make.left.equalTo(lineView);
         make.right.equalTo(self);
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(20.0));
-        make.height.mas_equalTo(kHeight(160));
+        make.height.mas_equalTo(kHeight(160 + 3));
     }];
     
     
@@ -69,13 +69,14 @@
         backView.backgroundColor = white_color;
         [self.scrollView addSubview:backView];
         
-        
         backView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
         backView.layer.shadowOffset = CGSizeMake(0,1);
         backView.layer.shadowOpacity = 1;
         backView.layer.shadowRadius = 5;
         backView.layer.cornerRadius = 2.5;
-        backView.clipsToBounds = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+        [backView addGestureRecognizer:tap];
         
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
@@ -138,6 +139,10 @@
     //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
     
+}
+
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" animated:YES];
 }
 
 

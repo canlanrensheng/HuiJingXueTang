@@ -20,5 +20,6 @@
 #import "NSString+TXCategory.h"
 #import "UIImage+Category.h"
 #import "MBProgressHUD+HJHud.h"
+#import "DateFormatter.h"
 
 #endif /* CategoryHeader_h */

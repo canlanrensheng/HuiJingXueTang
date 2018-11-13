@@ -75,7 +75,7 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            [self.backSubject sendNext:nil];
+            [self.backSubject sendNext:@(0)];
         }];
     }];
     [leftView addSubview:cancleBtn];
@@ -92,7 +92,7 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            [self.backSubject sendNext:nil];
+            [self.backSubject sendNext:@(0)];
         }];
     }];
     [leftView addSubview:resetBtn];
@@ -131,9 +131,9 @@
     CGFloat padding = kWidth(10.0);
     for (NSInteger i = 0; i < assetCount; i++) {
         int lie = i % 3;
-        int hang = i / 3;
+        int hang = (int)(i / 3);
         UIButton *itemBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"金健",MediumFont(font(13)),HEXColor(@"#999999"),0);
+            button.ljTitle_font_titleColor_state(@"余春",MediumFont(font(13)),HEXColor(@"#999999"),0);
             [button setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
             [button setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
             [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(0.5)];
@@ -146,6 +146,8 @@
                 [self.rightSelectbutton clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(0.5)];
                 [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(0.5)];
                 self.rightSelectbutton = button;
+                
+                [self.backSubject sendNext:@(1)];
             }];
         }];
         

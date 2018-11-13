@@ -8,7 +8,7 @@
 
 #import "UITabBar+TXAdditions.h"
 
-#define TabbarItemNums 4.0
+#define TabbarItemNums 5.0
 
 @implementation UITabBar (TXAdditions)
 
@@ -20,7 +20,7 @@
     
     int contNum = [value intValue];
     if(contNum <= 0){
-        badgeView.hidden = YES;
+        badgeView.hidden = NO;
     }else{
         badgeView.hidden = NO;
         if(contNum > 99){
@@ -40,9 +40,9 @@
     float percentX = (index + 0.5) / TabbarItemNums;
     CGFloat x = ceilf(percentX * tabFrame.size.width);
 //    CGFloat x = CGRectGetMaxX(self.frame);
-    CGFloat y = ceilf(0.005 * tabFrame.size.height);
-    badgeView.frame = CGRectMake(x, y, 18, 18);
-    badgeView.layer.cornerRadius = 9;
+    CGFloat y = ceilf(0.11 * tabFrame.size.height);
+    badgeView.frame = CGRectMake(x, y, kHeight(10.0), kHeight(10.0));
+    badgeView.layer.cornerRadius = kHeight(5.0);
     badgeView.clipsToBounds = YES;
     [self addSubview:badgeView];
 }
@@ -54,7 +54,7 @@
 
 - (void)removeBadgeOnItemIndex:(int)index{
     for (UIView *subView in self.subviews) {
-        if (subView.tag == 888+index) {
+        if (subView.tag == 888 + index) {
             [subView removeFromSuperview];
         }
     }

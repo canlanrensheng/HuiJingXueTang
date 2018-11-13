@@ -69,12 +69,13 @@
     NSDictionary *parameters = @{
                                  @"page":page
                                  };
-    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSInteger code = [[dic objectForKey:@"code"]integerValue];
         if (code == 200) {
-            NSMutableArray *dataArr = dic[@"data"];
-            self.recommongCourceDataArray = [HJRecommentTeacherModel mj_objectArrayWithKeyValuesArray:dataArr];
+            NSDictionary *dataDic= dic[@"data"];
+            NSArray *teacherlistArr = dataDic[@"teacherlist"];
+            self.recommentTeacherArray = [HJRecommentTeacherModel mj_objectArrayWithKeyValuesArray:teacherlistArr];
             success();
         } else {
             ShowError([dic objectForKey:@"msg"]);

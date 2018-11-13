@@ -9,15 +9,12 @@ pod 'AFNetworking'
 pod 'SVProgressHUD'
 pod 'SDWebImage'
 pod 'MJRefresh'
-#pod 'ZFPlayer'
+
 pod 'ZFPlayer', '~> 3.0'
 pod 'ZFPlayer/AVPlayer', '~> 3.0'
 pod 'ZFPlayer/ControlView', '~> 3.0'
 
 pod 'NIMSDK'
-pod 'WechatOpenSDK'
-pod 'UMCShare/UI'
-#pod 'GCCycleScrollView'
 
 pod 'DZNEmptyDataSet', '~> 1.8.1'
 pod 'IQKeyboardManager'
@@ -26,6 +23,13 @@ pod 'Reachability', '~> 3.2'
 pod 'DCURLRouter', '~> 0.81'
 pod 'MBProgressHUD', '~> 1.1.0'
 pod 'MJExtension', '~> 3.0.13'
-#pod 'SDCycleScrollView', '~> 1.74'
+pod 'DateTools'
+
+pod 'mob_sharesdk'
+pod 'mob_sharesdk/ShareSDKPlatforms/QQ'
+pod 'mob_sharesdk/ShareSDKPlatforms/SinaWeibo'
+pod 'mob_sharesdk/ShareSDKPlatforms/WeChat'
+
+
 
 end

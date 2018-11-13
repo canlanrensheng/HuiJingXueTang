@@ -40,7 +40,7 @@
         [self addSubview:view];
 
         UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake((view.width - kWidth(44)) / 2, kHeight(18.0), kWidth(44), kWidth(44))];
-        btn.tag = 1234+i;
+        btn.tag = i;
         [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [btn setBackgroundImage:[UIImage imageNamed:btnimgarr[i]] forState:UIControlStateNormal];
         [view addSubview:btn];
@@ -56,29 +56,38 @@
 
 //点击跳转的处理
 - (void)btnAction:(UIButton *)btn {
-    
+    if (btn.tag == 0) {
+        //直播教学
+        VisibleViewController().tabBarController.selectedIndex = 1;
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"SetToLiveVC" object:nil userInfo:nil];
+       
+    } else if ( btn.tag == 1) {
+        //教学跟踪
+        
+    } else if (btn.tag == 2) {
+        //绝技诊股
+        if([APPUserDataIofo AccessToken].length <= 0) {
+            ShowMessage(@"您还未登录");
+            [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+            return;
+        }
+        [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
+    } else if ( btn.tag == 3) {
+        //教参精华
+        if([APPUserDataIofo AccessToken].length <= 0) {
+            ShowMessage(@"您还未登录");
+            [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+            return;
+        }
+        [DCURLRouter pushURLString:@"route://teachBestVC" animated:YES];
+    }
 }
 
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
-   //跳转处理
+    //跳转处理
     if(_scrollView.imageURLStringsGroup.count > 0) {
-        NSDictionary *dic = self.listViewModel.cycleScrollViewDataArray[index];
-        NSInteger link = [dic[@"link"] integerValue];
-        if (link == 1) {
-            NSString *imgurl = dic[@"content"];
-            AdJumpViewController *vc = [[AdJumpViewController alloc] init];
-            vc.type = @"1";
-            vc.url = imgurl;
-            [VisibleViewController().navigationController pushViewController:vc animated:YES];
-        }else{
-            NSString *imgurl = dic[@"content"];
-            AdJumpViewController *vc = [[AdJumpViewController alloc] init];
-            vc.type = @"0";
-            vc.url = imgurl;
-            [VisibleViewController().navigationController pushViewController:vc animated:YES];
-        }
+        [DCURLRouter pushURLString:@"route://classDetailVC" animated:YES];
     }
-    
 }
 
 - (void)setViewModel:(BaseViewModel *)viewModel {

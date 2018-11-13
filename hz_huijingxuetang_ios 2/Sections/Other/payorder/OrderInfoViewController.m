@@ -9,7 +9,6 @@
 
 #import "OrderInfoViewController.h"
 #import "OrderViewCell.h"
-#import <AlipaySDK/AlipaySDK.h>
 #import "YJAlertview.h"
 #import "AllOrderListViewController.h"
 @interface OrderInfoViewController ()<UITableViewDelegate,UITableViewDataSource,YJAlertviewDelegate>
@@ -355,30 +354,30 @@
 
 -(void)alipay:(NSString *)orderstr{
     //应用注册scheme,在AliSDKDemo-Info.plist定义URL types
-    NSString *appScheme = @"alipay9815485a129";
-    NSString * orderString = orderstr;
-    // NOTE: 调用支付结果开始支付
-    [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-        NSLog(@"reslut = %@",resultDic);
-        NSString * memo = resultDic[@"memo"];
-        NSLog(@"===memo:%@", memo);
-        if ([resultDic[@"ResultStatus"] isEqualToString:@"9000"]) {
-            //支付成功回调
-            
-            [SVProgressHUD showSuccessWithStatus:@"支付成功"];
-            if ([_type isEqualToString:@"1"]) {
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"loaddata" object:self];
-                [self.navigationController popViewControllerAnimated:YES];
-            }else{
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"reloaddata" object:self];
-                [self.navigationController popViewControllerAnimated:YES];
-
-            }
-        }else{
-            [SVProgressHUD showErrorWithStatus:memo];
-        }
-        
-    }];
+//    NSString *appScheme = @"alipay9815485a129";
+//    NSString * orderString = orderstr;
+//    // NOTE: 调用支付结果开始支付
+//    [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+//        NSLog(@"reslut = %@",resultDic);
+//        NSString * memo = resultDic[@"memo"];
+//        NSLog(@"===memo:%@", memo);
+//        if ([resultDic[@"ResultStatus"] isEqualToString:@"9000"]) {
+//            //支付成功回调
+//            
+//            [SVProgressHUD showSuccessWithStatus:@"支付成功"];
+//            if ([_type isEqualToString:@"1"]) {
+//                [[NSNotificationCenter defaultCenter]postNotificationName:@"loaddata" object:self];
+//                [self.navigationController popViewControllerAnimated:YES];
+//            }else{
+//                [[NSNotificationCenter defaultCenter]postNotificationName:@"reloaddata" object:self];
+//                [self.navigationController popViewControllerAnimated:YES];
+//
+//            }
+//        }else{
+//            [SVProgressHUD showErrorWithStatus:memo];
+//        }
+//        
+//    }];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

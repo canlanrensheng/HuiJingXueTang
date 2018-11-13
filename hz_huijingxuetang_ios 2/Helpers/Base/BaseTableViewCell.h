@@ -11,4 +11,6 @@
 
 @interface BaseTableViewCell : UITableViewCell<BaseTableViewCellProtocol>
 
+@property (nonatomic,strong) RACSubject *backSubject;
+
 @end

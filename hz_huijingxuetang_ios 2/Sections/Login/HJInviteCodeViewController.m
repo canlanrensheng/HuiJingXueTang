@@ -8,7 +8,7 @@
 
 #import "HJInviteCodeViewController.h"
 #import "HJInviteCodeView.h"
-#import "CustomTabbarController.h"
+
 
 @interface HJInviteCodeViewController ()
 
@@ -41,8 +41,7 @@
             [YJAPPNetwork registWithPhonenum:para[@"phone"] pwd:para[@"pwd"] code:para[@"code"] incode:nil success:^(NSDictionary *responseObject) {
                 NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
                 if (code == 200) {
-                    CustomTabbarController *customTabbar = [[CustomTabbarController alloc]init];
-                    [UIApplication sharedApplication].keyWindow.rootViewController = customTabbar;
+                    [DCURLRouter popViewControllerWithTimes:3 animated:YES];
                 }else{
                     [ConventionJudge NetCode:code vc:self type:@"1"];
                 }
@@ -98,8 +97,7 @@
                     [[NSUserDefaults standardUserDefaults] synchronize];
                     [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
                     [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-                    CustomTabbarController *customTabbar = [[CustomTabbarController alloc]init];
-                    [UIApplication sharedApplication].keyWindow.rootViewController = customTabbar;
+                    [DCURLRouter popViewControllerWithTimes:4 animated:YES];
                 }else{
                     [ConventionJudge NetCode:code vc:self type:@"1"];
                 }

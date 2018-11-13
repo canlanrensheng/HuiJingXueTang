@@ -67,8 +67,6 @@
 -(UIBarButtonItem*)createBackButton{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     backButton.frame = CGRectMake(0, 0, 26, 40);
-//    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateNormal];
-//    [backButton setImage:V_IMAGE(@"back") forState:UIControlStateSelected];
     [backButton setImage:[UIImage imageNamed:@"back_n"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_p"] forState:UIControlStateHighlighted];
     [backButton addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];

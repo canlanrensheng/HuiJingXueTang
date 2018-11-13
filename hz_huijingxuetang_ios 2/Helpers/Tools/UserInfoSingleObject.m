@@ -27,16 +27,16 @@
         [[[RACObserve(self, networkStatus) distinctUntilChanged] skip:2] subscribeNext:^(id x) {
             switch ([x integerValue]) {
                 case NotReachable:
-//                    ShowMessage(@"网络已失去连接");
-                    [SVProgressHUD showInfoWithStatus:@"网络已失去连接"];
+                    ShowMessage(@"网络已失去连接");
+//                    [SVProgressHUD showInfoWithStatus:@"网络已失去连接"];
                     break;
                 case ReachableViaWiFi:
-//                    ShowMessage(string(@"已连接WiFi-",[self getWifiName]));
-                    [SVProgressHUD showInfoWithStatus:string(@"已连接WiFi-",[self getWifiName])];
+                    ShowMessage(string(@"已连接WiFi-",[self getWifiName]));
+//                    [SVProgressHUD showInfoWithStatus:string(@"已连接WiFi-",[self getWifiName])];
                     break;
                 default:
-//                    ShowMessage(@"已开启数据连接");
-                    [SVProgressHUD showInfoWithStatus:@"网络已失去连接"];
+                    ShowMessage(@"已开启数据连接");
+//                    [SVProgressHUD showInfoWithStatus:@"网络已失去连接"];
                     break;
             }
         }];

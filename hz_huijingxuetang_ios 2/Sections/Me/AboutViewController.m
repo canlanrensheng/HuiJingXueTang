@@ -7,7 +7,7 @@
 //
 
 #import "AboutViewController.h"
-#import "DiscoverInfoViewController.h"
+
 @interface AboutViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @end
@@ -69,15 +69,13 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 0) {
-        DiscoverInfoViewController *vc = [[DiscoverInfoViewController alloc]init];
-        vc.name = @"服务协议";
-        [self.navigationController pushViewController:vc animated:YES];
-    }else if (indexPath.row == 1){
+      
+    } else if (indexPath.row == 1){
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:[NSString stringWithFormat:@"本公司承诺不代客理财、不推荐股票、不承诺收益、如有发现违反上述规定、请拨打监督电话和投诉电话%@",self.phone] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
         [alertController addAction:cancelAction];
         [self presentViewController:alertController animated:YES completion:nil];
-    }else{
+    } else {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:[NSString stringWithFormat:@"本公司承诺不代客理财、不推荐股票、不承诺收益、如有发现违反上述规定、请拨打监督电话和投诉电话%@",self.phone] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleCancel handler:nil];
         [alertController addAction:cancelAction];

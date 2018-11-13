@@ -90,12 +90,14 @@ void ShowError(NSString *statues) {
         dispatch_async(dispatch_get_main_queue(), ^{
 //            [MBProgressHUD showError:statues toView:VisibleViewController().view];
 //            [MBProgressHUD show:statues];
-            ShowMessage(statues);
+//            ShowMessage(statues);
+            [MBProgressHUD showMessage:statues view:[UIApplication sharedApplication].keyWindow];
         });
     }else{
 //        [MBProgressHUD showError:statues toView:VisibleViewController().view];
 //        [MBProgressHUD showInfoMessage:statues];
-        ShowMessage(statues);
+//        ShowMessage(statues);
+        [MBProgressHUD showMessage:statues view:[UIApplication sharedApplication].keyWindow];
     }
 }
 

@@ -13,11 +13,9 @@
 #import "InviteViewController.h"
 #import "AboutViewController.h"
 #import "MyCardViewController.h"
-#import "BuyVipViewController.h"
 #import "LoginViewController.h"
-#import "PlanViewController.h"
 #import "AllOrderListViewController.h"
-#import <WXApi.h>
+
 @interface MePageViewController ()<UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @end
@@ -309,12 +307,12 @@
 }
 
 -(void)goweixin{
-    JumpToBizProfileReq *req = [[JumpToBizProfileReq alloc]init];
-    req.profileType =WXBizProfileType_Normal;
-    req.username=@"gh_6b31b722a1e8";
-    req.extMsg = @"";
-    req.profileType =0;
-    [WXApi sendReq:req];
+//    JumpToBizProfileReq *req = [[JumpToBizProfileReq alloc]init];
+//    req.profileType =WXBizProfileType_Normal;
+//    req.username=@"gh_6b31b722a1e8";
+//    req.extMsg = @"";
+//    req.profileType =0;
+//    [WXApi sendReq:req];
 }
 
 -(void)backHide{
@@ -373,8 +371,7 @@
     }else if (indexPath.row == 8){
         [self jumpHUD];
     }else if (indexPath.row == 4){
-        PlanViewController *vc = [[PlanViewController alloc]init];
-        [self.navigationController pushViewController:vc animated:YES];
+     
     }
     
 
