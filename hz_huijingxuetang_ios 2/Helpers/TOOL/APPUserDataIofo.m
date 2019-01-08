@@ -13,18 +13,41 @@ NSString * const AccessToken  = @"accessToken";
 NSString * const Access  = @"access";
 
 NSString * const UserID  = @"userID";
+NSString * const Eval  = @"eval";
 NSString * const UserIsLoginInfoKey = @"UserIsLoginInfoKey";
 NSString * const Cityid  = @"cityID";
 NSString * const CityName  = @"cityname";
 NSString * const CityShortName  = @"cityshortname";
 NSString * const UserIcon  = @"usericon";
 NSString * const NikeName  = @"nikename";
+NSString * const Sex  = @"sex";
 NSString * const Phone  = @"phone";
 NSString * const DeviceToken  = @"deviceToken";
 
 
 
 @implementation APPUserDataIofo
+
+/**
+ 存入openId
+ **/
++(void)writeOpenId:(NSString *)openId {
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:openId forKey:@"openId"];
+    [userdefaults synchronize];
+}
+
+/**
+ 获取用户openId
+ **/
++ (NSString *)OpenId {
+    NSString *openId = [[NSUserDefaults standardUserDefaults] stringForKey:@"openId"];
+    if (openId == nil) {
+        openId = @"";
+        
+    }
+    return openId;
+}
 
 
 /**
@@ -35,6 +58,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:accessToken forKey:AccessToken];
+    [userdefaults synchronize];
 }
 
 //获取用户token
@@ -55,6 +79,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:access forKey:Access];
+    [userdefaults synchronize];
 }
 
 //获取用户access
@@ -75,6 +100,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:userid forKey:UserID];
+    [userdefaults synchronize];
     
 }
 
@@ -88,12 +114,33 @@ NSString * const DeviceToken  = @"deviceToken";
 }
 
 /**
+ 存入风险评估
+ **/
++(void)getEval:(NSString *)eval {
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:eval forKey:Eval];
+    [userdefaults synchronize];
+}
+
+/**
+ //获取是否做过风险评估
+ **/
++ (NSString *)Eval {
+    NSString *eval = [[NSUserDefaults standardUserDefaults] stringForKey:Eval];
+    if (eval == nil) {
+        eval = @"";
+    }
+    return eval;
+}
+
+/**
  存入用户昵称
  **/
 +(void)getUserName:(NSString *)nikename{
     
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:nikename forKey:NikeName];
+    [userdefaults synchronize];
 }
 
 
@@ -110,12 +157,32 @@ NSString * const DeviceToken  = @"deviceToken";
 }
 
 /**
+ 存入性别
+ **/
++(void)getSex:(NSString *)sex{
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:sex forKey:Sex];
+    [userdefaults synchronize];
+}
+
+/**
+ 获取用户性别
+ **/
++ (NSString *)sex {
+    NSString *sex = [[NSUserDefaults standardUserDefaults] stringForKey:Sex];
+    if (sex == nil) {
+        sex = @"";
+    }
+    return sex;
+}
+
+/**
  存入用户手机
  **/
 +(void)getUserPhone:(NSString *)phone{
-    
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:phone forKey:Phone];
+    [userdefaults synchronize];
 }
 
 
@@ -155,6 +222,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:cityid forKey:Cityid];
+    [userdefaults synchronize];
 }
 
 /**
@@ -177,6 +245,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:cityname forKey:CityName];
+    [userdefaults synchronize];
 }
 
 /**
@@ -190,6 +259,61 @@ NSString * const DeviceToken  = @"deviceToken";
     return cityid;
 }
 
+//存入问题返回时间
+
++(void)getProblemBacktTime:(NSString *)problembacktime {
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:problembacktime forKey:@"problembacktime"];
+    [userdefaults synchronize];
+}
+
+/**
+ 获取问题反馈时间
+ **/
++ (NSString *)Problembacktime {
+    NSString *problembacktime = [[NSUserDefaults standardUserDefaults] stringForKey:@"problembacktime"];
+    if (problembacktime == nil) {
+        problembacktime = @"";
+    }
+    return problembacktime;
+}
+
+//联系人
++(void)getContact:(NSString *)contact {
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:contact forKey:@"contact"];
+    [userdefaults synchronize];
+}
+
+//合伙人的标示
++(void)getPartner:(NSString *)partner {
+    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    [userdefaults setObject:partner forKey:@"partner"];
+    [userdefaults synchronize];
+}
+
+/**
+ 获取合伙人的标示
+ **/
++ (NSString *)Partner {
+    NSString *partner = [[NSUserDefaults standardUserDefaults] stringForKey:@"partner"];
+    if (partner == nil) {
+        partner = @"";
+    }
+    return partner;
+}
+
+/**
+ 获取问题反馈时间
+ **/
++ (NSString *)Contact {
+    NSString *contact = [[NSUserDefaults standardUserDefaults] stringForKey:@"contact"];
+    if (contact == nil) {
+        contact = @"";
+    }
+    return contact;
+}
+
 /**
  存入Cityshortname
  **/
@@ -198,6 +322,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:cityshortname forKey:CityShortName];
+    [userdefaults synchronize];
 }
 
 /**
@@ -219,6 +344,7 @@ NSString * const DeviceToken  = @"deviceToken";
 {
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:usericon forKey:UserIcon];
+    [userdefaults synchronize];
 }
 
 /**
@@ -251,6 +377,7 @@ NSString * const DeviceToken  = @"deviceToken";
 +(void)getDeviceToken:(NSString *)deviceToken{
     NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setObject:deviceToken forKey:DeviceToken];
+    [userdefaults synchronize];
 }
 
 /**

@@ -16,9 +16,18 @@
 
 @property (nonatomic,copy) void (^backBlock)(NSInteger index);
 
+@property (nonatomic,strong) NSMutableArray *buttonArray;
+
 @end
 
 @implementation HJTopSementView
+
+- (NSMutableArray *)buttonArray {
+    if(!_buttonArray) {
+        _buttonArray = [NSMutableArray array];
+    }
+    return _buttonArray;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame titleColor:(UIColor *)titleColor selectTitleColor:(UIColor *)selectTitleColor  lineColor:(UIColor *)lineColor  buttons:(NSArray *)itemButtons block:(void (^)(NSInteger index))block{
     if(self = [super initWithFrame:frame]) {
@@ -48,14 +57,16 @@
                 }];
             }];
             if (i == 0) {
-                self.lastSelectButton.selected = YES;
                 self.lastSelectButton = itemButton;
+                self.lastSelectButton.selected = YES;
+                self.lastSelectButton.titleLabel.font = BoldFont(font(15));
+                
                 self.lineView.frame = CGRectMake(0, self.frame.size.height - kHeight(2.0 + 5.0), kWidth(20.0) , kHeight(2.0));
                 self.lineView.backgroundColor = lineColor;
                 self.lineView.centerX = self.lastSelectButton.centerX;
                 [self addSubview:self.lineView];
             }
-            
+            [self.buttonArray addObject:itemButton];
             [self addSubview:itemButton];
             [self addSubview:self.lineView];
             self.bottomLineView.frame = CGRectMake(0, self.frame.size.height - kHeight(1.0), Screen_Width , kHeight(1.0));
@@ -67,10 +78,22 @@
     return  self;
 }
 
+- (void)setSelectIndex:(NSInteger)selectIndex {
+    _selectIndex = selectIndex;
+    UIButton *button = (UIButton *)[self.buttonArray objectAtIndex:selectIndex];
+    self.lastSelectButton.selected = NO;
+    button.selected = YES;
+    self.lastSelectButton.titleLabel.font = MediumFont(font(15));
+    button.titleLabel.font = BoldFont(font(15));
+    self.lastSelectButton = button;
+    self.lineView.centerX = self.lastSelectButton.centerX;
+}
+
 - (UIView *)lineView {
     if(!_lineView){
         _lineView = [[UIView alloc] init];
         _lineView.backgroundColor = HEXColor(@"#EAEAEA");
+        [_lineView clipWithCornerRadius:kHeight(1.0) borderColor:nil borderWidth:0];
     }
     return _lineView;
 }
@@ -82,7 +105,6 @@
     }
     return _bottomLineView;
 }
-
 
 
 @end

@@ -11,6 +11,48 @@
 
 @implementation YJAPPNetwork
 
+//上线马甲包控制
++(void)SetOnlineMaJiaBaoWithCheckVersion:(NSString *)checkVersion success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/auditiosflag",API_BASEURL];
+    NSDictionary *para = @{@"auditver" : checkVersion};
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"获取版本更新的马甲包的数据是:%@",dic);
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
+//检测版本更新
++(void)CheckVersionWithSuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/getlatestver",API_BASEURL];
+    NSDictionary *para = @{@"flag" : @"1"};
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"获取版本更新的内容的数据是:%@",dic);
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
+//保存openId到后台服务器
++(void)SaveOpenIdToServiceWithOpenId:(NSString *)openId success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/saveopenid",API_BASEURL];
+    NSDictionary *para = @{
+                                 @"accesstoken":[APPUserDataIofo AccessToken],
+                                 @"openid":openId
+                                 };
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"获取版本更新的内容的数据是:%@",dic);
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
 /**
  首页获取场馆分页
  **/
@@ -181,9 +223,9 @@
                                  @"telno":phonenum,
                                  @"password":code,
                                  };
-    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",dic);
+//        DLog(@"登陆成功获取到的信息是%@",dic);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -807,15 +849,33 @@
 /**
  创建待支付订单
  **/
-+(void)WillPayWithAccesstoken:(NSString*)accesstoken cids:(NSString *)cids success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
++(void)WillPayWithAccesstoken:(NSString*)accesstoken cids:(NSString *)cids picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/createcourseorder",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"accesstoken":accesstoken,
-                                 @"cids":cids
+                                 @"accesstoken" : accesstoken,
+                                 @"cids" : cids,
+                                 @"picdata" : picData
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSLog(@"%@",dic);
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
+//生成砍价的订单
++(void)CreateKillPriceOrderWithAccesstoken:(NSString*)accesstoken courseId:(NSString *)courseId picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/createbargaincourseorder",API_BASEURL];
+    NSDictionary *parameters = @{
+                                 @"accesstoken" : accesstoken,
+                                 @"courseid" : courseId,
+                                 @"picdata" : picData
+                                 };
+    [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"获取到的砍价订单的数据是:%@",[NSString convertToJsonData:dic]);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -844,14 +904,22 @@
  立即支付
  **/
 +(void)OrderPayAccesstoken:(NSString*)accesstoken orderid:(NSString *)orderid couponid:(NSString *)couponid paytype:(NSString *)paytype mch:(NSString *)mch success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
-    NSString *url = [NSString stringWithFormat:@"%@/LiveApi/app/orderpayment",API_BASEURL];
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/paycourseorder",API_BASEURL];
     NSDictionary *parameters = @{
                                  @"accesstoken":accesstoken,
                                  @"orderid":orderid,
                                  @"couponid":couponid,
                                  @"paytype":paytype,
-                                 @"mch":mch,
+                                 @"dev":mch,
                                  };
+    if(couponid.length <= 0) {
+        parameters = @{
+                       @"accesstoken":accesstoken,
+                       @"orderid":orderid,
+                       @"paytype":paytype,
+                       @"dev":mch,
+                       };
+    }
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSLog(@"%@",dic);
@@ -1143,7 +1211,10 @@
  **/
 +(void)getAdSuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/mp/bannerlist",API_BASEURL];
-    NSDictionary *para = @{@"type" : @"2"};
+    
+    NSDictionary *para = @{@"type" : @"2",
+                           @"vesttype" : MaJia ? @"free" : @""
+                           };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:para method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         success(dic);

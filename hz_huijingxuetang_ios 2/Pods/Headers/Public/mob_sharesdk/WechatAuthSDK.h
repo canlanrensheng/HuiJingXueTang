@@ -1,1 +1,1 @@
-../../../mob_sharesdk/SDK/ShareSDK/Support/PlatformSDK/WeChatSDK/WechatAuthSDK.h
+../../../mob_sharesdk/SDK/ShareSDK/Support/PlatformSDK/WeChatSDKFull/WechatAuthSDK.h

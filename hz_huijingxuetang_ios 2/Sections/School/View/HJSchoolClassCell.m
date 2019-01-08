@@ -7,15 +7,22 @@
 //
 
 #import "HJSchoolClassCell.h"
-
+#import "HJSchoolCourseListModel.h"
+#import "HJSchoolCourseListViewModel.h"
 @interface HJSchoolClassCell ()
 
-@property (nonatomic,strong) UIImageView *imgView;
+@property (nonatomic,strong) UIImageView *imgV;
 @property (nonatomic,strong) UIImageView *youhuuiImaV;
 @property (nonatomic,strong) UILabel *courceLabel;
 @property (nonatomic,strong) UILabel *studentCountLabel;
 @property (nonatomic,strong) UILabel *originPriceLabel;
 @property (nonatomic,strong) UILabel *priceLabel;
+@property (nonatomic,strong) UILabel *teacherLabel;
+@property (nonatomic,strong) UILabel *dayLabel;
+
+@property (nonatomic,strong) UIView *priceLineView;
+
+@property (nonatomic,strong) NSMutableArray *starImgMarr;
 
 @end
 
@@ -26,30 +33,29 @@
     
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
-    imaV.image = V_IMAGE(@"占位图");
-//    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
+//    imaV.image = V_IMAGE(@"占位图");
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(kHeight(11.0));
+//        make.top.equalTo(self).offset(kHeight(11.0));
+        make.centerY.equalTo(self);
         make.left.equalTo(self).offset(kWidth(10.0));
         make.width.mas_equalTo(kWidth(145));
         make.height.mas_equalTo(kHeight(90));
     }];
     [imaV clipWithCornerRadius:kHeight(5.0) borderColor:nil borderWidth:0];
-    self.imgView = imaV;
+    self.imgV = imaV;
     
     UIImageView *youhuuiImaV = [[UIImageView alloc] init];
     youhuuiImaV.image = V_IMAGE(@"优惠标签");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
-    youhuuiImaV.backgroundColor = Background_Color;
-    [imaV addSubview:youhuuiImaV];
+    youhuuiImaV.backgroundColor = clear_color;
+    [self addSubview:youhuuiImaV];
     [youhuuiImaV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(imaV).offset(kHeight(7.0));
-        make.left.equalTo(self).offset(kWidth(6.0));
+        make.left.equalTo(imaV).offset(-kWidth(5.0));
     }];
 
-    self.youhuuiImaV = imaV;
+    self.youhuuiImaV = youhuuiImaV;
     
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -66,7 +72,6 @@
     
     self.courceLabel = nameLabel;
     
-    
     //星级
     UIView *starView = [[UIView alloc] init];
     starView.backgroundColor = white_color;
@@ -77,17 +82,13 @@
         make.height.mas_equalTo(kHeight(11));
     }];
     
+    self.starImgMarr = [NSMutableArray array];
     for(int i = 0; i < 5;i++) {
         UIImageView *starImageView = [[UIImageView alloc] init];
         starImageView.frame = CGRectMake((kWidth(2 + 11) * i), 0, kWidth(11), kWidth(11));
         starImageView.backgroundColor = white_color;
-        if(i <= 3) {
-            starImageView.image = V_IMAGE(@"评价星亮色");
-        } else {
-            starImageView.image = V_IMAGE(@"评价星 暗色");
-        }
-//        starImageView.image = V_IMAGE(@"评价星星");
         [starView addSubview:starImageView];
+        [self.starImgMarr addObject:starImageView];
     }
     
     //星级Label
@@ -109,7 +110,7 @@
     
     //讲师
     UILabel *teacherLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"讲师：金建",MediumFont(font(13)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"讲师：",MediumFont(font(10)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -120,6 +121,7 @@
         make.left.equalTo(imaV.mas_right).offset(kWidth(13.0));
         make.height.mas_equalTo(kHeight(12.0));
     }];
+    self.teacherLabel = teacherLabel;
     
     //天数
     UILabel *dayLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -133,15 +135,15 @@
         make.centerY.equalTo(teacherLabel);
         make.height.mas_equalTo(kHeight(12.0));
     }];
+    self.dayLabel = dayLabel;
     
     //价格
     UILabel *priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥12800",BoldFont(font(15)),HEXColor(@"#FF4400"));
+        label.ljTitle_font_textColor(@"￥0",BoldFont(font(15)),HEXColor(@"#FF4400"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
-    //        NSString *price = [NSString stringWithFormat:@"¥ %.0f",model.coursemoney];
-    //        priceLabel.attributedText = [price attributeWithStr:@"¥" color:HEXColor(@"#666666") font:BoldFont(font(13))];
+
     [self addSubview:priceLabel];
     [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(dayLabel.mas_left);
@@ -150,11 +152,9 @@
     }];
     self.priceLabel = priceLabel;
     
-    
-
     //原来的价格
     UILabel *originPriceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥1980",MediumFont(font(10)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@"￥0",MediumFont(font(10)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
@@ -168,18 +168,73 @@
     self.originPriceLabel = originPriceLabel;
     
     //画线
-    UIView *priceLineView= [[UIView alloc] init];
+    UIView *priceLineView = [[UIView alloc] init];
     priceLineView.backgroundColor = HEXColor(@"#999999");
     [self addSubview:priceLineView];
     [priceLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(originPriceLabel);
         make.left.right.equalTo(originPriceLabel);
-        make.height.mas_equalTo(kHeight(1.0));
+        make.height.mas_equalTo(kHeight(0.5));
     }];
-    
+    self.priceLineView = priceLineView;
 
-//    NSString *price = [NSString stringWithFormat:@"¥ %.0f",model.coursemoney];
-//    priceLabel.attributedText = [price attributeWithStr:@"¥" color:HEXColor(@"#FF4400") font:BoldFont(font(13))];
+}
+
+//fuyu
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJSchoolCourseListViewModel *listViewModel = (HJSchoolCourseListViewModel *)viewModel;
+    Courselist *model = listViewModel.videoCourseListArray[indexPath.row];
+    if(model){
+        [self.imgV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        self.courceLabel.text = model.coursename;
+        if(model.hassecond == 0){
+            self.youhuuiImaV.hidden = YES;
+            self.originPriceLabel.hidden = YES;
+            self.priceLineView.hidden = YES;
+            self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.coursemoney];
+            self.dayLabel.text = [NSString stringWithFormat:@"/%tu天",model.periods];
+        }else{
+            self.youhuuiImaV.hidden = NO;
+            self.originPriceLabel.hidden = NO;
+            self.priceLineView.hidden = NO;
+            
+            self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.secondprice.floatValue];
+            self.dayLabel.text = [NSString stringWithFormat:@"/%tu天",model.periods];
+            self.originPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.coursemoney];
+        }
+        
+        //设置星级
+        float fStaLevel = model.starlevel.floatValue;
+        if(fStaLevel == model.starlevel.intValue) {
+            for (int i = 0;i < 5 ;i++){
+                UIImageView *imaV = self.starImgMarr[i];
+                if(i < model.starlevel.intValue) {
+                    imaV.image = V_IMAGE(@"评价星亮色");
+                } else {
+                    imaV.image = V_IMAGE(@"评价星 暗色");
+                }
+            }
+        } else{
+            for (int i = 0;i < 5 ;i++){
+                UIImageView *imaV = self.starImgMarr[i];
+                if(i < ceilf(model.starlevel.floatValue) - 1) {
+                    imaV.image = V_IMAGE(@"评价星亮色");
+                }  else if(i == ceilf(model.starlevel.floatValue) - 1){
+                    imaV.image = V_IMAGE(@"评价星亮色-1");
+                } else {
+                    imaV.image = V_IMAGE(@"评价星 暗色");
+                }
+            }
+        }
+        
+        self.studentCountLabel.text = [NSString stringWithFormat:@"%.1f   %tu人学过",model.starlevel.floatValue,model.browsingcount];
+        self.teacherLabel.text = [NSString stringWithFormat:@"讲师：%@",model.realname];
+//        self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.secondprice.floatValue];
+//        self.dayLabel.text = [NSString stringWithFormat:@"/%tu天",model.periods];
+//        self.originPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.coursemoney];
+        
+    }
+    
 }
 
 @end

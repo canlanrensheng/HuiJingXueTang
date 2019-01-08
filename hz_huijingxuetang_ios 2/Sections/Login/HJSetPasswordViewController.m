@@ -90,21 +90,9 @@
             if (button.selected) {
                 self.passwordTf.secureTextEntry = NO;
                 [button setBackgroundImage:V_IMAGE(@"隐藏密码") forState:UIControlStateNormal];
-                [button mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.right.equalTo(self.view).offset(-kWidth(10));
-                    make.centerY.equalTo(self.passwordTf).offset(kHeight(3.0));
-                    make.width.mas_equalTo(kWidth(16.0));
-                    make.height.mas_equalTo(kHeight(12.0));
-                }];
             } else {
                 self.passwordTf.secureTextEntry = YES;
                 [button setBackgroundImage:V_IMAGE(@"显示密码") forState:UIControlStateNormal];
-                [button mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.right.equalTo(self.view).offset(-kWidth(10));
-                    make.centerY.equalTo(self.passwordTf).offset(kHeight(3.0));
-                    make.width.mas_equalTo(kWidth(16.0));
-                    make.height.mas_equalTo(kHeight(6.0));
-                }];
             }
         }];
     }];
@@ -113,19 +101,19 @@
     [secertBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-kWidth(10));
         make.centerY.equalTo(self.passwordTf).offset(kHeight(3.0));
-        make.width.mas_equalTo(kWidth(16.0));
-        make.height.mas_equalTo(kHeight(12.0));
+        make.width.mas_equalTo(kWidth(22.0));
+        make.height.mas_equalTo(kHeight(22.0));
     }];
     
     //分割线
     UIView *lineView = [[UIView alloc] init];
-    lineView.backgroundColor = [UIColor colorWithHexString:@"#1D3043"];
+    lineView.backgroundColor = [UIColor colorWithHexString:@"#22476B"];
     [self.view addSubview:lineView];
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.passwordTf);
         make.right.equalTo(self.view).offset(-kWidth(10));
         make.top.equalTo(self.passwordTf.mas_bottom);
-        make.height.mas_equalTo(kHeight(1.0));
+        make.height.mas_equalTo(kHeight(0.5));
     }];
     
     
@@ -166,7 +154,9 @@
     [sureBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(30));
         make.centerX.equalTo(self.view);
-        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+//        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+        make.left.equalTo(self.view).offset(kWidth(10.0));
+        make.right.equalTo(self.view).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(40.0));
     }];
     

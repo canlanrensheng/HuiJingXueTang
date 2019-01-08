@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F10B4F207E67332EB33347096F1FA30A"
+               BlueprintIdentifier = "FDB5C387A43B6FCD1C84E7F76E8F9A1B"
                BlueprintName = "DCURLRouter"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "libDCURLRouter.a">

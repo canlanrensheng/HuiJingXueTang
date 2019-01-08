@@ -28,7 +28,7 @@
     lineView.backgroundColor = HEXColor(@"#EAEAEA");
     [self addSubview:lineView];
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_bottom).offset(-kHeight(1.0));
+        make.top.equalTo(self.mas_bottom).offset(-kHeight(0.5));
         make.left.right.equalTo(self);
         make.height.mas_offset(kHeight(1.0));
     }];

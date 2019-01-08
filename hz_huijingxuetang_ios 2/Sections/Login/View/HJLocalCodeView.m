@@ -27,8 +27,6 @@
     if (self = [super initWithFrame:frame]) {
         self.charCount = charCount;
         self.lineCount = lineCount;
-//        self.layer.cornerRadius = 5.0;
-//        self.layer.masksToBounds = YES;
         self.backgroundColor = NNRandomColor;
         [self changeValidationCode];
         [self addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGesture)]];

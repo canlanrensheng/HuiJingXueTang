@@ -72,11 +72,19 @@
 }
 
 - (void)tapClick{
-    HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithBindBlock:^(BOOL success) {
+    if(MaJia) {
         if(_model.itemId) {
             NSDictionary *para = @{@"infoId" : _model.itemId
                                    };
-            [DCURLRouter pushURLString:@"route://teachBestDetailVC" query:para animated:YES];
+            [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
+        }
+        return;
+    }
+    HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithTeacherId:_model.userid BindBlock:^(BOOL success) {
+        if(_model.itemId) {
+            NSDictionary *para = @{@"infoId" : _model.itemId
+                                   };
+            [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
         }
     }];
     [alertView show];

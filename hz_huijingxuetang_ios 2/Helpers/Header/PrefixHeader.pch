@@ -10,7 +10,7 @@
 
 
 #import <AFNetworking/AFNetworking.h>
-#import <SVProgressHUD.h>
+//#import <SVProgressHUD.h>
 #import <Masonry.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <IQKeyboardManager/IQKeyboardManager.h>
@@ -43,13 +43,23 @@
 #import "CategoryHeader.h"
 #import "GeneralParamsMacro.h"
 #import "LoginViewController.h"
+#import "NotificationConst.h"
 
 
 ////正式环境
-#define API_BASEURL @"http://api.huijingschool.com/"
-
+//#define API_BASEURL @"https://api.huijingschool.com/"
 //测试环境
-//#define API_BASEURL @"http://test.huijingschool.com/"
+#define API_BASEURL @"http://192.168.10.18:8084/"
+
+//分享的域名
+//#define API_SHAREURL @"http://192.168.10.144:8081/"
+#define API_SHAREURL @"http://mp.huijingschool.com/"
+
+
+//是否展示马甲
+//#define MaJia (([UserInfoSingleObject  shareInstance].isShowMaJia) || ([[APPUserDataIofo phone] isEqualToString:@"15123456789"]))
+
+#define MaJia 0
 
 //图片Url
 #define _IMGURL @"http://api.huijingschool.com"
@@ -118,6 +128,15 @@
 
 //网络状况
 #define netError @"网络错误"
+
+//防止重复点击
+#define kRepeatClickTime(_seconds_) \
+static BOOL shouldPrevent; \
+if (shouldPrevent) return; \
+shouldPrevent = YES; \
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((_seconds_) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{ \
+shouldPrevent = NO; \
+}); \
 
 //提示框
 #define SVShow \

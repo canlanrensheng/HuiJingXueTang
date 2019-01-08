@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger,PayType){
 
 - (HJPayTypeAlert*)initWithBlock:(void(^)(PayType payType))block;
 - (void)show;
+- (void)dismiss;
 
 @end
 

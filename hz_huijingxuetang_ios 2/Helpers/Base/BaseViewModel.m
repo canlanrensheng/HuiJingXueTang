@@ -10,6 +10,7 @@
 #import "HudTool.h"
 #import "BaseNavigationViewController.h"
 
+
 @interface BaseViewModel ()
 
 @property (nonatomic, copy, readwrite) NSDictionary *params;
@@ -97,9 +98,11 @@
     return _universalCommand;
 }
 
+
 - (JSLoadingView *)loadingView{
     if (!_loadingView) {
         _loadingView = [[JSLoadingView alloc] init];
+        _loadingView.backgroundColor = white_color;
         [VisibleViewController().view addSubview:_loadingView];
         [_loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.mas_equalTo(VisibleViewController().view);
@@ -109,5 +112,7 @@
     }
     return _loadingView;
 }
+
+
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import "HJConfirmOrderListCell.h"
-
+#import "HJConfirmOrderViewModel.h"
+#import "HJConfirmOrderModel.h"
 @interface HJConfirmOrderListCell ()
 
 @property (nonatomic,strong) UIButton *selectButton;
@@ -41,16 +42,17 @@
     
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"重温经典系列之新K线战法",BoldFont(font(14)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(14)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
-        label.numberOfLines = 1.0;
+        label.numberOfLines = 2.0;
         [label sizeToFit];
     }];
     [self addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(imaV).offset(kHeight(5.0));
         make.left.equalTo(imaV.mas_right).offset(kWidth(10.0));
-        make.height.mas_equalTo(kHeight(13.0));
+        make.right.equalTo(self).offset(-kWidth(10));
+//        make.height.mas_equalTo(kHeight(13.0));
     }];
     
     self.nameLabel = nameLabel;
@@ -58,7 +60,7 @@
     
     //服务周期：
     _serviceTimeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"服务周期：一年",MediumFont(font(11.0)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"服务周期：一年",MediumFont(font(11.0)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -84,7 +86,7 @@
     
     //价格
     _priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥1299",MediumFont(font(13.0)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"￥1299",MediumFont(font(15.0)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -94,7 +96,21 @@
         make.right.equalTo(self).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(13.0));
     }];
-    
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJConfirmOrderViewModel *listViewModel = (HJConfirmOrderViewModel *)viewModel;
+    CourselistModel *courseModel = listViewModel.model.courselist[indexPath.row];
+    if (courseModel) {
+        [self.picImageView sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        self.nameLabel.text = courseModel.coursename;
+        NSString *serviceTimeString = [NSString stringWithFormat:@"服务周期：%ld天",courseModel.periods];
+        self.serviceTimeLabel.attributedText = [serviceTimeString attributeWithStr:@"服务周期：" color:HEXColor(@"#999999") font:MediumFont(font(11.0))];
+//        self.serviceTimeLabel.text = [NSString stringWithFormat:@"服务周期：%ld天",courseModel.periods];
+        self.courceTypeLabel.text = @"";
+        NSString *price = [NSString stringWithFormat:@"￥%.2f",courseModel.coursemoney.floatValue];
+        self.priceLabel.attributedText = [price attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+    }
 }
 
 @end

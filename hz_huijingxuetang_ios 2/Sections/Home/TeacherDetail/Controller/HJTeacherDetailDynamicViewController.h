@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJTeacherDetailDynamicViewController : BaseTableViewController
 
+@property (nonatomic,copy) NSString *teacherId;
+
 @end
 
 NS_ASSUME_NONNULL_END

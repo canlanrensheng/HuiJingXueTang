@@ -19,6 +19,9 @@ typedef void(^NNChangeValidationCodeBlock)();
 
 @property (nonatomic, copy) NNChangeValidationCodeBlock changeValidationCodeBlock;
 
+//更换图片验证码
+- (void)tapGesture;
+
 - (instancetype)initWithFrame:(CGRect)frame andCharCount:(NSInteger)charCount andLineCount:(NSInteger)lineCount;
 
 @end

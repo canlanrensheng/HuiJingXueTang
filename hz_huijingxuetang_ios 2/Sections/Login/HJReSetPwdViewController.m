@@ -39,6 +39,7 @@
         tmpTF.font = MediumFont(font(13));
         tmpTF.textColor = [UIColor colorWithHexString:@"#333333"];
         tmpTF.borderStyle = UITextBorderStyleNone;
+        tmpTF.secureTextEntry = YES;
         tmpTF.placeholder = @"请输入8~16位 数字、字母或符号组合";
         tmpTF.clearButtonMode = UITextFieldViewModeWhileEditing;
         tmpTF;
@@ -46,9 +47,44 @@
     [self.view addSubview:self.pwdTf];
     [self.pwdTf mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(kWidth(10));
-        make.right.equalTo(self.view).offset(-kWidth(10));
+        make.right.equalTo(self.view).offset(-kWidth(10 + 16.0 + 10));
         make.height.mas_equalTo(kHeight(45));
         make.top.equalTo(self.view);
+    }];
+    
+    //保密的按钮
+    UIButton *secertBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",MediumFont(font(13)),white_color,0);
+        [button setBackgroundImage:V_IMAGE(@"显示密码") forState:UIControlStateNormal];
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        @weakify(self);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            @strongify(self);
+            button.selected = !button.selected;
+            if (button.selected) {
+                self.pwdTf.secureTextEntry = NO;
+                [button setBackgroundImage:V_IMAGE(@"隐藏密码") forState:UIControlStateNormal];
+            } else {
+                self.pwdTf.secureTextEntry = YES;
+                [button setBackgroundImage:V_IMAGE(@"显示密码") forState:UIControlStateNormal];
+            }
+        }];
+    }];
+    secertBtn.hidden = YES;
+    [self.view addSubview:secertBtn];
+    [secertBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-kWidth(10));
+        make.centerY.equalTo(self.pwdTf).offset(kHeight(3.0));
+        make.width.mas_equalTo(kWidth(22.0));
+        make.height.mas_equalTo(kHeight(22.0));
+    }];
+    
+    [self.pwdTf.rac_textSignal subscribeNext:^(NSString * _Nullable x) {
+        if (x.length > 0) {
+            secertBtn.hidden = NO;
+        } else {
+            secertBtn.hidden = YES;
+        }
     }];
     
     //分割线
@@ -68,16 +104,54 @@
         tmpTF.font = MediumFont(font(13));
         tmpTF.textColor = [UIColor colorWithHexString:@"#333333"];
         tmpTF.borderStyle = UITextBorderStyleNone;
+        tmpTF.secureTextEntry = YES;
         tmpTF.placeholder = @"重复密码";
         tmpTF.clearButtonMode = UITextFieldViewModeWhileEditing;
         tmpTF;
     });
+    
+    
     [self.view addSubview:self.surePwdTf];
     [self.surePwdTf mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(kWidth(10));
-        make.right.equalTo(self.view).offset(-kWidth(10));
+        make.right.equalTo(self.view).offset(-kWidth(10 + 16.0 + 10));
         make.height.mas_equalTo(kHeight(45));
         make.top.equalTo(lineView.mas_bottom);
+    }];
+    
+    //保密的按钮
+    UIButton *surePwdSecertBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",MediumFont(font(13)),white_color,0);
+        [button setBackgroundImage:V_IMAGE(@"显示密码") forState:UIControlStateNormal];
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        @weakify(self);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            @strongify(self);
+            button.selected = !button.selected;
+            if (button.selected) {
+                self.surePwdTf.secureTextEntry = NO;
+                [button setBackgroundImage:V_IMAGE(@"隐藏密码") forState:UIControlStateNormal];
+            } else {
+                self.surePwdTf.secureTextEntry = YES;
+                [button setBackgroundImage:V_IMAGE(@"显示密码") forState:UIControlStateNormal];
+            }
+        }];
+    }];
+    surePwdSecertBtn.hidden = YES;
+    [self.surePwdTf.rac_textSignal subscribeNext:^(NSString * _Nullable x) {
+        if (x.length > 0) {
+            surePwdSecertBtn.hidden = NO;
+        } else {
+            surePwdSecertBtn.hidden = YES;
+        }
+    }];
+    
+    [self.view addSubview:surePwdSecertBtn];
+    [surePwdSecertBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-kWidth(10));
+        make.centerY.equalTo(self.surePwdTf).offset(kHeight(3.0));
+        make.width.mas_equalTo(kWidth(22.0));
+        make.height.mas_equalTo(kHeight(22.0));
     }];
     
     //完成按钮
@@ -103,7 +177,8 @@
     [nextBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.surePwdTf.mas_bottom).offset(kHeight(71.0));
         make.centerX.equalTo(self.view);
-        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+        make.left.equalTo(self.view).offset(kWidth(10.0));
+        make.right.equalTo(self.view).offset(-kWidth(10));
         make.height.mas_equalTo(kHeight(40.0));
     }];
 }
@@ -127,7 +202,7 @@
 //            [self.navigationController popViewControllerAnimated:YES];
             [DCURLRouter popTwiceViewControllerAnimated:YES];
         } else {
-            [ConventionJudge NetCode:code vc:self type:@"1"];
+//            [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
         ShowError(netError);

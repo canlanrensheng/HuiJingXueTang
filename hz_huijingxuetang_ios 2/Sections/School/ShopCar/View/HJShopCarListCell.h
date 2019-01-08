@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJShopCarListCell : BaseTableViewCell
 
+@property (nonatomic,strong) RACSubject *backSub;
+
 @end
 
 NS_ASSUME_NONNULL_END

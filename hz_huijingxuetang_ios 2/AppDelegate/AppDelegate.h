@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-@interface AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate>
+#import <WXApi.h>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

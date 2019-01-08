@@ -8,6 +8,13 @@
 
 #import "HJBaseClassDetailGroupCell.h"
 
+@interface HJBaseClassDetailGroupCell ()
+
+@property (nonatomic,strong) UIImageView *iconImageV;
+@property (nonatomic,strong) UILabel *desLabel;
+
+@end
+
 @implementation HJBaseClassDetailGroupCell
 
 - (void)hj_configSubViews {
@@ -62,6 +69,14 @@
         make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
         make.right.equalTo(self).offset(-kWidth(10.0));
     }];
+    
+    self.iconImageV = iconImageV;
+    self.desLabel = desLabel;
+}
+
+- (void)setModel:(HJSchoolCourseDetailModel *)model {
+    _model = model;
+    
 }
 
 @end

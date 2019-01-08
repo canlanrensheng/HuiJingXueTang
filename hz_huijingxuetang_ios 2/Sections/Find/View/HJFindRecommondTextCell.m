@@ -64,17 +64,33 @@
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
             if([APPUserDataIofo AccessToken].length <= 0) {
-                ShowMessage(@"您还未登录");
                 [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                 return;
             }
             if(self.model.isinterest == 0) {
                 [self.viewModel careOrCancleCareWithTeacherId:self.model.teacherid accessToken:[APPUserDataIofo AccessToken] insterest:@"1" Success:^{
                     button.selected = !button.selected;
+//                    ShowMessage(@"关注成功");
+                    [self.backRefreshSubject sendNext:@(1)];
+                    self.model.isinterest = 1;
+                    // 刷新关注的列表
+                    if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                    } else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
+                    }
                 }];
             } else {
                 [self.viewModel careOrCancleCareWithTeacherId:self.model.teacherid accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
                     button.selected = !button.selected;
+                    [self.backRefreshSubject sendNext:@(0)];
+                    self.model.isinterest = 0;
+                    // 刷新关注的列表
+                    if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                    }else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
+                    }
                 }];
             }
         }];
@@ -124,6 +140,7 @@
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
     HJFindViewModel *listViewModel = (HJFindViewModel *)viewModel;
+    self.viewModel = listViewModel;
     HJFindRecommondModel *model = nil;
     if(listViewModel.findSegmentType == 0) {
         model = listViewModel.findArray[indexPath.row];
@@ -137,6 +154,13 @@
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;
     self.dateLabel.text = [DateFormatter getDate:model.createtime];
+}
+
+- (RACSubject *)backRefreshSubject {
+    if(!_backRefreshSubject) {
+        _backRefreshSubject = [[RACSubject alloc] init];
+    }
+    return _backRefreshSubject;
 }
 
 @end

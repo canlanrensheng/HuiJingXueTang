@@ -12,5 +12,10 @@
 #import "HudTool.h"
 #import "YJNetWorkTool.h"
 #import "TXAlertView.h"
+#import "HJCheckUserVipTool.h"
+#import "UserInfoSingleObject.h"
+#import "TXDataManage.h"
+#import "HJCheckLivePwdTool.h"
+#import "HJPayTool.h"
 
 #endif /* Tool_h */

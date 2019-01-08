@@ -8,18 +8,38 @@
 
 #import "HJMessageViewController.h"
 #import "HJMessageListCell.h"
+#import "HJMessageViewModel.h"
+#import "HJMessageModel.h"
 @interface HJMessageViewController ()
+
+@property (nonatomic,strong) HJMessageViewModel *viewModel;
 
 @end
 
 @implementation HJMessageViewController
 
+- (HJMessageViewModel *)viewModel {
+    if (!_viewModel){
+        _viewModel = [[HJMessageViewModel alloc] init];
+    }
+    return  _viewModel;
+}
+
 - (void)hj_setNavagation {
     self.title = @"消息通知";
 }
 
-- (void)hj_configSubViews{
-    //    self.tableView.scrollEnabled = NO;
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+     __weak typeof(self)weakSelf = self;
+    [self.viewModel getMessageWithSuccess:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
+- (void)hj_configSubViews {
     self.numberOfSections = 1;
     
     self.sectionFooterHeight = 0.001f;
@@ -35,6 +55,15 @@
     
 }
 
+- (void)hj_refreshData {
+    __weak typeof(self)weakSelf = self;
+    [self.viewModel getMessageWithSuccess:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return  kHeight(61.0);
 }
@@ -44,20 +73,27 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return self.viewModel.messageArray.count;
 }
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJMessageListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJMessageListCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.row < self.viewModel.messageArray.count) {
+        [cell setViewModel:self.viewModel indexPath:indexPath];
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [DCURLRouter pushURLString:@"route://messageDetailVC" animated:YES];
+    if (indexPath.row < self.viewModel.messageArray.count) {
+        kRepeatClickTime(1.0);
+        HJMessageModel *model = self.viewModel.messageArray[indexPath.row];
+        NSDictionary *para = @{@"type" : @(model.type)};
+        [DCURLRouter  pushURLString:@"route://messageDetailVC"  query:para animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -74,5 +110,7 @@
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
 }
+
+
 
 @end

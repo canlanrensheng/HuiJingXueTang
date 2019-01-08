@@ -268,8 +268,8 @@
 //                    break;
 //                }
 //            }
-//            LoginViewController *loginvc = [[LoginViewController alloc]init];
-//            [VisibleViewController().navigationController pushViewController:loginvc animated:YES];
+            LoginViewController *loginvc = [[LoginViewController alloc]init];
+            [VisibleViewController().navigationController pushViewController:loginvc animated:YES];
             break;
         }
         case 11:

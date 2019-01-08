@@ -13,5 +13,6 @@
 #import "UILabel+LJLabel.h"
 #import "UIButton+LJButton.h"
 #import "HJShareTool.h"
+#import "HJCheckLivePwdAlertView.h"
 
 #endif /* ViewHeader_h */

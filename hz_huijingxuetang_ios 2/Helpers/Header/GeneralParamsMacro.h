@@ -110,13 +110,23 @@
 
 /// 系统控件默认高度
 
-#define isiphoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+//#define isiphoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+//iPhoneX / iPhoneXS
+#define  isIphoneX_XS     (Screen_Width == 375.f && Screen_Height == 812.f ? YES : NO)
+//iPhoneXR / iPhoneXSMax
+#define  isIphoneXR_XSMax    (Screen_Width == 414.f && Screen_Height == 896.f ? YES : NO)
+//异性全面屏
+#define   isFringeScreen    (isIphoneX_XS || isIphoneXR_XSMax)
 
-#define kStatusBarHeight        [[UIApplication sharedApplication] statusBarFrame].size.height
+
+
 #define kTopBarHeight           (44.f)
-#define kNavigationBarHeight    (isiphoneX ? 88 : 64)
-#define kBottomBarHeight        (isiphoneX ? 83 : 49)
-#define KHomeIndicatorHeight    (isiphoneX ? 34 : 0)
+#define kNavigationBarHeight    (isFringeScreen ? 88 : 64)
+#define kBottomBarHeight        (isFringeScreen ? 83 : 49)
+#define KHomeIndicatorHeight    (isFringeScreen ? 34 : 0)
+#define kStatusBarHeight        (isFringeScreen ? 44.0 : 20.0)
+
+#define kTopStatusHeight        (isFringeScreen ? 44.0 : 0.0)
 
 #define kCellDefaultHeight      (44.f)
 
@@ -211,6 +221,7 @@ NO)
 #define kWidth(R) (R)*(Screen_Width)/375
 #define kHeight(R) (R)*(Screen_Width)/375
 //(R)*(Screen_Height)/667
+
 
 #define font(R) (R)*(Screen_Width)/375
 
@@ -352,6 +363,8 @@ alpha:1.0]
 
 #define MediumFont(FONTSIZE) [UIFont fontWithName:@"PingFangSC-Medium" size:(FONTSIZE)]
 #define BoldFont(FONTSIZE)   [UIFont fontWithName:@"PingFangSC-Semibold" size:(FONTSIZE)]
+
+
 #define HEXColor(color) [UIColor colorWithHexString:color]
 
 ///正常字体

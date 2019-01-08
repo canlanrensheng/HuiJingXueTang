@@ -7,13 +7,24 @@
 //
 
 #import "HJSchoolDetailReviewPastCell.h"
+#import "HJSchoolLiveDetailViewModel.h"
+#import "HJPastListModel.h"
 
+@interface HJSchoolDetailReviewPastCell()
+
+@property (nonatomic,strong) UILabel *liveNameLabel;
+@property (nonatomic,strong) UILabel *backPlaylabel;
+@property (nonatomic,strong) UILabel *playingLabel;
+@property (nonatomic,strong) UILabel *playStartTimeLabel;
+@property (nonatomic,strong) UIImageView *playImaV;
+
+@end
 
 @implementation HJSchoolDetailReviewPastCell
 
 - (void)hj_configSubViews {
     UILabel *jiNameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"1.识别K线",MediumFont(font(14)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(14)),HEXColor(@"#333333"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -23,10 +34,11 @@
         make.left.equalTo(self).offset(kWidth(11.0));
         make.height.mas_equalTo(kHeight(13));
     }];
+    self.liveNameLabel = jiNameLabel;
     
     //直播的状态
     UILabel *liveStatusLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"点播",MediumFont(font(10)),HEXColor(@"#22476B"));
+        label.ljTitle_font_textColor(@"回放",MediumFont(font(10)),HEXColor(@"#22476B"));
         label.textAlignment = NSTextAlignmentCenter;
         label.backgroundColor = white_color;
         label.numberOfLines = 0;
@@ -39,8 +51,8 @@
         make.left.equalTo(jiNameLabel.mas_right).offset(kWidth(8.0));
         make.size.mas_equalTo(CGSizeMake(kWidth(25), kHeight(15)));
     }];
-    
-    liveStatusLabel.hidden = YES;
+    self.backPlaylabel = liveStatusLabel;
+    liveStatusLabel.hidden = NO;
     
     UILabel *onLiveStatusLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"正在播放",MediumFont(font(10)),white_color);
@@ -57,6 +69,8 @@
         make.size.mas_equalTo(CGSizeMake(kWidth(47), kHeight(15)));
     }];
     
+    self.playingLabel = onLiveStatusLabel;
+    
     UIImageView *liveStatusImageV = [[UIImageView alloc] init];
     liveStatusImageV.image = V_IMAGE(@"播放");
     [self addSubview:liveStatusImageV];
@@ -66,9 +80,11 @@
         make.width.height.mas_equalTo(kWidth(24));
     }];
     
+    self.playImaV = liveStatusImageV;
+    
     //课程的播放的次数
     UILabel *playCountLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"俞春 1500次播放",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -78,6 +94,31 @@
         make.left.equalTo(self).offset(kWidth(11.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    
+    self.playStartTimeLabel = playCountLabel;
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJSchoolLiveDetailViewModel *listViewModel = (HJSchoolLiveDetailViewModel *)viewModel;
+    HJPastListModel *model = listViewModel.pastListArray[indexPath.row];
+    self.liveNameLabel.text = model.coursename;
+    NSDate *date = [NSDate dateWithString:model.starttime formatString:@"yyyy-MM-dd HH:mm:ss"];
+    self.playStartTimeLabel.text = [NSString stringWithFormat:@"%ld-%@-%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+    if ([listViewModel.courseid isEqualToString:model.courseid]) {
+        self.playingLabel.hidden = NO;
+        self.backPlaylabel.hidden = YES;
+        self.playImaV.image = V_IMAGE(@"直播icon-1");
+    } else {
+//        if (model.isPlay) {
+//            self.playingLabel.hidden = NO;
+//            self.backPlaylabel.hidden = YES;
+//            self.playImaV.image = V_IMAGE(@"直播icon-1");
+//        } else {
+        self.playingLabel.hidden = YES;
+        self.backPlaylabel.hidden = NO;
+        self.playImaV.image = V_IMAGE(@"播放");
+//        }
+    }
 }
 
 @end

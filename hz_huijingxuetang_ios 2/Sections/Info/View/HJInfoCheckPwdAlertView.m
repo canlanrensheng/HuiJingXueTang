@@ -22,6 +22,7 @@
 @property (nonatomic,strong) UITextField * phoneTf;
 
 @property (nonatomic,strong) HJTeachDetailViewModel *viewModel;
+@property (nonatomic,copy) NSString *teacherId;
 
 @end
 
@@ -57,12 +58,11 @@
         alertView.layer.cornerRadius = kHeight(5.0);
         alertView.clipsToBounds = YES;
         [_bgView addSubview:alertView];
-//        [alertView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.centerY.equalTo(self.bgView);
-//            make.left.equalTo(self.bgView).offset(kWidth(38));
-//            make.right.equalTo(self.bgView).offset(-kWidth(38));
-//            make.height.mas_equalTo(kHeight(200));
-//        }];
+        
+        _alertView.centerY = _bgView.centerY;
+        CGRect rec = alertView.frame;
+        rec.origin.x = (Screen_Width - rec.size.width) / 2;
+        alertView.frame = rec;
         
         //标题
         UILabel *messageLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -84,7 +84,7 @@
         [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(messageLabel.mas_bottom).offset(kHeight(16.0));
             make.left.right.equalTo(alertView);
-            make.height.mas_equalTo(kHeight(1.0));
+            make.height.mas_equalTo(kHeight(0.5));
         }];
         
         //输入的类型
@@ -94,11 +94,11 @@
         _phoneTf.font = MediumFont(font(15));
         _phoneTf.clearButtonMode = UITextFieldViewModeNever;
         _phoneTf.delegate = self;
-        NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
-        NSString *infoPwd = [defa objectForKey:@"InfoPwd"];
-        if(infoPwd.length > 0){
-            _phoneTf.text = infoPwd;
-        }
+//        NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+//        NSString *infoPwd = [defa objectForKey:@"InfoPwd"];
+//        if(infoPwd.length > 0){
+//            _phoneTf.text = infoPwd;
+//        }
         _phoneTf.placeholder = @"";
         _phoneTf.tintColor = HEXColor(@"#2B4E71");
         _phoneTf.textAlignment = NSTextAlignmentCenter;
@@ -106,7 +106,8 @@
         _phoneTf.keyboardType = UIKeyboardTypeDefault;
         [alertView addSubview:_phoneTf];
         [_phoneTf mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(lineView.mas_bottom).offset(kHeight(50));
+//            make.top.equalTo(lineView.mas_bottom).offset(kHeight(50));
+            make.top.equalTo(alertView.mas_centerY).offset(-kHeight(15.5));
             make.centerX.equalTo(alertView);
             make.left.equalTo(alertView).offset(kWidth(50));
             make.right.equalTo(alertView).offset(-kWidth(50));
@@ -154,16 +155,21 @@
                     ShowMessage(@"请输入密码");
                     return;
                 }
-                [MBProgressHUD showHUD:self.alertView];
-                [self.viewModel verifyInfoPwdWithInfoPwd:self.phoneTf.text Success:^{
-                    [MBProgressHUD hideHUDForView:self.alertView animated:YES];
-                    NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
-                    [defa setObject:self.phoneTf.text forKey:@"InfoPwd"];
-                    [defa synchronize];
-                    if(self.bindBlock){
-                        self.bindBlock(1);
+                [self.viewModel verifyInfoPwdWithInfoPwd:self.phoneTf.text Success:^(BOOL successFlag) {
+                    if(successFlag) {
+                        [MBProgressHUD showMessage:@"校验成功" view:[UIApplication sharedApplication].keyWindow];
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+                            [defa setObject:self.phoneTf.text forKey:[NSString stringWithFormat:@"InfoPwd%@",self.teacherId]];
+                            [defa synchronize];
+                            if(self.bindBlock){
+                                self.bindBlock(1);
+                            }
+                            [self removeFromSuperview];
+                        });
+                    } else {
+                        ShowMessage(@"密码不正确");
                     }
-                    [self removeFromSuperview];
                 }];
             }];
         }];
@@ -175,11 +181,11 @@
             make.width.mas_equalTo(buttonWidth);
         }];
         
+        //成为第一响应者
+        [_phoneTf becomeFirstResponder];
     
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-        
-        [_phoneTf becomeFirstResponder];
         
         _alertView = alertView;
     }
@@ -191,18 +197,51 @@
     }
 }
 
-- (HJInfoCheckPwdAlertView * )initWithBindBlock:(void(^)(BOOL success))bindBlock {
+- (HJInfoCheckPwdAlertView * )initWithTeacherId:(NSString *)teacherid BindBlock:(void(^)(BOOL success))bindBlock {
     HJInfoCheckPwdAlertView *alretView = [self initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
+    self.teacherId = teacherid;
     _bindBlock = bindBlock;
     return alretView;
 }
 
-- (void)show{
-    [[UIApplication sharedApplication].keyWindow addSubview:self];
-    _alertView.centerY = _bgView.centerY;
-    CGRect rec = _alertView.frame;
-    rec.origin.x = (Screen_Width - rec.size.width) / 2;
-    _alertView.frame = rec;
+- (void)show {
+    [self.viewModel verifyInfoPwdWithInfoPwd:@"" Success:^(BOOL successFlag) {
+        if(successFlag) {
+            //没有密码
+            if (self.bindBlock) {
+                self.bindBlock(1);
+            }
+            [self removeFromSuperview];
+        } else {
+            //有密码
+            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+            NSString *infoPwd = [defa objectForKey:[NSString stringWithFormat:@"InfoPwd%@",self.teacherId]];
+            if(infoPwd.length > 0){
+                [self.viewModel verifyInfoPwdWithInfoPwd:infoPwd Success:^(BOOL successFlag) {
+                    if(successFlag) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            if (self.bindBlock) {
+                                self.bindBlock(1);
+                            }
+                            [self removeFromSuperview];
+                        });
+                    } else {
+                        [[UIApplication sharedApplication].keyWindow addSubview:self];
+                        _alertView.centerY = _bgView.centerY;
+                        CGRect rec = _alertView.frame;
+                        rec.origin.x = (Screen_Width - rec.size.width) / 2;
+                        _alertView.frame = rec;
+                    }
+                }];
+            } else {
+                [[UIApplication sharedApplication].keyWindow addSubview:self];
+                _alertView.centerY = _bgView.centerY;
+                CGRect rec = _alertView.frame;
+                rec.origin.x = (Screen_Width - rec.size.width) / 2;
+                _alertView.frame = rec;
+            }
+        }
+    }];
 }
 
 - (void)alertTapClick{
@@ -232,7 +271,7 @@
     [value getValue:&rect];
     [UIView animateWithDuration:time animations:^{
         CGRect rec = self.alertView.frame;
-        rec.origin.y = [UIScreen mainScreen].bounds.size.height - rec.size.height - rect.size.height;
+        rec.origin.y = [UIScreen mainScreen].bounds.size.height - rec.size.height - rect.size.height - kHeight(30.0);
         self.alertView.frame = rec;
     }];
 }
@@ -245,10 +284,6 @@
     CGRect rect;
     [value getValue:&rect];
     [UIView animateWithDuration:time animations:^{
-//        CGRect rec = self.alertView.frame;
-//        rec.origin.y = (Screen_Height - rect.size.height) / 2;
-//        self.alertView.frame = rec;
-        
         _alertView.centerY = _bgView.centerY;
         CGRect rec = _alertView.frame;
         rec.origin.x = (Screen_Width - rec.size.width) / 2;

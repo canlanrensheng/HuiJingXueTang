@@ -445,4 +445,12 @@
     return replaceString;
 }
 
+//处理日期单个的数据
++ (NSString *)convertDateSingleData:(NSInteger)date {
+    if([NSString stringWithFormat:@"%ld",date].length < 2) {
+        return [NSString stringWithFormat:@"0%ld",date];
+    }
+    return [NSString stringWithFormat:@"%ld",date];
+}
+
 @end

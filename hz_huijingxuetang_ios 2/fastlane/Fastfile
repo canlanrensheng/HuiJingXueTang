@@ -1,0 +1,30 @@
+#default_platform(:ios)
+
+#platform :ios do
+  #desc "Description of what the lane does"
+  #lane :mylane do
+    #build_app(export_method: "ad-hoc")
+   # pgyer(api_key: "929819c5d317f5e0ce89728820f53e38", #user_key:"960445a800333e96a963ad46360664b7")
+  #end
+#end
+
+lane :hjschool do
+  # 以下两个action来自fastlane-plugin-versioning，
+  # 第一个递增 Build，第二个设定Version。
+  # 如果你有多个target，就必须指定target的值，否则它会直接找找到的第一个plist修改
+    #increment_build_number_in_plist(target: 'HuiJingSchool')
+    #increment_version_number_in_plist(
+     # target: 'HuiJingSchool',
+      #version_number: '1.0.0'
+   # )
+    # gym用来编译ipa
+    gym(scheme: 'HuiJingSchool',#打包scheme
+    export_method:"ad-hoc",#打包类型app-store, ad-hoc, enterprise, development
+    output_directory: "./build",#ipa打包存放路径
+    output_name: 'hjschool.ipa'#ipa名称
+    )
+    firim(firim_api_token: "fa7150b7209a1b3c660f70edc75644e0") #上传到firim
+end
+
+
+

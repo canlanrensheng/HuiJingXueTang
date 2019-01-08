@@ -14,6 +14,9 @@
 #import "HJFindViewController.h"
 #import "HJInfoViewController.h"
 #import "BaseNavigationViewController.h"
+#import "AnimationTabbarItem.h"
+
+#import "HJMessageViewModel.h"
 
 @interface CustomTabbarController ()<UITabBarControllerDelegate>
 @property (strong, nonatomic) NSMutableArray *controllers;
@@ -27,7 +30,7 @@
     if (!_controllers) {
         //首页
         HomePageViewController *vc = [[HomePageViewController alloc] init];
-        BaseNavigationViewController *nvc1 = [[BaseNavigationViewController alloc]initWithRootViewController:vc];
+        BaseNavigationViewController *nvc1 = [[BaseNavigationViewController alloc] initWithRootViewController:vc];
         nvc1.tabBarItem = [self setTabbarItemWithTitle:@"首页" withImage:@"首页未选中" withSelectImage:@"首页选中"];
         [vc.navigationController setNavigationBarHidden:YES];
         
@@ -55,36 +58,87 @@
         nvc5.tabBarItem = [self setTabbarItemWithTitle:@"我的" withImage:@"我的未选中" withSelectImage:@"我的选中"];
         vc5.view.backgroundColor = ALLViewBgColor;
         
-       
-        _controllers = [NSMutableArray arrayWithArray:@[nvc1,nvc2,nvc3,nvc4,nvc5]];
+        if(MaJia) {
+            _controllers = [NSMutableArray arrayWithArray:@[nvc1,nvc3,nvc4,nvc5]];
+        } else {
+            _controllers = [NSMutableArray arrayWithArray:@[nvc1,nvc2,nvc3,nvc4,nvc5]];
+        }
+        
     }
     return _controllers;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    AnimationTabbarItem *myTabBar = [[AnimationTabbarItem alloc] init];
+    [self setValue:myTabBar forKey:@"tabBar"];
     self.delegate = self;
     self.fd_prefersNavigationBarHidden = YES;
-    self.tabBar.tintColor = NavigationBar_Color;
+    self.tabBar.tintColor = HEXColor(@"#22476B");
+    //防止页面错乱问题
+    self.tabBar.translucent = NO;
     
     self.viewControllers = self.controllers;
     
-    [self.tabBar showBadgeValueAtIndex:4 value:@""];
+    //登陆的时候获取小红点
+    if([APPUserDataIofo AccessToken].length > 0) {
+        HJMessageViewModel *viewModel = [[HJMessageViewModel alloc] init];
+        [viewModel getMessageWithSuccess:^{
+            if(viewModel.hasmess) {
+                [self.tabBar showBadgeValueAtIndex:4 value:@""];
+            } else {
+                [self.tabBar hideBadgeValueAtIndex:4];
+            }
+        }];
+    }
+    
+    //去掉分割线
+    self.tabBar.backgroundImage = [UIImage new];
+    self.tabBar.shadowImage = [UIImage new];
+    //添加阴影
+    self.tabBar.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.2].CGColor;
+    self.tabBar.layer.shadowOpacity = 0.5;
+    self.tabBar.layer.shadowOffset = CGSizeMake(0, -1.0);
+    self.tabBar.layer.shadowRadius = 5.0;//半径
+    
+    
+    for (UITabBarItem *barItem in self.tabBar.items) {
+        barItem.titlePositionAdjustment = UIOffsetMake(0, -kHeight(5.0));
+        barItem.imageInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
+    }
+
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
-    self.tabBar.hidden = NO;
-    
+//- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
+//    self.tabBar.hidden = NO;
+//    DLog(@"获取到的数据是:%ld",self.selectedIndex);
 //    if(self.selectedIndex == 4){
 //        if([APPUserDataIofo AccessToken].length <= 0) {
 //            ShowMessage(@"您还未登录");
-//            [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
-//            return;
+//            [UserInfoSingleObject shareInstance].isLogined = YES;
+//            NSDictionary *para = @{@"isFromMineVC" :@(YES)};
+//            [DCURLRouter pushURLString:@"route://loginVC" query:para animated:YES];
+//            return YES;
 //        }
 //    }
+//    return  NO;
+//}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
+    self.tabBar.hidden = NO;
+    DLog(@"获取到的数据是:%ld",self.selectedIndex);
+    if(self.selectedIndex == 4){
+        if([APPUserDataIofo AccessToken].length <= 0) {
+//            ShowMessage(@"您还未登录");
+            [UserInfoSingleObject shareInstance].isLogined = YES;
+            NSDictionary *para = @{@"isFromMineVC" :@(YES)};
+            [DCURLRouter pushURLString:@"route://loginVC" query:para animated:YES];
+        }
+    }
 }
 
-- (UITabBarItem *)setTabbarItemWithTitle:(NSString *)title withImage:(NSString *)image withSelectImage:(NSString *)selectImage{
+- (UITabBarItem *)setTabbarItemWithTitle:(NSString *)title withImage:(NSString *)image withSelectImage:(NSString *)selectImage {
     UITabBarItem *tabbarItem = [[UITabBarItem alloc]initWithTitle:title image:[[UIImage imageNamed:image] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]selectedImage:[[UIImage imageNamed:selectImage] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     return tabbarItem;
 }

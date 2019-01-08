@@ -10,4 +10,11 @@
 
 @implementation HJHomeStuntJudgeStockModel
 
++ (NSDictionary *)mj_replacedKeyFromPropertyName
+{
+    return @{
+             @"stuntId":@"id"
+             };
+}
+
 @end

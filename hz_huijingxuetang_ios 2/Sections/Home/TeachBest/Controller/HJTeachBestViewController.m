@@ -14,6 +14,7 @@
 @interface HJTeachBestViewController ()
 
 @property (nonatomic,strong) HJTeachBestViewModel *viewModel;
+@property (nonatomic,assign) BOOL isVip;
 
 @end
 
@@ -48,8 +49,21 @@
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.tableView = self.tableView;
     self.viewModel.page = 1;
-    [self.viewModel getListWithSuccess:^{
-        [self.tableView reloadData];
+    [self.viewModel.loadingView startAnimating];
+    [self.viewModel getListWithSuccess:^(BOOL successFlag) {
+        [self.viewModel.loadingView stopLoadingView];
+        if(self.viewModel.page == 1 && self.viewModel.infoListArray.count <= 0) {
+            [[HJCheckUserVipTool shareInstance] checkUserVipWithSuccess:^(int vipNum) {
+                if(vipNum == 0) {
+                    self.isVip = NO;
+                }else {
+                    self.isVip = YES;
+                }
+                [self.tableView reloadData];
+            }];
+        } else {
+            [self.tableView reloadData];
+        }
     }];
 }
 
@@ -58,7 +72,7 @@
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page = 1;
-        [self.viewModel getListWithSuccess:^{
+        [self.viewModel getListWithSuccess:^(BOOL successFlag) {
             [self.tableView reloadData];
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -71,7 +85,7 @@
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
-            [self.viewModel getListWithSuccess:^{
+            [self.viewModel getListWithSuccess:^(BOOL successFlag) {
                 [self.tableView reloadData];
                 [self.tableView.mj_footer endRefreshing];
             }];
@@ -99,22 +113,39 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJBaseTeachBestListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJBaseTeachBestListCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setViewModel:self.viewModel indexPath:indexPath];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithBindBlock:^(BOOL success) {
+    kRepeatClickTime(1.0);
+    if(MaJia) {
         HJTeachBestListModel *model = self.viewModel.infoListArray[indexPath.row];
         if(model.articalid) {
             NSDictionary *para = @{@"infoId" : model.articalid
                                    };
             [DCURLRouter pushURLString:@"route://teachBestDetailVC" query:para animated:YES];
         }
-    }];
-    [alertView show];
+        return;
+    }
+//    HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithBindBlock:^(BOOL success) {
+//        HJTeachBestListModel *model = self.viewModel.infoListArray[indexPath.row];
+//        if(model.articalid) {
+//            NSDictionary *para = @{@"infoId" : model.articalid
+//                                   };
+//            [DCURLRouter pushURLString:@"route://teachBestDetailVC" query:para animated:YES];
+//        }
+//    }];
+//    [alertView show];
+    
+    HJTeachBestListModel *model = self.viewModel.infoListArray[indexPath.row];
+    if(model.articalid) {
+        NSDictionary *para = @{@"infoId" : model.articalid
+                               };
+        [DCURLRouter pushURLString:@"route://teachBestDetailVC" query:para animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -128,42 +159,53 @@
 
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"学习小组空白页"];
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        if (self.isVip) {
+            return [UIImage imageNamed:@"学习小组空白页"];
+        } else{
+            return [UIImage imageNamed:@"我的额课程空白页"];
+        }
+    }
 }
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"暂无相关文章";
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        if(self.isVip) {
+            text = @"暂无相关文章";
+        } else {
+            text = @"您还尚未购买课程";
+        }
+    }
+    
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
 }
 
-
-#pragma mark - 空白页显示按钮
-- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
-{
-    NSString *text = @"重新加载";
-    UIFont *font = [UIFont systemFontOfSize:16.0];
-    UIColor *textColor = [UIColor whiteColor];
-    
-    NSMutableDictionary *attributes = [NSMutableDictionary new];
-    if (font) [attributes setObject:font forKey:NSFontAttributeName];
-    if (textColor) [attributes setObject:textColor forKey:NSForegroundColorAttributeName];
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-}
-
-#pragma mark - 设置按钮的背景颜色
-- (UIImage *)buttonBackgroundImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
-    UIImage *image = [UIImage imageWithColor:red_color];
-    UIEdgeInsets capInsets = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0);
-    UIEdgeInsets rectInsets = UIEdgeInsetsZero;
-    
-    return [[image resizableImageWithCapInsets:capInsets resizingMode:UIImageResizingModeStretch] imageWithAlignmentRectInsets:rectInsets];
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        if(self.isVip) {
+            return nil;
+        } else {
+            return  [UIImage imageNamed:@"添加课程按钮"];
+        }
+    }
 }
 
 #pragma mark - 空白数据集 按钮被点击时 触发该方法：
 - (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
-    NSLog(@"按钮被点击");
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        [self hj_loadData];
+    } else {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        self.tabBarController.selectedIndex = 1;
+    }
 }
 
 @end

@@ -87,7 +87,6 @@
 }
 
 - (void)setTitleView {
-    
     UIView *titleView = self.navigationItem.titleView;
     
     // Double title view
@@ -163,6 +162,16 @@
         }];
     }
     return _activityView;
+}
+
+- (void)startAnimating {
+    [self.activityView startAnimating];
+}
+
+
+- (void)stopLoadingView {
+    [self.activityView stopAnimating];
+    [self.activityView removeFromSuperview];
 }
 
 - (RACSubject *)completionSubject{

@@ -7,6 +7,16 @@
 //
 
 #import "HJSearchResultTeacherCell.h"
+#import "HJSearchResultViewModel.h"
+#import "HJSearchResultModel.h"
+@interface HJSearchResultTeacherCell ()
+
+@property (nonatomic,strong) UIImageView *liveImageV;
+@property (nonatomic,strong) UILabel *titleTextLabel;
+@property (nonatomic,strong) UILabel *desTextLabel;
+@property (nonatomic,strong) UILabel *detailTLabel;
+
+@end
 
 @implementation HJSearchResultTeacherCell
 
@@ -24,6 +34,8 @@
         make.width.height.mas_equalTo(kHeight(60));
     }];
     [iconImageV clipWithCornerRadius:kHeight(30.0) borderColor:nil borderWidth:0];
+    
+    self.liveImageV = iconImageV;
     //昵称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"何晶莹",BoldFont(font(13)),HEXColor(@"#333333"));
@@ -37,6 +49,8 @@
         make.height.mas_equalTo(kHeight(13));
         make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
     }];
+    
+    self.titleTextLabel = nameLabel;
 
     //工作
     UILabel *jobLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -51,6 +65,8 @@
         make.height.mas_equalTo(kHeight(11));
         make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
     }];
+    
+    self.desTextLabel = jobLabel;
 
     //功课和学员数量
     UILabel *studentCountLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -65,6 +81,38 @@
         make.height.mas_equalTo(kHeight(11));
         make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
     }];
+    
+    self.detailTLabel = studentCountLabel;
+    
+    //分割线
+    UIView *lineView = [[UIView alloc] init];
+    lineView.backgroundColor = HEXColor(@"#EAEAEA");
+    [self addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self);
+        make.height.mas_equalTo(kHeight(0.5));
+    }];
+}
+
+//- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+//    HJSearchResultViewModel *listViewModel = (HJSearchResultViewModel *)viewModel;
+//    TeacherResponses *model = listViewModel.model.teacherResponses[indexPath.row];
+//    if(model) {
+//        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图")];
+//        self.titleTextLabel.text = model.realname;
+//        self.desTextLabel.text = model.teacprofessional;
+//        self.detailTLabel.text = [NSString stringWithFormat:@"%ld门课程 | %ld名学员",(long)model.courCount,(long)model.stuCount];
+//    }
+//}
+
+- (void)setModel:(TeacherResponses *)model {
+    _model = model;
+    if(model) {
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图")];
+        self.titleTextLabel.text = model.realname;
+        self.desTextLabel.text = model.teacprofessional;
+        self.detailTLabel.text = [NSString stringWithFormat:@"%ld门课程 | %ld名学员",(long)model.courCount,(long)model.stuCount];
+    }
 }
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import "HJShopCarListCell.h"
-
+#import "HJShopCarViewModel.h"
+#import "HJShopCarListModel.h"
 @interface HJShopCarListCell ()
 
 @property (nonatomic,strong) UIButton *selectButton;
@@ -16,6 +17,8 @@
 @property (nonatomic,strong) UILabel *courceTypeLabel;
 @property (nonatomic,strong) UILabel *serviceTimeLabel;
 @property (nonatomic,strong) UILabel *priceLabel;
+
+@property (nonatomic,strong) HJShopCarListModel *model;
 
 @end
 
@@ -28,11 +31,13 @@
         button.ljTitle_font_titleColor_state(@"选择",H15,clear_color,0);
         [button setImage:[UIImage imageNamed:@"未选中"] forState:UIControlStateNormal];
         [button setImage:[UIImage imageNamed:@"勾选"] forState:UIControlStateSelected];
-        @weakify(self);
-        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
-            
-        }];
+//        @weakify(self);
+//        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//            @strongify(self);
+//            button.selected = !button.selected;
+//            self.model.isSelect = button.selected;
+//            [self.backSub sendNext:nil];
+//        }];
     }];
     [self addSubview:self.selectButton];
     [self.selectButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -60,14 +65,15 @@
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"重温经典系列之新K线战法",BoldFont(font(14)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
-        label.numberOfLines = 1.0;
+        label.numberOfLines = 2;
         [label sizeToFit];
     }];
     [self addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(imaV).offset(kHeight(5.0));
         make.left.equalTo(imaV.mas_right).offset(kWidth(10.0));
-        make.height.mas_equalTo(kHeight(13.0));
+        make.right.equalTo(self).offset(-kWidth(10));
+//        make.height.mas_equalTo(kHeight(13.0));
     }];
 
     self.nameLabel = nameLabel;
@@ -88,7 +94,7 @@
 
     //课程类型：直播：
     _courceTypeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"课程类型：直播",MediumFont(font(11.0)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"",MediumFont(font(11.0)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -101,7 +107,7 @@
 
     //价格
     _priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥1299",MediumFont(font(13.0)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"￥1299",MediumFont(font(15.0)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -112,6 +118,35 @@
         make.height.mas_equalTo(kHeight(13.0));
     }];
     
+    //分割线
+    UIView *lineView = [[UIView alloc] init];
+    lineView.backgroundColor = Line_Color;
+    [self addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self);
+        make.height.mas_equalTo(kHeight(0.5));
+    }];
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJShopCarViewModel *listViewModel = (HJShopCarViewModel *)viewModel;
+    HJShopCarListModel *model = listViewModel.shopCarListArray[indexPath.row];
+    self.model = model;
+    if (model) {
+        [self.picImageView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        self.nameLabel.text = model.coursename;
+        _serviceTimeLabel.text = [NSString stringWithFormat:@"服务周期：%ld天",model.periods];
+        NSString *price = [NSString stringWithFormat:@"￥%.2f",model.coursemoney.floatValue];
+        self.priceLabel.attributedText = [price attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+        self.selectButton.selected = model.isSelect;
+    }
+}
+
+- (RACSubject *)backSub {
+    if(!_backSub) {
+        _backSub = [[RACSubject alloc] init];
+    }
+    return _backSub;
 }
 
 @end

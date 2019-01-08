@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger,ShareObjectType){
     ShareObjectTypeWXFriend,  //微信好友
     ShareObjectTypeWXCircle,//微信朋友圈
     ShareObjectTypeQQ,  //QQ
-    ShareObjectTypeWb
+    ShareObjectTypeWb,
+    ShareObjectTypeCopyLink
 };
 
 @interface ShareLinkAlertView : UIView

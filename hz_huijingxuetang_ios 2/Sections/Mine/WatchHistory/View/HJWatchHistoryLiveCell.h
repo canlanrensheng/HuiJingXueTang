@@ -7,10 +7,12 @@
 //
 
 #import "BaseTableViewCell.h"
-
+#import "HJLiveDetailModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJWatchHistoryLiveCell : BaseTableViewCell
+
+@property (nonatomic,strong) HJLiveDetailModel *model;
 
 @end
 

@@ -25,14 +25,13 @@
     return _activityView;
 }
 
-- (void)tx_configSubViews{
+- (void)hj_configSubViews{
     self.backgroundColor = white_color;
     [self addSubview:self.activityView];
     [self.activityView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(50, 50));
         make.center.mas_equalTo(self);
     }];
-    
 }
 
 - (void)startAnimating{

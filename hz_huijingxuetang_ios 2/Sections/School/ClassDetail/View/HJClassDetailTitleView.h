@@ -8,9 +8,13 @@
 
 #import "BaseView.h"
 
+#import "TimeCountDownView.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJClassDetailTitleView : BaseView
+
+@property (nonatomic,strong) UILabel *titleTextLabel;
+@property (nonatomic,strong) TimeCountDownView *timeCountDownView;
 
 @end
 

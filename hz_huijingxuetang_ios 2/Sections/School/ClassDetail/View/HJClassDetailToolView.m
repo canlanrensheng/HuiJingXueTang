@@ -38,7 +38,7 @@
     self.lineView.frame = CGRectMake(0, Height - kHeight(3.0 + 4.0), kWidth(20.0) , kHeight(3.0));
     [self addSubview:self.lineView];
     
-    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, Height - kHeight(1.0), Screen_Width , kHeight(1.0))];
+    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, Height - kHeight(0.5), Screen_Width , kHeight(0.5))];
     bottomView.backgroundColor = HEXColor(@"#EAEAEA");
     [self addSubview:bottomView];
     
@@ -107,6 +107,7 @@
     if(!_lineView){
         _lineView = [[UIView alloc] init];
         _lineView.backgroundColor = HEXColor(@"#22476B");
+        [_lineView clipWithCornerRadius:kHeight(1.5) borderColor:nil borderWidth:0];
     }
     return _lineView;
 }

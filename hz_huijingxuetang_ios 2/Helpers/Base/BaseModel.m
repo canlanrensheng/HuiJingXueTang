@@ -7,6 +7,7 @@
 //
 
 #import "BaseModel.h"
+
 @implementation BaseModel
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key{};

@@ -29,7 +29,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>alipay</string>
+			<string>alisdkdemo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>alipay9815485a129</string>
@@ -60,7 +60,7 @@
 			<string>qq</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>QQ4208D021</string>
+				<string>QQ060D3A5D</string>
 			</array>
 		</dict>
 		<dict>
@@ -71,6 +71,16 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>wb3896694739</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>alipay</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>alipay9815485a129</string>
 			</array>
 		</dict>
 	</array>

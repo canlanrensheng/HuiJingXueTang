@@ -7,10 +7,15 @@
 //
 
 #import "BaseTableViewController.h"
-
+#import "HJClassDetailViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJBaseEvaluationViewController : BaseTableViewController
+
+@property (nonatomic,strong) HJClassDetailViewModel *viewModel;
+
+//免费领取的操作
+@property (nonatomic,strong) RACSubject *evaluationSubject;
 
 @end
 

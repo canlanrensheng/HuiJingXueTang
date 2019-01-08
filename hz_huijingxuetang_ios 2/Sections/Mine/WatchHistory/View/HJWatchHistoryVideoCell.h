@@ -12,6 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJWatchHistoryVideoCell : BaseTableViewCell
 
+@property (nonatomic,strong) UIImageView *imaV;
+@property (nonatomic,strong) UILabel *nameLabel;
+@property (nonatomic,strong) UILabel *totalTimeLabel;
+@property (nonatomic,strong) UILabel *teacherNameLabel;
+@property (nonatomic,strong) UILabel *timeLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

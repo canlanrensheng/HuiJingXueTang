@@ -87,25 +87,25 @@
     return  _viewModel;
 }
 
+
 - (void)hj_loadData {
     self.viewModel.findSegmentType = 1;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.tableView = self.tableView;
-    self.viewModel = [[HJFindViewModel alloc] init];
+//    self.viewModel = [[HJFindViewModel alloc] init];
     self.viewModel.page = 1;
     [self.viewModel teacherDynamicCareListWithSuccess:^{
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
 - (void)hj_bindViewModel {
     @weakify(self);
-    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshFindData" object:nil] subscribeNext:^(NSNotification *noty) {
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreFindCareData" object:nil] subscribeNext:^(NSNotification *noty) {
         @strongify(self);
-        NSDictionary *para = noty.userInfo;
-        if([[para objectForKey:@"index"] integerValue] == 1) {
-            [self hj_loadData];
-        }
+        [self hj_loadData];
     }];
 }
 
@@ -126,8 +126,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel teacherDynamicCareListWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -229,8 +231,32 @@
     return self.viewModel.careArray.count;
 }
 
+- (void)dealCareOrCancleCareDataWithSelect:(BOOL)isSelect indexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.viewModel.careArray.count) {
+        HJFindRecommondModel *selectModel = self.viewModel.careArray[indexPath.row];
+        NSMutableArray *marr = [NSMutableArray arrayWithArray:self.viewModel.careArray];
+        if(isSelect == 0 ) {
+//            //选中的时候
+//            for (HJFindRecommondModel *model in self.viewModel.careArray) {
+//                if (model.teacherid == selectModel.teacherid) {
+//                    model.isinterest = 1;
+//                }
+//            }
+//        } else {
+            //取消选中的时候
+            for (HJFindRecommondModel *model in self.viewModel.careArray) {
+                if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+//                    model.isinterest = 0;
+                    [marr removeObject:model];
+                }
+            }
+        }
+        self.viewModel.careArray = marr;
+        [self.tableView reloadData];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     if (indexPath.row < self.viewModel.careArray.count) {
         HJFindRecommondModel *model = self.viewModel.careArray[indexPath.row];
         switch (model.findType) {
@@ -240,6 +266,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -249,6 +278,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -258,6 +290,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -268,6 +303,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -277,6 +315,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -287,6 +328,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -296,6 +340,9 @@
                 self.viewModel.findSegmentType = FindSegmentTypeCare;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.hidden = YES;
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
                 return cell;
             }
                 break;
@@ -313,6 +360,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     /// 如果正在播放的index和当前点击的index不同，则停止当前播放的index
+    kRepeatClickTime(1.0);
     if (self.player.playingIndexPath != indexPath) {
         [self.player stopCurrentPlayingCell];
     }
@@ -320,20 +368,79 @@
     if (!self.player.currentPlayerManager.isPlaying) {
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }
+//    if (indexPath.row < self.viewModel.careArray.count) {
+//        HJFindRecommondModel *model = self.viewModel.careArray[indexPath.row];
+//        if(model.type == 1 || model.type == 2) {
+//            //资讯
+//            NSDictionary *para = @{@"infoId" : model.dynamiclinkid
+//                                   };
+//            [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
+//        }
+//        if (model.type == 3 || model.type == 4) {
+//            //直播
+//        }
+//        if(model.type == 5) {
+//            //课程
+//            if([APPUserDataIofo AccessToken].length <= 0) {
+//                ShowMessage(@"您还未登录");
+//                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+//                return;
+//            }
+//            [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.dynamiclinkid} animated:YES];
+//        }
+//    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0.0001f;
 }
 
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"发现 关注 缺省"];
-}
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+//    return [UIImage imageNamed:@"发现 关注 缺省"];
+//}
+//
+//- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
+//    NSString *text = @"还未关注老师";
+//    NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
+//    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+//}
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"还未关注老师";
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        text = @"还未关注老师";
+    }
+    
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        return [UIImage imageNamed:@"发现 关注 缺省"];
+    }
+}
+
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - 空白数据集 按钮被点击时 触发该方法：
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        [self hj_loadData];
+    } else {
+        
+    }
 }
 
 @end

@@ -9,6 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @interface YJAPPNetwork : NSObject
+
+//上线马甲包控制
++(void)SetOnlineMaJiaBaoWithCheckVersion:(NSString *)checkVersion success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
+//检测版本更新
++(void)CheckVersionWithSuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
+//保存openId到后台服务器
++(void)SaveOpenIdToServiceWithOpenId:(NSString *)openId success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
 /**
  首页
  **/
@@ -233,8 +243,10 @@
 /**
  创建待支付订单
  **/
-+(void)WillPayWithAccesstoken:(NSString*)accesstoken cids:(NSString *)cids success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
++(void)WillPayWithAccesstoken:(NSString*)accesstoken cids:(NSString *)cids picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
 
+//生成砍价的订单
++(void)CreateKillPriceOrderWithAccesstoken:(NSString*)accesstoken courseId:(NSString *)courseId picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
 /**
  订单详情
  **/

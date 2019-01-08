@@ -22,6 +22,10 @@
 - (void)shareOperation:(SSDKPlatformType)platformType title:(NSString *)title message:(NSString *)message imgs:(NSArray *)imgs url:(NSString *)url shareSuccessBlock:(ShareSuccessBlock)shareSuccessBlock shareFailureBlock:(ShareFailureBlock)shareFailureBlock{
     NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
     NSArray* imageArray = imgs;
+    
+    if(platformType == SSDKPlatformTypeSinaWeibo) {
+        message = [NSString stringWithFormat:@"%@ %@",message,url];
+    }
     [shareParams SSDKSetupShareParamsByText:message
                                          images:imageArray //传入要分享的图片
                                             url:[NSURL URLWithString:url]
@@ -39,13 +43,13 @@
          switch (state) {
              case SSDKResponseStateSuccess:
              {
-                 [MBProgressHUD showMessage:@"分享成功" view:[UIApplication sharedApplication].keyWindow];
+                 //[MBProgressHUD showMessage:@"分享成功" view:[UIApplication sharedApplication].keyWindow];
                  shareSuccessBlock();
                  break;
              }
              case SSDKResponseStateFail:
              {
-                 [MBProgressHUD showMessage:@"分享失败" view:[UIApplication sharedApplication].keyWindow];
+                 //[MBProgressHUD showMessage:@"分享失败" view:[UIApplication sharedApplication].keyWindow];
                  shareFailureBlock();
                  break;
              }

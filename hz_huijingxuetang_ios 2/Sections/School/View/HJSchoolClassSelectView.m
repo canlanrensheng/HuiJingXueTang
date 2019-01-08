@@ -37,9 +37,9 @@
         make.width.mas_equalTo(kWidth(90));
     }];
     
-    NSArray *titleArr = @[@"讲师分类",@"系列分类",@"价格分类"];
-    CGFloat height = kHeight(40);
-    for (int i = 0 ;i < 3;i ++) {
+    NSArray *titleArr = @[@"智能分类",@"价格分类"];
+    CGFloat height = kHeight(50);
+    for (int i = 0 ;i < titleArr.count;i ++) {
         UIButton *typeBtn = [UIButton creatButton:^(UIButton *button) {
             button.frame = CGRectMake(0, height * i, kWidth(90), height);
             button.ljTitle_font_titleColor_state(titleArr[i],MediumFont(font(13)),HEXColor(@"#333333"),0);
@@ -55,6 +55,17 @@
                 self.lastSelectBtn = button;
                 
                 self.lineView.centerY = button.centerY;
+                
+                //点击的操作
+                if (i == 0) {
+                    [self reloadScrollSmartClassifyViewWithImageArr:@[@"限时特惠"]];
+                } else {
+                    NSMutableArray *marr = [NSMutableArray array];
+                    for (Price *price in _viewModel.model.price){
+                        [marr addObject:price.name];
+                    }
+                    [self reloadScrollViewWithImageArr:marr];
+                }
             }];
         }];
         [leftView addSubview:typeBtn];
@@ -65,6 +76,7 @@
             self.lineView.backgroundColor = HEXColor(@"#22476B");
             [leftView addSubview:self.lineView];
             self.lineView.centerY = typeBtn.centerY;
+            typeBtn.selected = YES;
         }
     }
     
@@ -75,7 +87,7 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            [self.backSubject sendNext:@(0)];
+            [self.backSubject sendNext:@(-1)];
         }];
     }];
     [leftView addSubview:cancleBtn];
@@ -92,6 +104,14 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
+            //将所有选中的按钮置于非选中状态
+            self.rightSelectbutton.selected = NO;
+            self.viewModel.filter_price = @"";
+            self.viewModel.filter_preference = @"";
+            self.viewModel.sort_price = @"";
+            self.viewModel.sort_sales = @"";
+            self.viewModel.sort_starlevel = @"";
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
             [self.backSubject sendNext:@(0)];
         }];
     }];
@@ -112,18 +132,15 @@
     [rightView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(kHeight(20));
         make.bottom.equalTo(self);
-        make.left.equalTo(self.leftView.mas_right);
-        make.width.mas_equalTo(kWidth(90));
+        make.left.equalTo(self.leftView.mas_right).offset(kWidth(10));
+        make.width.mas_equalTo(Screen_Width - kWidth(90 + 20));
     }];
     
     self.rightView = rightView;
-    
-    [self reloadScrollViewWithImageArr:@[@"1",@"2",@"3",@"4",@"5"]];
-    
-    
+    [self reloadScrollSmartClassifyViewWithImageArr:@[@"限时特惠"]];
 }
 
-- (void)reloadScrollViewWithImageArr:(NSArray *)assets{
+- (void)reloadScrollSmartClassifyViewWithImageArr:(NSArray *)assets{
     [[self.rightView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     NSUInteger assetCount = assets.count;
     CGFloat width = (Screen_Width - kWidth(90) - 4 * kWidth(10.0)) / 3;
@@ -133,7 +150,7 @@
         int lie = i % 3;
         int hang = (int)(i / 3);
         UIButton *itemBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"余春",MediumFont(font(13)),HEXColor(@"#999999"),0);
+            button.ljTitle_font_titleColor_state(assets[i],MediumFont(font(13)),HEXColor(@"#999999"),0);
             [button setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
             [button setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
             [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(0.5)];
@@ -147,6 +164,55 @@
                 [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(0.5)];
                 self.rightSelectbutton = button;
                 
+               
+                self.viewModel.sort_price = @"";
+                self.viewModel.sort_sales = @"";
+                self.viewModel.sort_starlevel = @"";
+                self.viewModel.filter_price = @"";
+                self.viewModel.filter_preference = @"1";
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
+                [self.backSubject sendNext:@(1)];
+            }];
+        }];
+        
+        if(i == 0) {
+            self.rightSelectbutton = itemBtn;
+        }
+        [self.rightView addSubview:itemBtn];
+    }
+}
+
+- (void)reloadScrollViewWithImageArr:(NSArray *)assets{
+    [[self.rightView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    NSUInteger assetCount = assets.count;
+    CGFloat width = (Screen_Width - kWidth(90) - 3 * kWidth(10.0)) / 2;
+    CGFloat height = kHeight(30);
+    CGFloat padding = kWidth(10.0);
+    for (NSInteger i = 0; i < assetCount; i++) {
+        int lie = i % 2;
+        int hang = (int)(i / 2);
+        UIButton *itemBtn = [UIButton creatButton:^(UIButton *button) {
+            button.ljTitle_font_titleColor_state(assets[i],MediumFont(font(13)),HEXColor(@"#999999"),0);
+            [button setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+            [button setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
+            [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(0.5)];
+            button.frame = CGRectMake((width + padding) * lie, (height + padding) * hang, width, height);
+            @weakify(self);
+            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                @strongify(self);
+                self.rightSelectbutton.selected = NO;
+                button.selected = YES;
+                [self.rightSelectbutton clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(0.5)];
+                [button clipWithCornerRadius:kHeight(15.0) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(0.5)];
+                self.rightSelectbutton = button;
+                
+                self.viewModel.sort_price = @"";
+                self.viewModel.sort_sales = @"";
+                self.viewModel.sort_starlevel = @"";
+                Price *priceModel = _viewModel.model.price[i];
+                self.viewModel.filter_price = priceModel.priceId;
+                self.viewModel.filter_preference = @"";
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
                 [self.backSubject sendNext:@(1)];
             }];
         }];
@@ -164,6 +230,11 @@
         _backSubject = [[RACSubject alloc] init];
     }
     return _backSubject;
+}
+
+- (void)setViewModel:(HJSchoolCourseListViewModel *)viewModel {
+    _viewModel = viewModel;
+    
 }
 
 @end

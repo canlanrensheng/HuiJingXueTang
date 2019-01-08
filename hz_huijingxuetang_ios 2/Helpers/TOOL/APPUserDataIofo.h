@@ -11,6 +11,19 @@
 #import <Foundation/Foundation.h>
 
 @interface APPUserDataIofo : NSObject
+
+//是否获取过微信openId
+
+/**
+ 存入openId
+ **/
++(void)writeOpenId:(NSString *)openId;
+
+/**
+ 获取用户openId
+ **/
++ (NSString *)OpenId;
+
 /**
  存入accessToken
  **/
@@ -41,6 +54,17 @@
  **/
 + (NSString *)UserID;
 
+
+/**
+ 存入风险评估
+ **/
++(void)getEval:(NSString *)eval;
+
+/**
+//获取是否做过风险评估
+ **/
++ (NSString *)Eval;
+
 /**
  存入用户昵称
  **/
@@ -50,6 +74,16 @@
  获取用户昵称
  **/
 + (NSString *)nikename;
+
+/**
+ 存入性别
+ **/
++(void)getSex:(NSString *)sex;
+
+/**
+ 获取用户性别
+ **/
++ (NSString *)sex;
 
 /**
  存入用户手机
@@ -87,6 +121,33 @@
  获取cityname
  **/
 + (NSString *)Cityname;
+
+//
+/**
+ 存入问题反馈时间
+ **/
++(void)getProblemBacktTime:(NSString *)problembacktime;
+
+/**
+ 获取问题反馈时间
+ **/
++ (NSString *)Problembacktime;
+
+//联系人
++(void)getContact:(NSString *)contact;
+
+/**
+ 获取联系人
+ **/
++ (NSString *)Contact;
+
+//合伙人的标示
++(void)getPartner:(NSString *)partner;
+
+/**
+ 获取合伙人的标示
+ **/
++ (NSString *)Partner;
 
 /**
  存入cityshortname

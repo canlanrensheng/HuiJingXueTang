@@ -21,10 +21,6 @@
 
 @implementation ForgetPWDViewController
 {
-//    UITextField *textf;
-//    UITextField *pwdtextf;
-//    UITextField *cordtextf;
-//    UIButton *grtcodebtn;
     NSTimer *timer;
     NSInteger countdown;
 }
@@ -126,7 +122,7 @@
     
     //获取验证码
     UIButton *getCodeBtn = [UIButton creatButton:^(UIButton *button) {
-        button.ljTitle_font_titleColor_state(@"获取验证码",MediumFont(font(13)),HEXColor(@"#1D3043"),0);
+        button.ljTitle_font_titleColor_state(@"获取验证码",MediumFont(font(13)),HEXColor(@"#22476B"),0);
         button.backgroundColor = white_color;
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
@@ -195,7 +191,9 @@
     [nextBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.codeTf.mas_bottom).offset(kHeight(25.0));
         make.centerX.equalTo(self.view);
-        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+//        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+        make.left.equalTo(self.view).offset(kWidth(10.0));
+        make.right.equalTo(self.view).offset(-kWidth(10));
         make.height.mas_equalTo(kHeight(40.0));
     }];
 }
@@ -208,6 +206,12 @@
     }
     if (!self.picCodeTf.text.length) {
         return ShowError(@"请输入图片验证码");
+    }
+    if (![self.localCodeView.charString isEqualToString:self.picCodeTf.text]) {
+        ShowError(@"图片验证码错误，注意字母大小写");
+        self.picCodeTf.text = @"";
+        [self.localCodeView tapGesture];
+        return;
     }
     if (!self.codeTf.text.length) {
         return ShowError(@"请输入验证码");
@@ -224,7 +228,10 @@
         return ShowError(@"请输入图片验证码");
     }
     if (![self.localCodeView.charString isEqualToString:self.picCodeTf.text]) {
-        return ShowError(@"请输入正确的图片验证码");
+        ShowError(@"图片验证码错误，注意字母大小写");
+        self.picCodeTf.text = @"";
+        [self.localCodeView tapGesture];
+        return;
     }
     [YJAPPNetwork GetCodeForgetWithPhonenum:self.phoneTf.text success:^(NSDictionary *responseObject) {
         NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
@@ -240,7 +247,7 @@
             timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(countdown) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
         }else{
-            [ConventionJudge NetCode:code vc:self type:@"1"];
+//            [ConventionJudge NetCode:code vc:self type:@"1"];
         }
     } failure:^(NSString *error) {
         ShowError(netError);

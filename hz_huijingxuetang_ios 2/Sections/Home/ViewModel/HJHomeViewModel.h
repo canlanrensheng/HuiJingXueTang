@@ -32,6 +32,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)recommentTeacherWithPage:(NSString *)page success:(void (^)(void))success;
 
+//最新资讯的接口
+@property (nonatomic,strong) NSMutableArray *topTitlesArray;
+@property (nonatomic,strong) NSMutableArray *bottomTitlesArray;
+- (void)getDynamicnewSuccess:(void (^)(void))success;
+
+//获取限时特惠
+@property (nonatomic,strong) NSMutableArray *limitKillArray;
+- (void)getLimitKillDataWithSuccess:(void (^)(void))success;
+
+//获取独家资讯
+@property (nonatomic,strong) NSMutableArray *exclusiveInfoArray;
+- (void)getExclusiveInfoSuccess:(void (^)(void))success;
+
+//获取正在直播的列表的数据
+@property (nonatomic,strong) NSMutableArray *liveListArray;
+- (void)getLiveListSuccess:(void (^)(void))success;
 
 @end
 

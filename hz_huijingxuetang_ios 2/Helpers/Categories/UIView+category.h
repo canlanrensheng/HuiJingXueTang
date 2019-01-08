@@ -32,5 +32,13 @@
                 withRadii:(CGSize)radii
                  viewRect:(CGRect)rect;
 
+/*设置顶部圆角*/
+- (void)setCornerOnTop:(CGFloat )cornerRadius;
+
+/*设置左边圆角*/
+- (void)setCornerOnLeft:(CGFloat )cornerRadius;
+/*设置右边圆角*/
+- (void)setCornerOnRight:(CGFloat )cornerRadius ;
+
 
 @end

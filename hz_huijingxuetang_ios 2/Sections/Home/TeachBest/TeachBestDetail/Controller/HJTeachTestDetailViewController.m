@@ -14,7 +14,8 @@
 #import "HJTeachDetailViewModel.h"
 #import "HJTeachBestDetailNoCommentCell.h"
 #import "HJTeachBestDetailCommentModel.h"
-@interface HJTeachTestDetailViewController ()<UIWebViewDelegate>
+#import <WebKit/WebKit.h>
+@interface HJTeachTestDetailViewController ()<WKNavigationDelegate,WKUIDelegate>
 
 
 @property (nonatomic,strong) HJSchoolLiveInputView *bottomView;
@@ -28,7 +29,7 @@
 @property (nonatomic,strong) UIImageView *liveImageV;
 @property (nonatomic,assign) CGFloat webViewCellHeight;
 
-@property (nonatomic,strong) UIWebView *webView;
+@property (nonatomic,strong) WKWebView *webView;
 @property (nonatomic,assign) NSInteger page;
 
 @end
@@ -66,7 +67,7 @@
     _headerView.backgroundColor = white_color;
     
     UILabel *infoTitleLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"股市心经之平常心之心静",MediumFont(font(21)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(21)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -77,7 +78,7 @@
     
     //日期
     UILabel *dateLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"2018年8月28日|于和伟|阅读量 2208",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -97,38 +98,21 @@
     self.tableView.tableHeaderView = _headerView;
 }
 
-
-
-#pragma mark UIWebViewDelegate
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
-    CGRect rect = webView.frame;
-    rect.size.height = webView.scrollView.contentSize.height;
-
-    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
-    self.webViewCellHeight = fittingSize.height;
-   
-//    DLog(@"高度是:%f %f %f",[webView.scrollView contentSize].height,fittingSize.width,webView.scrollView.contentSize.height);
-
-
-    [webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
-    [self.activityV stopAnimating];
-    [self.tableView reloadData];
-}
-
-//webViewDidFinishLoad代理方法被调用时，页面并不一定完全展现完成，可能有图片还未加载出来，导致此时获取的高度是并不是最终高度，过会儿图片加载出来后，浏览器会重新排版，而我们在这之前给了一个错误高度，导致显示异常。
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
-    if([keyPath isEqualToString:@"contentSize"]){
-//        CGSize fittingSize = [_webView sizeThatFits:CGSizeZero];
-//        self.webViewCellHeight = fittingSize.height;
-//        [self.tableView reloadData];
-    }
-}
-
 - (void)hj_setNavagation {
+    __weak typeof(self)weakSelf = self;
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:nil image:V_IMAGE(@"分享-1") action:^(id sender) {
-        [self.activityV stopAnimating];
-        [HJShareTool shareWithTitle:@"慧鲸学堂" content:@"邀请好友" images:nil url:@"http://mp.huijingschool.com/#/share"];
+        [weakSelf.activityV stopAnimating];
+        NSString *courceName = self.viewModel.model.articaltitle;
+        NSString *coursedes = @"股市前沿资讯名家讲师一手分析。想要了解更多股市资讯下载慧鲸学堂APP更多独家资讯一网打尽！";
+        id shareImg = weakSelf.viewModel.model.picurl;
+        if(self.viewModel.model.picurl.length <= 0) {
+            shareImg = V_IMAGE(@"shareImg");
+        }
+        NSString *shareUrl = [NSString stringWithFormat:@"%@informationDetails?id=%@",API_SHAREURL,weakSelf.params[@"infoId"]];
+        if([APPUserDataIofo UserID].length > 0) {
+            shareUrl = [NSString stringWithFormat:@"%@&userid=%@",shareUrl,[APPUserDataIofo UserID]];
+        }
+        [HJShareTool shareWithTitle:courceName content:coursedes images:@[shareImg] url:shareUrl];
     }];
 }
 
@@ -141,20 +125,24 @@
     [self.bottomView.backSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         if([APPUserDataIofo AccessToken].length <= 0) {
-            ShowMessage(@"您还未登录");
+//            ShowMessage(@"您还未登录");
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }
         NSString *infoId = self.params[@"infoId"];
-        [self.viewModel addNewsCommentWithInfoId:infoId  content:x Success:^{
-            self.viewModel.page = 1;
-            [self.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-                [self.tableView reloadData];
+        __weak typeof(self)weakSelf = self;
+        [self.viewModel addNewsCommentWithInfoId:infoId content:x Success:^{
+            weakSelf.viewModel.page = 1;
+            [weakSelf.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
+                [weakSelf.tableView reloadData];
             }];
         }];
+        weakSelf.bottomView.inputTextField.text = @"";
+        [self.view endEditing:YES];
     }];
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view).offset(-KHomeIndicatorHeight);
         make.height.mas_equalTo(kHeight(49.0));
     }];
     
@@ -166,7 +154,7 @@
     [self.tableView registerClassCell:[HJTeachBestDetailNoCommentCell class]];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, kHeight(49), 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, kHeight(49) + KHomeIndicatorHeight, 0));
     }];
     
 }
@@ -174,19 +162,24 @@
 - (void)hj_loadData {
     NSString *infoId = self.params[@"infoId"];
     //获取详情的数据
+    [self.viewModel.loadingView startAnimating];
     [self.viewModel getInfoDetailWithInfoid:infoId Success:^{
-        [self.activityV startAnimating];
         self.infoTitleLabel.text = self.viewModel.model.articaltitle;
         NSDate *date = [NSDate dateWithString:self.viewModel.model.tdays formatString:@"yyyy-MM-dd HH:mm:ss"];
-        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%ld/%ld",date.year,date.month,date.day];
-        self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %tu",date,self.viewModel.model.realname,self.viewModel.model.readcount];
+        NSString *dateString = [NSString stringWithFormat:@"%ld年%@月%@日",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+        self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %ld",dateString,self.viewModel.model.realname,self.viewModel.model.readcount.integerValue];
         [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
     //获取评论列表的数据
     self.viewModel.tableView = self.tableView;
     self.viewModel.page = 1;
     [self.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -223,13 +216,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0) {
-        return self.webViewCellHeight;
+        return self.webViewCellHeight + kHeight(10.0);
     }
     if(self.viewModel.infoCommondArray.count <= 0){
         return kHeight(218);
     }
     HJTeachBestDetailCommentModel *model = self.viewModel.infoCommondArray[indexPath.row];
-    return  model.cellHeight;;
+    return  model.cellHeight + kHeight(10.0);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -251,22 +244,25 @@
     if(indexPath.section == 0){
         HJTeachBestDetailWebViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailWebViewCell class]) forIndexPath:indexPath];
         self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.webView.delegate = self;
+        cell.webView.navigationDelegate = self;
+        cell.webView.UIDelegate = self;
         self.webView = cell.webView;
-        [cell.webView loadHTMLString:self.viewModel.model.content baseURL:nil];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if(self.viewModel.model.content) {
+            [cell.webView loadHTMLString:self.viewModel.model.content baseURL:nil];
+        }
         return cell;
     }
     if(self.viewModel.infoCommondArray.count <= 0){
         HJTeachBestDetailNoCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailNoCommentCell class]) forIndexPath:indexPath];
-        self.tableView.separatorColor = clear_color;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.tableView.separatorColor = clear_color;
         return cell;
     }
     HJTeachBestDetailHotCommontCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailHotCommontCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setViewModel:self.viewModel indexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -291,5 +287,58 @@
 }
 
 
+#pragma mark UIWebViewDelegate
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{//这里修改导航栏的标题，动态改变
+//    CGRect rect = webView.frame;
+//    rect.size.height = webView.scrollView.contentSize.height;
+//    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
+//    if (self.webViewCellHeight != webView.scrollView.contentSize.height || self.webViewCellHeight <= kHeight(44)) {
+//        [self.viewModel.loadingView stopLoadingView];
+//        self.webView.frame = rect;
+//        self.webViewCellHeight = fittingSize.height;
+//        [self.activityV stopAnimating];
+//        [self.tableView reloadData];
+//    }
+    CGRect rect = webView.frame;
+    rect.size.height = webView.scrollView.contentSize.height;
+    //    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
+    DLog(@"获取到的数据的高度时:%lf",self.webViewCellHeight);
+    if (self.webViewCellHeight != webView.scrollView.contentSize.height || self.webViewCellHeight <= kHeight(44)) {
+        [self.viewModel.loadingView stopLoadingView];
+        self.webView.frame = CGRectMake(rect.origin.x, rect.origin.y, Screen_Width - kWidth(20.0), rect.size.height);
+        self.webViewCellHeight = rect.size.height;
+        //        [self.webView sizeToFit];
+        [self.activityV stopAnimating];
+        [self.tableView reloadData];
+    }
+}
+
+// 页面加载失败时调用
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
+    
+}
+
+// 接收到服务器跳转请求之后再执行
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
+    
+}
+
+// 在收到响应后，决定是否跳转
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+    WKNavigationResponsePolicy actionPolicy = WKNavigationResponsePolicyAllow;
+    //这句是必须加上的，不然会异常
+    decisionHandler(actionPolicy);
+}
+
+// 在发送请求之前，决定是否跳转
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
+    WKNavigationActionPolicy actionPolicy = WKNavigationActionPolicyAllow;
+    if (navigationAction.navigationType==WKNavigationTypeBackForward) {//判断是返回类型
+        
+    }
+    //这句是必须加上的，不然会异常
+    decisionHandler(actionPolicy);
+}
 
 @end

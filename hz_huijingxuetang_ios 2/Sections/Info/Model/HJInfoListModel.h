@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString              * infomationtitle;
 @property (nonatomic , copy) NSString              * informationmodelid;
 @property (nonatomic , assign) NSInteger              readcounts;
+@property (nonatomic,assign) NSInteger readingquantity;
 @property (nonatomic , copy) NSString              * content;
 
 @end

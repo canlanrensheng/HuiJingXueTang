@@ -15,10 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString              * coursepic;
 @property (nonatomic , assign) CGFloat              coursemoney;
 @property (nonatomic , assign) NSInteger              study_count;
-@property (nonatomic , copy) NSString              * periods;
+@property (nonatomic , assign) NSInteger              periods;
+@property (nonatomic , copy) NSString              * starlevel;
 @property (nonatomic , copy) NSString              * courseid;
-@property (nonatomic , copy) NSString              * type;
+@property (nonatomic , copy) NSString              * realname;
+@property (nonatomic , assign) NSInteger              hassecond;
+@property (nonatomic , assign) NSInteger              type;
 @property (nonatomic , copy) NSString              * coursename;
+@property (nonatomic , copy) NSString              * secondprice;
 
 @end
 

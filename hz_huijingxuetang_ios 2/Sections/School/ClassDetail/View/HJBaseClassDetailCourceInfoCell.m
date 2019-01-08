@@ -8,6 +8,11 @@
 
 #import "HJBaseClassDetailCourceInfoCell.h"
 
+@interface HJBaseClassDetailCourceInfoCell ()
+
+@property (nonatomic,strong) UILabel *desLabel;
+@end
+
 @implementation HJBaseClassDetailCourceInfoCell
 
 - (void)hj_configSubViews {
@@ -23,24 +28,24 @@
         make.left.equalTo(self).offset(kWidth(10.0));
     }];
     
-    UIButton *moreBtn = [UIButton creatButton:^(UIButton *button) {
-        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
-        [button setBackgroundImage:V_IMAGE(@"前进箭头") forState:UIControlStateNormal];
-        @weakify(self);
-        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
-            
-        }];
-    }];
-    [self addSubview:moreBtn];
-    [moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(teacherInfoLabel);
-        make.right.equalTo(self).offset(-kWidth(11.0));
-    }];
+//    UIButton *moreBtn = [UIButton creatButton:^(UIButton *button) {
+//        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
+//        [button setBackgroundImage:V_IMAGE(@"前进箭头") forState:UIControlStateNormal];
+//        @weakify(self);
+//        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//            @strongify(self);
+//            
+//        }];
+//    }];
+//    [self addSubview:moreBtn];
+//    [moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(teacherInfoLabel);
+//        make.right.equalTo(self).offset(-kWidth(11.0));
+//    }];
     
     //描述
     UILabel *desLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"笑是俞春的标签，他为人亲和、授课风趣，但行事却非常务实、稳健。技术派出身的他，深入证券行业11年，曾任职证券咨询公司和券商，私",MediumFont(font(11)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#666666"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -50,6 +55,12 @@
         make.left.equalTo(self).offset(kWidth(10.0));
         make.right.equalTo(self).offset(-kWidth(10.0));
     }];
+    self.desLabel = desLabel;
+}
+
+- (void)setModel:(HJSchoolCourseDetailModel *)model {
+    _model = model;
+    self.desLabel.text = model.coursedes;
 }
 
 @end

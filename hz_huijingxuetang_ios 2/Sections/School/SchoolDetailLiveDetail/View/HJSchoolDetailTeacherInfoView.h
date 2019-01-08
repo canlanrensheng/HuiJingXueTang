@@ -7,10 +7,12 @@
 //
 
 #import "BaseView.h"
-
+#import "HJSchoolLiveDetailViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSchoolDetailTeacherInfoView : BaseView
+
+@property (nonatomic,strong) HJSchoolLiveDetailViewModel *viewModel;
 
 @end
 

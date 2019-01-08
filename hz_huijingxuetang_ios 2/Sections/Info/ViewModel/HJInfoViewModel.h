@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSMutableArray *newsItemArray;
 
 //获取资讯条目的数据
-- (void)getnewsItemslistWithSuccess:(void (^)(void))success;
+- (void)getnewsItemslistWithSuccess:(void (^)(BOOL success))success;
 
 @property (nonatomic,weak) UITableView *tableView;
 
@@ -26,7 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger currentpage;
 @property (nonatomic,assign) NSInteger page;
 @property (nonatomic,strong) NSMutableArray *infoListArray;
-- (void)getListWithModelid:(NSString *)modelid Success:(void (^)(void))success;
+- (void)getListWithModelid:(NSString *)modelid Success:(void (^)(BOOL success))success;
+
+@property (nonatomic,assign) BOOL isFirstLoad;
 
 @end
 

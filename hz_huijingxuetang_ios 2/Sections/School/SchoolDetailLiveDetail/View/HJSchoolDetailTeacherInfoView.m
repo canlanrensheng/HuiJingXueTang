@@ -9,6 +9,15 @@
 #import "HJSchoolDetailTeacherInfoView.h"
 #import "HJPicAndTextButton.h"
 
+@interface HJSchoolDetailTeacherInfoView ()
+
+@property (nonatomic,strong) UIImageView *iconImageV;
+@property (nonatomic,strong) UILabel *nameLabel;
+@property (nonatomic,strong) UILabel *desLabel;
+@property (nonatomic,strong) HJPicAndTextButton *careButton;
+
+@end
+
 @implementation HJSchoolDetailTeacherInfoView
 
 - (void)hj_configSubViews {
@@ -24,9 +33,11 @@
         make.width.height.mas_equalTo(kHeight(40));
     }];
     [iconImageV clipWithCornerRadius:kHeight(20.0) borderColor:nil borderWidth:0];
+    self.iconImageV = iconImageV;
+    
     //昵称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"何晶莹",BoldFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"暂无名称",BoldFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -38,19 +49,7 @@
         make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
     }];
     
-    //描述
-    UILabel *desLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"量化从优，峰回路转，天下股评早知道。",MediumFont(font(11)),HEXColor(@"#666666"));
-        label.textAlignment = NSTextAlignmentLeft;
-        label.numberOfLines = 0;
-        [label sizeToFit];
-    }];
-    [self addSubview:desLabel];
-    [desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(7.0));
-        make.height.mas_equalTo(kHeight(13));
-        make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
-    }];
+    self.nameLabel = nameLabel;
     
     //关注的按钮
     HJPicAndTextButton *careButton = [HJPicAndTextButton buttonWithType:UIButtonTypeCustom withSpace:kHeight(5.0)];
@@ -67,6 +66,7 @@
         make.size.mas_equalTo(CGSizeMake(kWidth(50), kHeight(60)));
         make.right.equalTo(self).offset(-kWidth(10.0));
     }];
+    self.careButton = careButton;
     
     //分割线
     UIView *lineView = [[UIView alloc] init];
@@ -76,17 +76,70 @@
         make.left.right.bottom.equalTo(self);
         make.height.mas_equalTo(kHeight(5.0));
     }];
+    
+    //描述
+    UILabel *desLabel = [UILabel creatLabel:^(UILabel *label) {
+        label.ljTitle_font_textColor(@"暂无个性标签",MediumFont(font(11)),HEXColor(@"#666666"));
+        label.textAlignment = NSTextAlignmentLeft;
+        label.numberOfLines = 0;
+        [label sizeToFit];
+    }];
+    [self addSubview:desLabel];
+    [desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(7.0));
+        make.height.mas_equalTo(kHeight(13));
+        make.left.equalTo(iconImageV.mas_right).offset(kWidth(10.0));
+        make.right.equalTo(careButton.mas_left).offset(-kWidth(10));
+    }];
+    self.desLabel = desLabel;
+   
 }
 
 - (void)carBtnClick:(UIButton *)btn {
+    if([APPUserDataIofo AccessToken].length <= 0) {
+//        ShowMessage(@"您还未登录");
+        [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+        return;
+    }
     btn.selected = !btn.selected;
     if(btn.selected) {
-        [btn setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
-        [btn setTitle:@"已关注" forState:UIControlStateNormal];
+        //关注
+        [self.viewModel careOrCancleCareWithTeacherId:self.viewModel.model.course.userid accessToken:[APPUserDataIofo AccessToken] insterest:@"1" Success:^{
+            [btn setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
+            [btn setTitle:@"已关注" forState:UIControlStateNormal];
+            [btn setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+        }];
     } else {
-        [btn setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
-        [btn setTitle:@"关注" forState:UIControlStateNormal];
+        //取消关注
+        [self.viewModel careOrCancleCareWithTeacherId:self.viewModel.model.course.userid accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
+            [btn setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
+            [btn setTitle:@"关注" forState:UIControlStateNormal];
+            [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+        }];
     }
 }
+
+- (void)setViewModel:(HJSchoolLiveDetailViewModel *)viewModel {
+    _viewModel = viewModel;
+    if (viewModel.model) {
+        [self.iconImageV sd_setImageWithURL:URL(viewModel.model.course.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        self.nameLabel.text = viewModel.model.course.realname;
+        self.desLabel.text = viewModel.model.course.slogen.length > 0 ? viewModel.model.course.slogen : @"暂无个性标签";
+        if (viewModel.model.course.isinterest == 1) {
+            self.careButton.selected = YES;
+            
+            [self.careButton setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
+            [self.careButton setTitle:@"已关注" forState:UIControlStateNormal];
+            [self.careButton setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+        } else {
+            self.careButton.selected = NO;
+            
+            [self.careButton setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
+            [self.careButton setTitle:@"关注" forState:UIControlStateNormal];
+            [self.careButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+        }
+    }
+}
+
 
 @end

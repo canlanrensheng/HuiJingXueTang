@@ -110,23 +110,24 @@
 }
 
 //校验资讯密码
-- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoPwd Success:(void (^)(void))success {
+- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoPwd Success:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/verifyinfopwd",API_BASEURL];
     NSDictionary *parameters = @{
                                  @"infopwd" : infoPwd
                                  };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
-        hideHud();
-        [MBProgressHUD showMessage:@"校验成功" view:[UIApplication sharedApplication].keyWindow];
+//        hideHud();
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSInteger code = [[dic objectForKey:@"code"]integerValue];
         if (code == 200) {
-            success();
+            success(YES);
         } else {
-            ShowError([dic objectForKey:@"msg"]);
+            success(NO);
+//            ShowError([dic objectForKey:@"msg"]);
         }
     } fail:^(id error) {
-        hideHud();
+//        hideHud();
+        success(NO);
         ShowError(error);
     }];
 }

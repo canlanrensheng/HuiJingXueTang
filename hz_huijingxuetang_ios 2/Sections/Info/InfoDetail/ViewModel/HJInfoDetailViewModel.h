@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addNewsCommentWithInfoId:(NSString *)infoId  content:(NSString *)content Success:(void (^)(void))success;
 
 //校验资讯密码
-- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoid Success:(void (^)(void))success;
+- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoid Success:(void (^)(BOOL successFlag))success;
 
 @end
 

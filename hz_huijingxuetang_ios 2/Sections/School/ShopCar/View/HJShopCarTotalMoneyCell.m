@@ -7,11 +7,8 @@
 //
 
 #import "HJShopCarTotalMoneyCell.h"
-
 @interface HJShopCarTotalMoneyCell ()
 
-@property (nonatomic,strong) UILabel *priceLabel;
-@property (nonatomic,strong) UILabel *desLabel;
 
 @end
 
@@ -21,7 +18,7 @@
     
     //名称
     _priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥1299",MediumFont(font(13.0)),HEXColor(@"#FF4400"));
+        label.ljTitle_font_textColor(@"¥0.00",MediumFont(font(17.0)),HEXColor(@"#FF4400"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
@@ -33,7 +30,7 @@
     }];
     
     _desLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"优惠卷抵扣:",MediumFont(font(13.0)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(13.0)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
@@ -43,7 +40,8 @@
         make.right.equalTo(_priceLabel.mas_left).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(13.0));
     }];
-    
 }
+
+
 
 @end

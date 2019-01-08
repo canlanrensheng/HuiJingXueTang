@@ -7,10 +7,14 @@
 //
 
 #import "BaseView.h"
-
+#import "HJTeacherDetailModel.h"
+#import "HJTeacherDetailViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJTeacherDetailHeaderView : BaseView
+
+@property (nonatomic,strong) HJTeacherDetailModel *model;
+@property (nonatomic,strong) HJTeacherDetailViewModel *viewModel;
 
 @end
 

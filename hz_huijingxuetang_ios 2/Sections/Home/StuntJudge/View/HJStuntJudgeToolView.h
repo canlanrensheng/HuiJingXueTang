@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIButton *evaluationButton;
 @property (nonatomic,strong) UIButton *liveButton;
 
+@property (nonatomic,assign) NSInteger selectIndex;
+
 @end
 
 NS_ASSUME_NONNULL_END

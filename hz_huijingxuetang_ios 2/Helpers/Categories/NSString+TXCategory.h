@@ -82,4 +82,8 @@ typedef NS_ENUM(NSInteger,ImageSizeType) {
 //处理空字符串
 - (NSString *)dealNullDataWithReplaceString:(NSString *)replaceString;
 
+//处理日期的单个的数据
++ (NSString *)convertDateSingleData:(NSInteger)date;
+
+
 @end

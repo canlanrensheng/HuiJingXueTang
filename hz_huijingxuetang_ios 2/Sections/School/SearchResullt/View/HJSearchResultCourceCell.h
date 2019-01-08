@@ -8,9 +8,13 @@
 
 #import "BaseTableViewCell.h"
 
+#import "HJSearchResultModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSearchResultCourceCell : BaseTableViewCell
+
+@property (nonatomic,strong) CourseResponses *model;
 
 @end
 

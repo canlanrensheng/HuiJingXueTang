@@ -21,5 +21,6 @@
 #import "UIImage+Category.h"
 #import "MBProgressHUD+HJHud.h"
 #import "DateFormatter.h"
+#import "HJDealNullTool.h"
 
 #endif /* CategoryHeader_h */

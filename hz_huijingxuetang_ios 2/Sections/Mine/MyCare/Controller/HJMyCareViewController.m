@@ -8,11 +8,22 @@
 
 #import "HJMyCareViewController.h"
 #import "HJMyCareListCell.h"
+#import "HJMyCareViewModel.h"
+#import "HJMyCareListModle.h"
 @interface HJMyCareViewController ()
+
+@property (nonatomic,strong) HJMyCareViewModel *viewModel;
 
 @end
 
 @implementation HJMyCareViewController
+
+- (HJMyCareViewModel *)viewModel {
+    if (!_viewModel) {
+        _viewModel = [[HJMyCareViewModel alloc] init];
+    }
+    return _viewModel;
+}
 
 - (void)hj_setNavagation {
     self.title = @"我的关注";
@@ -31,7 +42,38 @@
 }
 
 - (void)hj_loadData {
+    self.tableView.mj_footer.hidden = YES;
+    self.viewModel.tableView = self.tableView;
+    self.viewModel.page = 1;
+    [self.viewModel getMyCareListWithSuccess:^{
+        [self.tableView reloadData];
+    }];
+}
+
+- (void)hj_refreshData {
+    @weakify(self);
+    self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
+        @strongify(self);
+        [self hj_loadData];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer resetNoMoreData];
+        });
+    }];
     
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        @strongify(self);
+        self.viewModel.page++;
+        if(self.viewModel.currentpage < self.viewModel.totalpage){
+            [self.viewModel getMyCareListWithSuccess:^{
+                [self.tableView reloadData];
+                [self.tableView.mj_footer endRefreshing];
+            }];
+        }else{
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -43,21 +85,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return self.viewModel.myCareArray.count;
 }
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJMyCareListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJMyCareListCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if(indexPath.row < self.viewModel.myCareArray.count) {
+        [cell setViewModel:self.viewModel indexPath:indexPath];
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    
+    if (indexPath.row < self.viewModel.myCareArray.count) {
+        kRepeatClickTime(1.0);
+        HJMyCareListModle *model = self.viewModel.myCareArray[indexPath.row];
+        [DCURLRouter pushURLString:@"route://teacherDetailVC" query:@{@"teacherId" : model.userid} animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -76,7 +123,13 @@
 // 进入编辑模式，按下出现的编辑按钮后,进行删除操作
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
+        //删除进行的操作
+        if (indexPath.row < self.viewModel.myCareArray.count) {
+            HJMyCareListModle *model = self.viewModel.myCareArray[indexPath.row];
+            [self.viewModel careOrCancleCareWithTeacherId:model.userid accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
+                [self hj_loadData];
+            }];
+        }
     }
 }
 

@@ -6,10 +6,10 @@
 //  Copyright © 2018年 Junier. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "BaseTableViewController.h"
 
 
-@interface HomePageViewController : BaseViewController
+@interface HomePageViewController : BaseTableViewController
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navH;
 
 //@property (weak, nonatomic) IBOutlet UIButton *servebtn;

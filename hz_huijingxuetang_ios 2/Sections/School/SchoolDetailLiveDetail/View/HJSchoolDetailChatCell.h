@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSchoolDetailChatCell : BaseTableViewCell
 
+@property (nonatomic,strong) UILabel *nameLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

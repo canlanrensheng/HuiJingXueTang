@@ -7,6 +7,16 @@
 //
 
 #import "HJMessageDetailCell.h"
+#import "HJMessageDetailViewModel.h"
+#import "HJMessageDetailModel.h"
+
+@interface HJMessageDetailCell ()
+
+@property (nonatomic,strong) UILabel *timeLabel;
+@property (nonatomic,strong) UILabel *titleTextLabel;
+@property (nonatomic,strong) UILabel *desTextLabel;
+
+@end
 
 @implementation HJMessageDetailCell
 
@@ -31,7 +41,7 @@
     
     //时间
     UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"8月20日",MediumFont(font(11)),HEXColor(@"#CCCCCC"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#CCCCCC"));
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -43,9 +53,11 @@
         make.height.mas_equalTo(kHeight(10));
     }];
     
+    self.timeLabel = timeLabel;
+    
     //标题
     UILabel *titleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"绝技诊股",BoldFont(font(15)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(15)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -57,9 +69,11 @@
         make.height.mas_equalTo(kHeight(15));
     }];
     
+    self.titleTextLabel = titleTextLabel;
+    
     //描述的标题
     UILabel *desTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"你的问题已被回复，点击查看",BoldFont(font(13)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(13)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -70,6 +84,7 @@
         make.top.equalTo(titleTextLabel.mas_bottom).offset(kHeight(10));
         make.height.mas_equalTo(kHeight(14));
     }];
+    self.desTextLabel = desTextLabel;
     
     //箭头
     UIImageView *arrowImageV = [[UIImageView alloc] init];
@@ -80,6 +95,18 @@
         make.centerY.equalTo(backView);
     }];
     
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJMessageDetailViewModel *listViewModel = (HJMessageDetailViewModel *)viewModel;
+    HJMessageDetailModel *model = listViewModel.messageDetailListArray[indexPath.row];
+    if(model) {
+        NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+        self.timeLabel.text = [NSString stringWithFormat:@"%@月%@日",[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+        
+        self.titleTextLabel.text = model.title;
+        self.desTextLabel.text = model.content;
+    }
 }
 
 @end

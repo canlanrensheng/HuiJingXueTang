@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "BaseViewModelProtocol.h"
 #import "JSLoadingView.h"
+//#import <Lottie/Lottie.h>
 typedef NS_ENUM(NSUInteger, BMTitleViewType) {
     /// System title view
     BMTitleViewTypeDefault,
@@ -38,5 +39,10 @@ typedef NS_ENUM(NSUInteger, BMTitleViewType) {
 @property (nonatomic,assign) NSInteger currentpage;
 
 @property (nonatomic,strong) RACSubject *backSuject;
+
+//@property (nonatomic,strong) LOTAnimationView *animationView;
+//
+//- (void)play;
+//- (void)stop;
 
 @end

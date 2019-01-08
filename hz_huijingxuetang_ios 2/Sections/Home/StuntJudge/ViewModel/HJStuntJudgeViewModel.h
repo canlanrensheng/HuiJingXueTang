@@ -44,7 +44,7 @@ typedef NS_ENUM(NSInteger,StuntJuageType){
 
 //标记消息已读
 @property (nonatomic,assign) NSInteger notreadednum;
-- (void)stockAnsrReadsSettedWithId:(NSString *)stuntId Success:(void (^)(void))success;
+
 
 @end
 

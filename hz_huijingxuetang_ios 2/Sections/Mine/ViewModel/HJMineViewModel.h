@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJMineViewModel : BaseTableViewModel
 
+//获取用户信息
+- (void)getUserInfoWithSuccess:(void (^)(void))success;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

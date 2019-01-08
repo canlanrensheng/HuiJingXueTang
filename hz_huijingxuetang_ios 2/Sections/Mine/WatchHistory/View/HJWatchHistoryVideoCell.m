@@ -26,6 +26,8 @@
     }];
     [imaV clipWithCornerRadius:kHeight(2.5) borderColor:nil borderWidth:0];
     
+    self.imaV = imaV;
+    
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"重温经典系列之新K线战法",BoldFont(font(13)),HEXColor(@"#333333"));
@@ -38,6 +40,8 @@
         make.left.equalTo(imaV.mas_right).offset(kWidth(10.0));
         make.height.mas_equalTo(kHeight(13.0));
     }];
+    
+    self.nameLabel = nameLabel;
     
     //讲师
     UILabel *teacherLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -55,6 +59,8 @@
     }];
     [teacherLabel clipWithCornerRadius:kHeight(2.5) borderColor:nil borderWidth:0];
     
+    self.totalTimeLabel = teacherLabel;
+    
     //天数
     UILabel *dayLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"讲师：金建",MediumFont(font(11)),HEXColor(@"#666666"));
@@ -67,6 +73,7 @@
         make.bottom.equalTo(imaV).offset(-kHeight(5.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    self.teacherNameLabel = dayLabel;
     
     //时间
     UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -80,6 +87,7 @@
         make.right.equalTo(self).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    self.timeLabel = timeLabel;
 }
 
 @end

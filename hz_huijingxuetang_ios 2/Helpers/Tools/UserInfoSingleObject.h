@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <Reachability/Reachability.h>
 
+typedef NS_ENUM(NSInteger,WxOrAlipayType){
+    WxOrAlipayTypeBuy, //购买
+    WxOrAlipayTypeReward //打赏
+};
+
 @interface UserInfoSingleObject : NSObject
 
 + (instancetype)shareInstance;
@@ -27,5 +32,19 @@
 - (void)clearUserInfo;
 
 - (NSString *)getWifiName;
+
+//支付的类型
+@property (nonatomic,assign) WxOrAlipayType payType;
+
+@property (nonatomic,assign) NSInteger findType;
+
+//是否展示马甲包
+@property (nonatomic,assign) BOOL isShowMaJia;
+
+//是否已经登陆
+@property (nonatomic,assign) BOOL isLogined;
+
+//点击的学习小组的效果
+@property (nonatomic,assign) NSInteger clickStudentGroupCount;
 
 @end

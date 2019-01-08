@@ -11,15 +11,23 @@
 #import "HJStuntJudgeDetailQuestionCell.h"
 #import "HJStuntJudgeDetailAnserCell.h"
 #import "HJStuntJudgeListModel.h"
-#import "HJStuntJudgeViewModel.h"
+
+#import "HJStuntJudgeDetailViewModel.h"
 @interface HJStuntJudgeDetailViewController ()
 
-@property (nonatomic,strong) HJStuntJudgeListModel *model;
-@property (nonatomic,strong) HJStuntJudgeViewModel *viewModel;
+
+@property (nonatomic,strong) HJStuntJudgeDetailViewModel *viewModel;
 
 @end
 
 @implementation HJStuntJudgeDetailViewController
+
+- (HJStuntJudgeDetailViewModel *)viewModel {
+    if(!_viewModel) {
+        _viewModel = [[HJStuntJudgeDetailViewModel alloc] init];
+    }
+    return _viewModel;
+}
 
 - (void)hj_configSubViews{
     //    self.tableView.scrollEnabled = NO;
@@ -35,32 +43,43 @@
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
     
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:nil image:V_IMAGE(@"分享-1") action:^(id sender) {
-          [HJShareTool shareWithTitle:@"慧鲸学堂" content:@"邀请好友" images:nil url:@"http://mp.huijingschool.com/#/share"];
-    }];
-    NSDictionary *para = self.params;
-    HJStuntJudgeListModel *model = para[@"model"];
-    self.model = model;
+    
+//    __weak typeof(self)weakSelf = self;
+//    self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:nil image:V_IMAGE(@"分享-1") action:^(id sender) {
+//        NSString *shareUrl = [NSString stringWithFormat:@"%@#/share",API_SHAREURL];
+//        if([APPUserDataIofo UserID].length > 0) {
+//            shareUrl = [NSString stringWithFormat:@"%@?userid=%@",shareUrl,[APPUserDataIofo UserID]];
+//        }
+//          [HJShareTool shareWithTitle:weakSelf.viewModel.model.questiontitle
+//                              content:@"点击查看专家解答。想要和专家一对一提问，下载慧鲸APP，专家互动解答你的所有疑惑！" images:@[V_IMAGE(@"shareImg")]
+//                                  url:shareUrl];
+//    }];
 }
 
 - (void)hj_loadData {
     NSDictionary *para = self.params;
-    HJStuntJudgeListModel *model = para[@"model"];
-    self.viewModel = [[HJStuntJudgeViewModel alloc] init];
-    [self.viewModel stockAnsrReadsSettedWithId:model.stuntId Success:^{
-        [MBProgressHUD showMessage:@"消息已读" view:self.view];
+    NSString *stuntId = para[@"stuntId"];
+    [self.viewModel stockAnsrReadsSettedWithId:stuntId Success:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"StuntJudgeMessageRead" object:nil userInfo:nil];
+    }];
+
+    [self.viewModel.loadingView startAnimating];
+    [self.viewModel getStuntJudgeDetailWithId:stuntId Success:^(BOOL successFlag) {
+        [self.viewModel.loadingView stopLoadingView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0){
-        return  self.model.cellHeight;
+        return  self.viewModel.model.cellHeight > 0 ? self.viewModel.model.cellHeight : kHeight(88.0);
     }
-    return  self.model.answerCellHeight;;
+    return  self.viewModel.model.answerCellHeight > 0 ? self.viewModel.model.answerCellHeight : kHeight(88.0);
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }
 
@@ -68,29 +87,34 @@
     return 1;
 }
 
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0){
         HJStuntJudgeDetailQuestionCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJStuntJudgeDetailQuestionCell class]) forIndexPath:indexPath];
-        self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.model = self.model;
+        self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
+        if (self.viewModel.model) {
+           cell.model = self.viewModel.model;
+        }
         return cell;
     }
     HJStuntJudgeDetailAnserCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJStuntJudgeDetailAnserCell class]) forIndexPath:indexPath];
-    self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.model = self.model;
+    self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
+    if (self.viewModel.model) {
+        cell.model = self.viewModel.model;
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    if(section == 0) {
+        return 0.0001f;
+    }
     return 10.0;
 }
 

@@ -8,14 +8,24 @@
 
 #import "HJBaseMyCardVoucherViewController.h"
 #import "HJMyCardVoucherCell.h"
+
 @interface HJBaseMyCardVoucherViewController ()
+
+
 
 @end
 
 @implementation HJBaseMyCardVoucherViewController
 
+
+- (void)setViewModel:(HJMyCardVoucherViewModel *)viewModel {
+    _viewModel = viewModel;
+    [self loadData];
+}
+
 - (void)hj_configSubViews{
-    //    self.tableView.scrollEnabled = NO;
+    self.tableView.mj_footer.hidden = YES;
+    
     self.numberOfSections = 1;
     
     self.sectionFooterHeight = 0.001f;
@@ -27,8 +37,44 @@
     }];
 }
 
-- (void)hj_loadData {
+- (void)loadData {
+    DLog(@"获取到的下表是:%ld",self.viewModel.myCardVoucherType);
+    self.viewModel.tableView = self.tableView;
+    self.tableView.mj_footer.hidden = YES;
+    self.viewModel.page = 1;
+    [self.viewModel getMyCardVoucherSuccess:^{
+        [self.tableView reloadData];
+    }];
+}
+
+- (void)hj_bindViewModel {
+   
+}
+
+- (void)hj_refreshData {
+    @weakify(self);
+    self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
+        @strongify(self);
+        [self loadData];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer resetNoMoreData];
+        });
+    }];
     
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        @strongify(self);
+        self.viewModel.page++;
+        if(self.viewModel.currentpage < self.viewModel.totalpage){
+            [self.viewModel getMyCardVoucherSuccess:^{
+                [self.tableView reloadData];
+                [self.tableView.mj_footer endRefreshing];
+            }];
+        }else{
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -40,19 +86,25 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    if(self.viewModel.myCardVoucherType == MyCardVoucherTypeValid) {
+        return self.viewModel.validVoucherArray.count;
+    } else if (self.viewModel.myCardVoucherType == MyCardVoucherTypeUsed) {
+        return self.viewModel.usedVoucherArray.count;
+    } else {
+        return self.viewModel.invalidVoucherArray.count;
+    }
 }
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJMyCardVoucherCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJMyCardVoucherCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [cell setViewModel:self.viewModel indexPath:indexPath];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     
 }
@@ -66,15 +118,33 @@
     return - kHeight(40);
 }
 
-
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"绝技诊股空白页"];
-}
-
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"暂时还没有问题哦";
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        text = @"暂时无优惠券";
+    }
+    
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        return [UIImage imageNamed:@"网络问题"];
+    }
+}
+
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        return nil;
+    }
 }
 
 @end

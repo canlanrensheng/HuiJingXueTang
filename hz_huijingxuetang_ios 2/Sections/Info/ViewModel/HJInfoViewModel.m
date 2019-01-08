@@ -17,7 +17,7 @@
 @implementation HJInfoViewModel
 
 //获取资讯模块标题的列表的数据
-- (void)getnewsItemslistWithSuccess:(void (^)(void))success {
+- (void)getnewsItemslistWithSuccess:(void (^)(BOOL success))success{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/newsmodellist",API_BASEURL];
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -33,25 +33,34 @@
             }
             self.newsItemArray = marr;
             self.newsItemNameArray = nameMarr;
-            success();
+            success(YES);
         } else {
+            success(NO);
             ShowError([dic objectForKey:@"msg"]);
         }
     } fail:^(id error) {
+        success(NO);
         ShowError(error);
     }];
 }
 
 //获取资讯的列表的数据
-- (void)getListWithModelid:(NSString *)modelid Success:(void (^)(void))success {
+- (void)getListWithModelid:(NSString *)modelid Success:(void (^)(BOOL success))success {
     NSString *url = [NSString stringWithFormat:@"%@/LiveApi/app/newslist",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
                    @"modelid" : modelid,
                    @"page" : [NSString stringWithFormat:@"%ld",self.page]
                    };
+    if(!self.isFirstLoad) {
+        [self.loadingView startAnimating];
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+            if(!self.isFirstLoad) {
+                [self.loadingView stopLoadingView];
+                self.isFirstLoad = YES;
+            }
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
@@ -73,13 +82,23 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.infoListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                if(!self.isFirstLoad) {
+                    [self.loadingView stopLoadingView];
+                    self.isFirstLoad = YES;
+                }
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
+            if(!self.isFirstLoad) {
+                [self.loadingView stopLoadingView];
+                self.isFirstLoad = YES;
+            }
             hideHud();
             ShowError(error);
+            success(NO);
         }];
     });
     

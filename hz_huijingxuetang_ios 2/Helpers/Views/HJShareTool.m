@@ -41,13 +41,23 @@
             }
                 break;
                 
-            default:{
+            case ShareObjectTypeWb:{
                 [[ShareManager shareManager] shareOperation:SSDKPlatformTypeSinaWeibo title:title message:content imgs:images url:url shareSuccessBlock:^{
                     
                 } shareFailureBlock:^{
                     
                 }];
             }
+                break;
+                
+           case ShareObjectTypeCopyLink:{
+                //复制链接
+                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                pasteboard.string = url;
+                ShowMessage(@"链接复制成功");
+            }
+                break;
+            default:
                 break;
         }
     }];

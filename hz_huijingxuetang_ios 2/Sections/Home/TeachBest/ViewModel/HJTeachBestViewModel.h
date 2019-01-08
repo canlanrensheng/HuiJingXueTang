@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger currentpage;
 @property (nonatomic,assign) NSInteger page;
 @property (nonatomic,strong) NSMutableArray *infoListArray;
-- (void)getListWithSuccess:(void (^)(void))success;
+- (void)getListWithSuccess:(void (^)(BOOL successFlag))success;
 
 @end
 

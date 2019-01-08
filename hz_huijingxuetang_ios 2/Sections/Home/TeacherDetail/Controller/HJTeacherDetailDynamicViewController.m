@@ -33,7 +33,16 @@
 
 @implementation HJTeacherDetailDynamicViewController
 
+- (HJFindViewModel *)viewModel {
+    if(!_viewModel){
+        _viewModel = [[HJFindViewModel alloc] init];
+    }
+    return _viewModel;
+}
+
 - (void)hj_configSubViews{
+    self.tableView.mj_footer.hidden = YES;
+    
     self.urls = @[URL(@"http://tb-video.bdstatic.com/tieba-smallvideo-transcode/3612804_e50cb68f52adb3c4c3f6135c0edcc7b0_3.mp4")];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
@@ -76,49 +85,36 @@
     [self.tableView registerClassCell:[HJFindRecommondTextVideoLinkCell class]];
     
     
-    
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
 }
 
-- (HJFindViewModel *)viewModel {
-    if(!_viewModel) {
-        _viewModel = [[HJFindViewModel alloc] init];
-    }
-    return  _viewModel;
+- (void)hj_loadData {
+
 }
 
-- (void)hj_loadData {
-    self.viewModel.findSegmentType = 0;
+
+- (void)setTeacherId:(NSString *)teacherId {
+    _teacherId = teacherId;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.tableView = self.tableView;
-    self.viewModel = [[HJFindViewModel alloc] init];
     self.viewModel.page = 1;
-    [self.viewModel teacherDynamicRecommondListWithSuccess:^{
+    [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
         [self.tableView reloadData];
     }];
 }
 
-
 - (void)hj_bindViewModel {
-//    @weakify(self);
-//    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshFindData" object:nil] subscribeNext:^(NSNotification *noty) {
-//        @strongify(self);
-//        NSDictionary *para = noty.userInfo;
-//        if([[para objectForKey:@"index"] integerValue] == 0) {
-//            self.viewModel.findSegmentType = 0;
-//            [self hj_loadData];
-//        }
-//    }];
+
 }
 
-
 - (void)hj_refreshData {
-    @weakify(self);
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
-        @strongify(self);
-        [self hj_loadData];
+        self.viewModel.page = 1;
+        [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
+            [self.tableView reloadData];
+        }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer resetNoMoreData];
@@ -126,10 +122,9 @@
     }];
     
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
-            [self.viewModel teacherDynamicRecommondListWithSuccess:^{
+            [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
                 [self.tableView reloadData];
                 [self.tableView.mj_footer endRefreshing];
             }];
@@ -200,18 +195,12 @@
 
 /// play the video
 - (void)playTheVideoAtIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop {
-    //    [self.player playTheIndexPath:indexPath scrollToTop:NO];
-    
     if(indexPath.row < self.viewModel.findArray.count) {
         HJFindRecommondModel *model = self.viewModel.findArray[indexPath.row];
         if(model.dynamicvideo.length > 0) {
             [self.player playTheIndexPath:indexPath assetURL:URL(model.dynamicvideo) scrollToTop:scrollToTop];
-            //            [self.controlView showTitle:@""
-            //                         coverURLString:@"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
-            //                         fullScreenMode:ZFFullScreenModeLandscape];
         }
     }
-    
 }
 
 #pragma mark - getter
@@ -225,7 +214,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.row < self.viewModel.findArray.count) {
-        HJFindRecommondModel *model = self.viewModel.findArray [indexPath.row];
+        HJFindRecommondModel *model = self.viewModel.findArray[indexPath.row];
         return model.cellHeight;
     }
     return 0.0001f;
@@ -239,6 +228,28 @@
     return self.viewModel.findArray.count;
 }
 
+- (void)dealCareOrCancleCareDataWithSelect:(BOOL)isSelect indexPath:(NSIndexPath *)indexPath {
+    HJFindRecommondModel *selectModel = self.viewModel.findArray[indexPath.row];
+    if(isSelect == 1) {
+        //选中的时候
+        for (HJFindRecommondModel *model in self.viewModel.findArray) {
+            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                model.isinterest = 1;
+            }
+        }
+    } else {
+        //取消选中的时候
+        for (HJFindRecommondModel *model in self.viewModel.findArray) {
+            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                model.isinterest = 0;
+            }
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row < self.viewModel.findArray.count) {
@@ -247,27 +258,36 @@
             case FindTypeText: {
                 HJFindRecommondTextCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
             case FindTypePic: {
                 HJFindRecommondPictureCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondPictureCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
             case FindTypeLink: {
                 HJFindRecommondLinkCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondLinkCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
@@ -275,18 +295,24 @@
                 HJFindRecommondVideoCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondVideoCell class]) forIndexPath:indexPath];
                 [cell setDelegate:self withIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
             case FindTypePicLink: {
                 HJFindRecommondTextPicLinkCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextPicLinkCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
@@ -294,9 +320,12 @@
                 HJFindRecommondTextVideoLinkCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextVideoLinkCell class]) forIndexPath:indexPath];
                 [cell setDelegate:self withIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
+                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
+                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
+                }];
+                cell.hidden = NO;
                 return cell;
             }
                 break;
@@ -304,7 +333,6 @@
                 HJFindRecommondTextCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.hidden = YES;
                 return cell;
             }
@@ -315,13 +343,14 @@
     HJFindRecommondTextCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
     self.viewModel.findSegmentType = 0;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.hidden = YES;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    kRepeatClickTime(1.0);
     /// 如果正在播放的index和当前点击的index不同，则停止当前播放的index
     if (self.player.playingIndexPath != indexPath) {
         [self.player stopCurrentPlayingCell];
@@ -337,19 +366,46 @@
 }
 
 #pragma mark 数据为空的占位视图
-//- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView{
-//    return - kHeight(40);
-//}
-
-
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"学习小组空白页"];
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView{
+    return - kHeight(40);
 }
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"暂无数据";
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        text = @"暂无相关动态";
+    }
+    
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        return [UIImage imageNamed:@"老师详情动态空"];
+    }
+}
+
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - 空白数据集 按钮被点击时 触发该方法：
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        [self hj_loadData];
+    } else {
+        
+    }
 }
 
 

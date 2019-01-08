@@ -11,7 +11,7 @@
 @implementation HJTeachBestViewModel
 
 //获取资讯的列表的数据
-- (void)getListWithSuccess:(void (^)(void))success {
+- (void)getListWithSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/vipnewslist",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
@@ -19,7 +19,7 @@
                    @"page" : [NSString stringWithFormat:@"%ld",self.page]
                    };
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
@@ -41,11 +41,13 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.infoListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
+            success(NO);
             hideHud();
             ShowError(error);
         }];

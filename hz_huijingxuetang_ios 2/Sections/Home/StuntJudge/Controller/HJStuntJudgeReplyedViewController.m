@@ -148,7 +148,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJStuntReplyedCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJStuntReplyedCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if(indexPath.row < self.viewModel.stuntJuageReplyedArray.count) {
         [cell setViewModel:self.viewModel indexPath:indexPath];
     }
@@ -158,8 +158,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(indexPath.row < self.viewModel.stuntJuageReplyedArray.count) {
+        kRepeatClickTime(1.0);
         HJStuntJudgeListModel *model = self.viewModel.stuntJuageReplyedArray[indexPath.row];
-        NSDictionary *para = @{@"model" : model};
+        NSDictionary *para = @{@"stuntId" : model.stuntId};
         [DCURLRouter pushURLString:@"route://stuntJudgeDetailVC" query:para animated:YES];
     }
 }
@@ -172,14 +173,41 @@
     return - kHeight(40);
 }
 
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"绝技诊股空白页"];
-}
-
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"暂时还没有问题哦";
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        text = @"暂时还没有问题哦";
+    }
+    
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
 }
 
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        return [UIImage imageNamed:@"绝技诊股空白页"];
+    }
+}
+
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - 空白数据集 按钮被点击时 触发该方法：
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        [self hj_loadData];
+    } else {
+        
+    }
+}
 @end

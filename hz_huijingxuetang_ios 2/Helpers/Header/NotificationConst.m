@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-//NSString * const MyCarListVCRefreshDataNotification = @"UpdateCarInfoNotification";
+NSString * const UpdateUserInfoNotification = @"UpdateUserInfoNotification";
+
+NSString * const LoginGetUserInfoNotification = @"LoginGetUserInfoNotification";
 
 
 

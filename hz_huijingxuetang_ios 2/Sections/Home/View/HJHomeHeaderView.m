@@ -29,13 +29,18 @@
     _scrollView.currentPageDotColor = white_color;
     _scrollView.pageDotColor = RGBA(255, 255, 255, 0.2);
     _scrollView.autoScrollTimeInterval = 4.0f;
+    _scrollView.placeholderImage = V_IMAGE(@"占位图");
     [self addSubview:_scrollView];
 
     //
     NSArray *btnimgarr = @[@"直播ICON",@"教学跟踪ICON",@"绝技诊股ICON",@"教参精华"];
     NSArray *btnlbarr = @[@"直播教学",@"教学跟踪",@"绝技诊股",@"教参精华"];
-    for (int i = 0; i < 4; i++) {
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(Screen_Width / 4*i, _scrollView.frame.size.height, Screen_Width / 4, kHeight(100.0))];
+    if(MaJia) {
+        btnimgarr = @[@"教学跟踪ICON",@"绝技诊股ICON",@"教参精华"];
+        btnlbarr = @[@"教学跟踪",@"绝技诊股",@"教参精华"];
+    }
+    for (int i = 0; i < btnimgarr.count; i++) {
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(Screen_Width / btnimgarr.count *i, _scrollView.frame.size.height, Screen_Width / btnimgarr.count, kHeight(100.0))];
         view.backgroundColor = [UIColor whiteColor];
         [self addSubview:view];
 
@@ -45,7 +50,7 @@
         [btn setBackgroundImage:[UIImage imageNamed:btnimgarr[i]] forState:UIControlStateNormal];
         [view addSubview:btn];
 
-        UILabel *btnlb = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(btn.frame) + kHeight(10.0), view.width, kHeight(10.0))];
+        UILabel *btnlb = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn.frame) + kHeight(10.0), view.width, kHeight(10.0))];
         btnlb.textColor = HEXColor(@"#333333");
         btnlb.text = btnlbarr[i];
         btnlb.textAlignment = 1;
@@ -58,24 +63,45 @@
 - (void)btnAction:(UIButton *)btn {
     if (btn.tag == 0) {
         //直播教学
+        if(MaJia){
+            VisibleViewController().tabBarController.selectedIndex = 2;
+            return;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SetToLiveVC" object:nil userInfo:nil];
         VisibleViewController().tabBarController.selectedIndex = 1;
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"SetToLiveVC" object:nil userInfo:nil];
-       
     } else if ( btn.tag == 1) {
         //教学跟踪
-        
+        if(MaJia) {
+            if([APPUserDataIofo AccessToken].length <= 0) {
+//                ShowMessage(@"您还未登录");
+                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                return;
+            }
+            [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
+            return;
+        }
+        VisibleViewController().tabBarController.selectedIndex = 3;
     } else if (btn.tag == 2) {
         //绝技诊股
+        if(MaJia) {
+            //教参精华
+            VisibleViewController().tabBarController.selectedIndex = 2;
+            return;
+        }
         if([APPUserDataIofo AccessToken].length <= 0) {
-            ShowMessage(@"您还未登录");
+//            ShowMessage(@"您还未登录");
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }
         [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
     } else if ( btn.tag == 3) {
         //教参精华
+        if(MaJia) {
+            VisibleViewController().tabBarController.selectedIndex = 2;
+            return;
+        }
         if([APPUserDataIofo AccessToken].length <= 0) {
-            ShowMessage(@"您还未登录");
+//            ShowMessage(@"您还未登录");
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }
@@ -86,7 +112,13 @@
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
     //跳转处理
     if(_scrollView.imageURLStringsGroup.count > 0) {
-        [DCURLRouter pushURLString:@"route://classDetailVC" animated:YES];
+        NSDictionary *dic = self.listViewModel.cycleScrollViewDataArray[index];
+        NSString *courseId = [dic valueForKey:@"content"];
+        if(courseId.length > 0) {
+             [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : [dic valueForKey:@"content"]} animated:YES];
+        } else{
+            ShowMessage(@"课程Id不能为空");
+        }
     }
 }
 

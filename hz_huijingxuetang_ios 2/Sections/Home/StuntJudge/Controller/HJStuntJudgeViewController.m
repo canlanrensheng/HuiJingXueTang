@@ -14,7 +14,7 @@
 #import "HJStuntJudgeToolView.h"
 #import "HJStuntJudgeViewModel.h"
 
-@interface HJStuntJudgeViewController()
+@interface HJStuntJudgeViewController()<UIScrollViewDelegate>
 
 
 @property (nonatomic, strong) NSArray *controllersClass;
@@ -62,7 +62,9 @@
         self.viewModel.stuntJuageType = [x integerValue];
         //刷新数据
         self.selectIndex = [x integerValue];
-        [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
+        }];
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshStuntJudgeData" object:nil userInfo:@{@"index" :@(self.selectIndex)}];
     }];
@@ -75,7 +77,9 @@
         self.toolView.lastSelectButton = self.toolView.evaluationButton;
         self.toolView.lineView.centerX = self.toolView.lastSelectButton.centerX;
         self.selectIndex = 2;
-        [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
+        }];
     }];
     
     self.viewModel.toolView = toolView;
@@ -88,7 +92,8 @@
     scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kHeight(40));
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.pagingEnabled = YES;
-    scrollView.scrollEnabled = NO;
+    scrollView.scrollEnabled = YES;
+    scrollView.delegate = self;
     scrollView.bounces = NO;
     
     [self.view addSubview:scrollView];
@@ -139,6 +144,13 @@
     return _addReplyBtn;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat width = self.view.frame.size.width;
+    CGFloat offsetX = scrollView.contentOffset.x;
+    //获取索引
+    NSInteger scrollIndex = offsetX / width;
+    self.toolView.selectIndex = scrollIndex;
+}
 
 @end
 

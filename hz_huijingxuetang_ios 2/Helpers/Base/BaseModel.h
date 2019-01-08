@@ -10,5 +10,4 @@
 
 @interface BaseModel : NSObject<NSCoding>
 
-
 @end

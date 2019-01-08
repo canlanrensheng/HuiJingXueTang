@@ -12,6 +12,9 @@
 
 @interface HJInviteCodeViewController ()
 
+//是否已经完成
+@property (nonatomic,assign) BOOL isFinished;
+
 @end
 
 @implementation HJInviteCodeViewController
@@ -37,16 +40,32 @@
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
+            ShowHint(@"");
             NSDictionary *para = self.params;
             [YJAPPNetwork registWithPhonenum:para[@"phone"] pwd:para[@"pwd"] code:para[@"code"] incode:nil success:^(NSDictionary *responseObject) {
+                hideHud();
                 NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
                 if (code == 200) {
-                    [DCURLRouter popViewControllerWithTimes:3 animated:YES];
+                    NSDictionary *dic = [responseObject objectForKey:@"data"];
+                    //                    DLog(@"返回饿数据是:%@",dic);
+                    [UserInfoSingleObject shareInstance].isLogined = NO;
+                    [APPUserDataIofo getUserPhone:para[@"phone"]];
+                    [APPUserDataIofo writeOpenId:[para objectForKey:@"has_openid"]];
+                    [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
+                    [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
+                    [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
+                    //                    [DCURLRouter popViewControllerWithTimes:4 animated:YES];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:LoginGetUserInfoNotification object:nil userInfo:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [DCURLRouter popToRootViewControllerAnimated:YES];
+                    });
+                    
                 }else{
-                    [ConventionJudge NetCode:code vc:self type:@"1"];
+//                    [ConventionJudge NetCode:code vc:self type:@"1"];
                 }
             } failure:^(NSString *error) {
-                SVshowInfo(netError);
+                hideHud();
+                ShowMessage(netError);
             }];
 
         }];
@@ -86,23 +105,34 @@
     codeInputView.num = 6;
 //    __weak typeof(self)weakSelf = self;
     codeInputView.callBackBlock = ^(NSString *text) {
-        if(text.length == 6){
+        if(text.length == 6 && self.isFinished == NO){
+            self.isFinished = YES;
             NSDictionary *para = self.params;
+            ShowHint(@"");
             [YJAPPNetwork registWithPhonenum:para[@"phone"] pwd:para[@"pwd"] code:para[@"code"] incode:text success:^(NSDictionary *responseObject) {
+                hideHud();
                 NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
                 if (code == 200) {
                     NSDictionary *dic = [responseObject objectForKey:@"data"];
-//                    DLog(@"返回饿数据是:%@",dic);
-                    [[NSUserDefaults standardUserDefaults] setObject:para[@"phone"] forKey:@"UserName"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [UserInfoSingleObject shareInstance].isLogined = NO;
+                    [APPUserDataIofo getUserPhone:para[@"phone"]];
+                    [APPUserDataIofo writeOpenId:[para objectForKey:@"has_openid"]];
                     [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
                     [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-                    [DCURLRouter popViewControllerWithTimes:4 animated:YES];
+                    [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
+//                    [DCURLRouter popViewControllerWithTimes:4 animated:YES];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:LoginGetUserInfoNotification object:nil userInfo:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [DCURLRouter popToRootViewControllerAnimated:YES];
+                    });
+                    
                 }else{
-                    [ConventionJudge NetCode:code vc:self type:@"1"];
+//                    [ConventionJudge NetCode:code vc:self type:@"1"];
                 }
             } failure:^(NSString *error) {
-                SVshowInfo(netError);
+//                SVshowInfo(netError);
+                hideHud();
+                ShowMessage(netError);
             }];
         }
         DLog(@"%@",text);

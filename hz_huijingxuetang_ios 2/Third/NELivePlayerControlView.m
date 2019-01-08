@@ -9,7 +9,7 @@
 #import "NELivePlayerControlView.h"
 #import "UIView+NEPlayer.h"
 
-#define kPlayerBtnWidth (40)
+#define kPlayerBtnWidth (30)
 
 @interface NELivePlayerControlView ()
 {
@@ -19,19 +19,20 @@
 @property (nonatomic, strong) UIControl *overlayControl; //控制层
 @property (nonatomic, strong) UIActivityIndicatorView *bufferingIndicate; //缓冲动画
 @property (nonatomic, strong) UILabel *bufferingReminder; //缓冲提示
-@property (nonatomic, strong) UIView *topControlView; //顶部控制条
-@property (nonatomic, strong) UIView *bottomControlView; //底部控制条
 @property (nonatomic, strong) UIButton *playQuitBtn; //退出
 @property (nonatomic, strong) UILabel *fileName; //文件名字
 @property (nonatomic, strong) UILabel *currentTime;   //播放时间
 @property (nonatomic, strong) UILabel *totalDuration; //文件时长
 @property (nonatomic, strong) UISlider *videoProgress;//播放进度
-@property (nonatomic, strong) UIButton *playBtn;  //播放/暂停按钮
+
 @property (nonatomic, strong) UIButton *muteBtn;  //静音按钮
-@property (nonatomic, strong) UIButton *scaleModeBtn; //显示模式按钮
+
 @property (nonatomic, strong) UIButton *snapshotBtn;  //截图按钮
 @property (nonatomic, strong) UILabel *subtitleLab;//字幕
 @property (nonatomic, strong) UILabel *subtitleExLab;//额外的字幕
+
+
+
 @end
 
 @implementation NELivePlayerControlView
@@ -45,67 +46,146 @@
 }
 
 - (void)setupSubviews {
-    
-    [self addSubview:self.subtitleExLab];
-    [self addSubview:self.subtitleLab];
-    
+    self.userInteractionEnabled = YES;
+
     [self addSubview:self.mediaControl];
-    [_mediaControl addSubview:self.bufferingIndicate];
-    [_mediaControl addSubview:self.bufferingReminder];
-    
+
     [self addSubview:self.overlayControl];
     [_overlayControl addSubview:self.topControlView];
-    [_topControlView addSubview:self.playQuitBtn];
-    [_topControlView addSubview:self.fileName];
+
+    [_topControlView addSubview:self.fileTitleLabel];
     
     [_overlayControl addSubview:self.bottomControlView];
     [_bottomControlView addSubview:self.playBtn];
-    [_bottomControlView addSubview:self.currentTime];
-    [_bottomControlView addSubview:self.videoProgress];
-    [_bottomControlView addSubview:self.totalDuration];
-    [_bottomControlView addSubview:self.muteBtn];
-    [_bottomControlView addSubview:self.snapshotBtn];
     [_bottomControlView addSubview:self.scaleModeBtn];
+    
+    //分享按钮
+    UIButton *shareBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",nil,white_color,0);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            [self.shareSubject sendNext:nil];
+        }];
+    }];
+    [_topControlView addSubview:shareBtn];
+
+    self.shareBtn = shareBtn;
+    
+    //返回按钮
+    UIButton *backBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",nil,white_color,0);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            [self.backSubject sendNext:nil];
+        }];
+    }];
+    [_topControlView addSubview:backBtn];
+    self.backBtn = backBtn;
+    
+    //发送消息的按钮
+    self.sendChatBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"说点什么吧~",MediumFont(font(13)),HEXColor(@"#CCCCCC"),0);
+        button.titleLabel.textAlignment = NSTextAlignmentLeft;
+        button.backgroundColor = white_color;
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            [self.sendChatSubject sendNext:nil];
+        }];
+    }];
+    self.sendChatBtn.hidden = YES;
+    [self.sendChatBtn clipWithCornerRadius:kHeight(5.0) borderColor:nil borderWidth:0];
+    [_bottomControlView addSubview:self.sendChatBtn];
+    
+    [self addSubview:self.loadingView];
+    self.loadingView.speedTextLabel.hidden = YES;
 }
 
 - (void)layoutSubviews {
-    
     [super layoutSubviews];
     
     _mediaControl.frame = self.bounds;
-    _bufferingIndicate.center = CGPointMake(_overlayControl.width/2, (_overlayControl.height - 32)/2);
-    _bufferingReminder.top = _bufferingIndicate.bottom + 32.0;
-    _bufferingReminder.centerX = _bufferingIndicate.centerX;
     
+    CGFloat topViewHeight = kHeight(48);
+    CGFloat bottomViewHeight = kHeight(46);
+    if(!self.isFull) {
+        topViewHeight = kHeight(64);
+        bottomViewHeight = kHeight(46);
+    }
+
     _overlayControl.frame = self.bounds;
-    _topControlView.frame = CGRectMake(0, 0, _overlayControl.width, kPlayerBtnWidth);
-    _playQuitBtn.frame = CGRectMake(8.0, 0, kPlayerBtnWidth, _topControlView.height);
-    _fileName.frame = CGRectMake(_playQuitBtn.right + 8.0,
-                                 0,
-                                 _topControlView.width - (_playQuitBtn.right + 8.0)*2,
-                                 _topControlView.height);
+    _topControlView.frame = CGRectMake(0, 0, _overlayControl.width, topViewHeight);
     
-    _bottomControlView.frame = CGRectMake(0,
-                                          _overlayControl.height-kPlayerBtnWidth*1.5,
-                                          _overlayControl.width,
-                                          kPlayerBtnWidth*1.5);
-    _playBtn.frame = CGRectMake(8.0, 0, kPlayerBtnWidth, _bottomControlView.height);
-    _scaleModeBtn.frame = CGRectMake(_bottomControlView.width - kPlayerBtnWidth, 0, kPlayerBtnWidth, _bottomControlView.height);
-    _snapshotBtn.frame = CGRectMake(_scaleModeBtn.left-kPlayerBtnWidth, 0, kPlayerBtnWidth, _bottomControlView.height);
-    _muteBtn.frame = CGRectMake(_snapshotBtn.left-kPlayerBtnWidth, 0, kPlayerBtnWidth, _bottomControlView.height);
+    CGFloat shareCon = self.isFull ? (-kWidth(10)-KHomeIndicatorHeight) : (-kWidth(10));
+    self.shareBtn.frame = CGRectMake(self.bounds.size.width + shareCon - kWidth(30), (topViewHeight - kHeight(30)) / 2, kWidth(30), kWidth(30));
     
-    _currentTime.frame = CGRectMake(_playBtn.right + 8.0,
-                                    0,
-                                    _currentTime.width + 4.0,
-                                    _bottomControlView.height);
-    _totalDuration.frame = CGRectMake(_muteBtn.left - (_totalDuration.width + 4.0),
-                                      0,
-                                      _currentTime.width,
-                                      _bottomControlView.height);
-    _videoProgress.frame = CGRectMake(_currentTime.right + 4.0,
-                                      0,
-                                      _totalDuration.left - 4.0 - _currentTime.right - 4.0,
-                                      _bottomControlView.height);
+    CGFloat backCon = self.isFull ? (kWidth(10) + kStatusBarHeight) : (kWidth(10));
+    self.backBtn.frame = CGRectMake(backCon, (topViewHeight - kHeight(30)) / 2, kHeight(30), kHeight(30));
+    _bottomControlView.frame = CGRectMake(0, self.bounds.size.height - bottomViewHeight, self.bounds.size.width, bottomViewHeight);
+    
+    //直播的标题
+    self.fileTitleLabel.frame = CGRectMake(backCon + kWidth(40), (topViewHeight - kHeight(30)) / 2, kHeight(150), kHeight(30));
+    
+    
+    CGFloat playCon = self.isFull ? (kWidth(10.0) + kStatusBarHeight) : (kWidth(10));
+    self.playBtn.frame = CGRectMake(playCon, (_bottomControlView.size.height - kHeight(30))/ 2, kWidth(30), kWidth(30));
+    CGFloat scaleModeCon = self.isFull ? (-kWidth(10.0) - KHomeIndicatorHeight) : (-kWidth(10.0));
+    self.scaleModeBtn.frame = CGRectMake(self.bounds.size.width + scaleModeCon - kWidth(30), (_bottomControlView.size.height - kHeight(30))/ 2, kWidth(30), kWidth(30));
+    
+    self.loadingView.frame = self.bounds;
+    
+    //发送私聊信息的按钮
+    self.sendChatBtn.frame = CGRectMake((_bottomControlView.bounds.size.width - kWidth(295)) / 2, (_bottomControlView.bounds.size.height - kHeight(28)) / 2, kWidth(295), kHeight(28));
+    
+    if (self.isFull) {
+        //全屏的操作
+        [self.backBtn setImage:V_IMAGE(@"直播返回按钮横屏") forState:UIControlStateNormal];
+        [self.shareBtn setImage:V_IMAGE(@"直播分享横屏") forState:UIControlStateNormal];
+        [self.playBtn setImage:V_IMAGE(@"直播播放横屏") forState:UIControlStateNormal];
+        [self.playBtn setImage:V_IMAGE(@"直播暂停横屏") forState:UIControlStateSelected];
+        [self.scaleModeBtn setImage:V_IMAGE(@"直播全屏横屏") forState:UIControlStateNormal];
+    
+        
+        self.topControlView.image = V_IMAGE(@"黑色遮罩横屏上");
+        self.bottomControlView.image = V_IMAGE(@"黑色遮罩横屏下");
+        
+    } else {
+        //竖屏的操作
+        [self.backBtn setImage:V_IMAGE(@"直播返回按钮横屏") forState:UIControlStateNormal];
+        [self.shareBtn setImage:V_IMAGE(@"直播分享横屏") forState:UIControlStateNormal];
+        [self.playBtn setImage:V_IMAGE(@"直播播放横屏") forState:UIControlStateNormal];
+        [self.playBtn setImage:V_IMAGE(@"直播暂停横屏") forState:UIControlStateSelected];
+        [self.scaleModeBtn setImage:V_IMAGE(@"直播全屏横屏") forState:UIControlStateNormal];
+        
+        self.topControlView.image = V_IMAGE(@"黑色遮罩上竖屏");
+        self.bottomControlView.image = V_IMAGE(@"黑色遮罩下竖屏");
+    }
+    
+    _scaleModeBtn.selected = self.isFull;
+}
+
+- (ZFSpeedLoadingView *)loadingView {
+    if(!_loadingView) {
+        _loadingView = [[ZFSpeedLoadingView alloc] init];
+    }
+    return _loadingView;
+}
+
+- (RACSubject *)shareSubject {
+    if (!_shareSubject) {
+        _shareSubject = [[RACSubject alloc] init];
+    }
+    return _shareSubject;
+}
+
+- (RACSubject *)backSubject {
+    if (!_backSubject) {
+        _backSubject = [[RACSubject alloc] init];
+    }
+    return _backSubject;
+}
+
+- (RACSubject *)sendChatSubject {
+    if (!_sendChatSubject) {
+        _sendChatSubject = [[RACSubject alloc] init];
+    }
+    return _sendChatSubject;
 }
 
 #pragma mark - Action
@@ -122,6 +202,7 @@
 
 - (void)controlOverlayHide {
     _overlayControl.hidden = YES;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(controlOverlayHide) object:nil];
 }
 
 - (void)onClickBtnAction:(UIButton *)btn {
@@ -317,28 +398,43 @@
     return _bufferingReminder;
 }
 
--(UIView *)topControlView {
+-(UIImageView *)topControlView {
     if (!_topControlView) {
-        _topControlView = [[UIView alloc] init];
-        _topControlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_background_black"]];
-        _topControlView.alpha = 0.8;
+        _topControlView = [[UIImageView alloc] init];
+        _topControlView.userInteractionEnabled = YES;
+//        _topControlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"黑色遮罩"]];
+//        _topControlView.alpha = 0.8;
     }
     return _topControlView;
 }
 
-- (UIView *)bottomControlView {
+- (UIImageView *)bottomControlView {
     if (!_bottomControlView) {
-        _bottomControlView = [[UIView alloc] init];
-        _bottomControlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_background_black"]];
-        _bottomControlView.alpha = 0.8;
+        _bottomControlView = [[UIImageView alloc] init];
+        _bottomControlView.userInteractionEnabled = YES;
+//        _bottomControlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_background_black"]];
+//        _bottomControlView.alpha = 0.8;
     }
     return _bottomControlView;
+}
+
+//直播的标题
+- (UILabel *)fileTitleLabel {
+    if (!_fileTitleLabel) {
+        _fileTitleLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor(@" ",MediumFont(font(17)),white_color);
+            label.textAlignment = NSTextAlignmentLeft;
+            label.numberOfLines = 0;
+            [label sizeToFit];
+        }];
+    }
+    return _fileTitleLabel;
 }
 
 - (UIButton *)playQuitBtn {
     if (!_playQuitBtn) {
         _playQuitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playQuitBtn setImage:[UIImage imageNamed:@"btn_player_quit"] forState:UIControlStateNormal];
+        [_playQuitBtn setImage:[UIImage imageNamed:@"直播播放屏幕中央"] forState:UIControlStateNormal];
         [_playQuitBtn addTarget:self action:@selector(onClickBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playQuitBtn;
@@ -347,9 +443,9 @@
 - (UILabel *)fileName {
     if (!_fileName) {
         _fileName = [[UILabel alloc] init];
-        _fileName.textAlignment = NSTextAlignmentCenter; //文字居中
-        _fileName.textColor = [[UIColor alloc] initWithRed:191/255.0 green:191/255.0 blue:191/255.0 alpha:1];
-        _fileName.font = [UIFont systemFontOfSize:13.0];
+        _fileName.textAlignment = NSTextAlignmentLeft; //文字居中
+        _fileName.textColor = white_color;
+        _fileName.font = MediumFont(font(17));
     }
     return _fileName;
 }
@@ -394,8 +490,8 @@
 - (UIButton *)playBtn {
     if (!_playBtn) {
         _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playBtn setImage:[UIImage imageNamed:@"btn_player_pause"] forState:UIControlStateNormal];
-        [_playBtn setImage:[UIImage imageNamed:@"btn_player_play"] forState:UIControlStateSelected];
+//        [_playBtn setImage:[UIImage imageNamed:@"暂停-1"] forState:UIControlStateNormal];
+//        [_playBtn setImage:[UIImage imageNamed:@"播放-1"] forState:UIControlStateSelected];
         [_playBtn addTarget:self action:@selector(onClickBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playBtn;
@@ -403,7 +499,7 @@
 
 - (UIButton *)muteBtn {
     if (!_muteBtn) {
-       _muteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _muteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_muteBtn setImage:[UIImage imageNamed:@"btn_player_mute02"] forState:UIControlStateNormal];
         [_muteBtn setImage:[UIImage imageNamed:@"btn_player_mute01"] forState:UIControlStateSelected];
         [_muteBtn addTarget:self action:@selector(onClickBtnAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -414,8 +510,8 @@
 - (UIButton *)scaleModeBtn {
     if (!_scaleModeBtn) {
         _scaleModeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_scaleModeBtn setImage:[UIImage imageNamed:@"btn_player_scale01"] forState:UIControlStateNormal];
-        [_scaleModeBtn setImage:[UIImage imageNamed:@"btn_player_scale02"] forState:UIControlStateSelected];
+//        [_scaleModeBtn setImage:[UIImage imageNamed:@"全屏-1"] forState:UIControlStateNormal];
+//        [_scaleModeBtn setImage:[UIImage imageNamed:@"全屏-1"] forState:UIControlStateSelected];
         [_scaleModeBtn addTarget:self action:@selector(onClickBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _scaleModeBtn;
@@ -453,4 +549,5 @@
     }
     return _subtitleExLab;
 }
+
 @end

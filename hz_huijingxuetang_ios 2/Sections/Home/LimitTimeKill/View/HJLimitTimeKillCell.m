@@ -7,7 +7,8 @@
 //
 
 #import "HJLimitTimeKillCell.h"
-
+#import "HJHomeLimitKillModel.h"
+#import "HJLimitKillMoreViewModel.h"
 @interface HJLimitTimeKillCell ()
 
 @property (nonatomic,strong) UIImageView *imgView;
@@ -16,6 +17,8 @@
 @property (nonatomic,strong) UILabel *studentCountLabel;
 @property (nonatomic,strong) UILabel *originPriceLabel;
 @property (nonatomic,strong) UILabel *priceLabel;
+@property (nonatomic,strong) UILabel *dayLabel;
+@property (nonatomic,strong) NSMutableArray *starImgMarr;
 
 @end
 
@@ -42,11 +45,11 @@
     UIImageView *youhuuiImaV = [[UIImageView alloc] init];
     youhuuiImaV.image = V_IMAGE(@"优惠标签");
     //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
-    youhuuiImaV.backgroundColor = Background_Color;
-    [imaV addSubview:youhuuiImaV];
+    youhuuiImaV.backgroundColor = clear_color;
+    [self addSubview:youhuuiImaV];
     [youhuuiImaV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(imaV).offset(kHeight(7.0));
-        make.left.equalTo(self).offset(kWidth(6.0));
+         make.left.equalTo(imaV).offset(-kWidth(5.0));
     }];
     
     self.youhuuiImaV = imaV;
@@ -77,17 +80,13 @@
         make.height.mas_equalTo(kHeight(11));
     }];
     
+    self.starImgMarr = [NSMutableArray array];
     for(int i = 0; i < 5;i++) {
         UIImageView *starImageView = [[UIImageView alloc] init];
         starImageView.frame = CGRectMake((kWidth(2 + 11) * i), 0, kWidth(11), kWidth(11));
         starImageView.backgroundColor = white_color;
-        if(i <= 3) {
-            starImageView.image = V_IMAGE(@"评价星亮色");
-        } else {
-            starImageView.image = V_IMAGE(@"评价星 暗色");
-        }
-        //        starImageView.image = V_IMAGE(@"评价星星");
         [starView addSubview:starImageView];
+        [self.starImgMarr addObject:starImageView];
     }
     
     //星级Label
@@ -137,6 +136,8 @@
         make.height.mas_equalTo(kHeight(12.0));
     }];
     
+    self.dayLabel = dayLabel;
+    
     
     //原来的价格
     UILabel *originPriceLabel = [UILabel creatLabel:^(UILabel *label) {
@@ -160,12 +161,51 @@
     [priceLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(originPriceLabel);
         make.left.right.equalTo(originPriceLabel);
-        make.height.mas_equalTo(kHeight(1.0));
+        make.height.mas_equalTo(kHeight(0.5));
     }];
     
-    
-    //    NSString *price = [NSString stringWithFormat:@"¥ %.0f",model.coursemoney];
-    //    priceLabel.attributedText = [price attributeWithStr:@"¥" color:HEXColor(@"#FF4400") font:BoldFont(font(13))];
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJLimitKillMoreViewModel *listViewModel = (HJLimitKillMoreViewModel *)viewModel;
+    HJHomeLimitKillModel *model = listViewModel.limitKillMoreArray[indexPath.row];
+    if(model){
+        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        self.courceLabel.text = model.coursename;
+        self.youhuuiImaV.hidden = NO;
+        self.originPriceLabel.hidden = NO;
+        
+        self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.secondprice.floatValue];
+        self.dayLabel.text = [NSString stringWithFormat:@"/%ld天",model.periods.integerValue];
+        self.originPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.coursemoney];
+        
+        
+        //设置星级
+        float fStaLevel = model.coursescore.floatValue;
+        if(fStaLevel == model.coursescore.intValue) {
+            for (int i = 0;i < 5 ;i++){
+                UIImageView *imaV = self.starImgMarr[i];
+                if(i < model.coursescore.intValue) {
+                    imaV.image = V_IMAGE(@"评价星亮色");
+                } else {
+                    imaV.image = V_IMAGE(@"评价星 暗色");
+                }
+            }
+        } else{
+            for (int i = 0;i < 5 ;i++){
+                UIImageView *imaV = self.starImgMarr[i];
+                if(i < ceilf(model.coursescore.floatValue) - 1) {
+                    imaV.image = V_IMAGE(@"评价星亮色");
+                }  else if(i == ceilf(model.coursescore.floatValue) - 1){
+                    imaV.image = V_IMAGE(@"评价星亮色-1");
+                } else {
+                    imaV.image = V_IMAGE(@"评价星 暗色");
+                }
+            }
+        }
+        
+        self.studentCountLabel.text = [NSString stringWithFormat:@"%.1f   %ld人学过",model.coursescore.floatValue,model.browsingcount.integerValue];
+    }
 }
 
 @end

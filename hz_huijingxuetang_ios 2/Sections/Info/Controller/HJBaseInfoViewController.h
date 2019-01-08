@@ -6,11 +6,11 @@
 //  Copyright © 2018年 Junier. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 #import "HJInfoItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HJBaseInfoViewController : BaseTableViewController
+@interface HJBaseInfoViewController : BaseViewController <UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) HJInfoItemModel *model;
 

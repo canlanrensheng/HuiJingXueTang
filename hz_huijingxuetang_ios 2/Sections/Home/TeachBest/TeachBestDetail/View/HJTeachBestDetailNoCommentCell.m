@@ -22,7 +22,7 @@
     }];
     
     UILabel *timeKillLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"快来写点评论吧！",MediumFont(font(13)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@"快来写点评论吧",MediumFont(font(13)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];

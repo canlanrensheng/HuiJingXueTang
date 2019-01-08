@@ -7,54 +7,177 @@
 //
 
 #import "HJSchoolDetailChatViewController.h"
+#import <NIMSDK/NIMSDK.h>
+#import <NIMSDK/NIMChatroomManagerProtocol.h>
 
 #import "HJSchoolDetailChatCell.h"
 #import "HJSchoolLiveInputView.h"
-
+#import "HJSchoolLiveDetailViewModel.h"
+#import "HJTeacherChatCell.h"
+#import "HJSystemNotyChatCell.h"
 #define BottomViewHeight kHeight(40)
-@interface HJSchoolDetailChatViewController ()
+@interface HJSchoolDetailChatViewController ()<NIMChatManagerDelegate,NIMChatroomManagerDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) HJSchoolLiveInputView *bottomView;
+
+@property (nonatomic,copy) NSString *icon;
+@property (nonatomic,copy) NSString *nickName;
+@property (nonatomic,copy) NSString *roomId;
+@property (nonatomic,assign) BOOL isInRoom;
+
 
 @end
 
 @implementation HJSchoolDetailChatViewController
 
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NIMSDK sharedSDK].chatManager removeDelegate:self];
+}
+
+
 - (void)viewDidLoad {
     self.tableViewStyle = UITableViewStyleGrouped;
     [super viewDidLoad];
-    
+    [[NIMSDK sharedSDK].chatManager addDelegate:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:@"UIKeyboardWillShowNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHidden:) name:@"UIKeyboardWillHideNotification" object:nil];
+}
+
+- (void)setViewModel:(HJSchoolLiveDetailViewModel *)viewModel {
+    _viewModel = viewModel;
+    [[[NIMSDK sharedSDK] loginManager] login:_viewModel.model.chat.accid
+                                       token:_viewModel.model.chat.tokenid
+                                  completion:^(NSError *error) {
+//                                      NSDictionary *para = error.userInfo;
+//                                      DLog(@"获取到的数据是:%@ %@",error.userInfo,para[@"NSLocalizedDescription"]);
+                                      if (!error) {
+                                          NIMChatroomEnterRequest *request = [[NIMChatroomEnterRequest alloc]init];
+                                          request.roomId = _viewModel.model.chat.roomid;
+                                          request.roomAvatar = [APPUserDataIofo UserIcon];
+                                          request.roomNickname = [APPUserDataIofo nikename];
+                                          DLog(@"进入直播室:");
+                                          [[NIMSDK sharedSDK].chatroomManager enterChatroom:request completion:^(NSError * _Nullable error, NIMChatroom * _Nullable chatroom, NIMChatroomMember * _Nullable me) {
+                                              if (!error) {
+//                                                  ShowMessage(@"进入直播室成功");
+                                                  self.nickName = me.roomNickname;
+                                                  self.icon = me.roomAvatar;
+                                                  self.isInRoom = YES;
+                                              } else {
+                                                  NSDictionary *para = error.userInfo;
+//                                                  ShowMessage(@"进去直播室失败");
+                                                  DLog(@"获取到的数据是:%@ %@",error.userInfo,para[@"NSLocalizedDescription"]);
+                                              }
+
+                                          }];
+                                      } else {
+                                          self.isInRoom = NO;
+//                                          ShowMessage(@"登陆网易云信失败");
+                                      }
+                                  }];
 }
 
 - (void)hj_configSubViews{
     self.bottomView = [[HJSchoolLiveInputView alloc] init];
+    self.bottomView.inputTextField.delegate = self;
+
     [self.view addSubview:self.bottomView];
+    
     @weakify(self);
-    [self.bottomView.backSubject subscribeNext:^(id  _Nullable x) {
+    __weak typeof(self)weakSelf = self;
+    [weakSelf.bottomView.backSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
-        if([x integerValue] == 0) {
-            //加入购物车
-        } else {
-            //立即购买
-        }
+        [self commentButtonAction];
     }];
+    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view).offset(-KHomeIndicatorHeight);
         make.height.mas_equalTo(kHeight(49.0));
     }];
-    
+
     [self.tableView registerClassCell:[HJSchoolDetailChatCell class]];
-    
+    [self.tableView registerClassCell:[HJTeacherChatCell class]];
+    [self.tableView registerClassCell:[HJSystemNotyChatCell class]];
+
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
+    }];
+    
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"SendChatMessageKeyboardShow" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        [self.bottomView.inputTextField becomeFirstResponder];
     }];
 }
 
-- (void)hj_loadData {
-    
+- (void)hj_bindViewModel {
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"GiftRewardSuccessSendSystemNoty" object:nil] subscribeNext:^(NSNotification *noty) {
+        @strongify(self);
+        [self recieveGiftRewardSuccessSendSystemNoty:noty];
+    }];
+}
+
+//收到打赏通知之后进行的操作
+- (void)recieveGiftRewardSuccessSendSystemNoty:(NSNotification *)noty{
+    NSDictionary *userInfo =  noty.userInfo;
+    NSString *giftName = userInfo[@"giftName"];
+    NIMMessage *message = [[NIMMessage alloc] init];
+    message.text = self.bottomView.inputTextField.text;
+    NSDictionary *extDict = @{@"systemNotyMessage" : @"1",
+                              @"text" : [NSString stringWithFormat:@"“%@”打赏了一辆“%@”！",self.nickName,giftName],
+                              @"giftName" : giftName.length > 0 ? giftName : @""
+                              };
+    message.remoteExt = extDict;
+
+    //扩展字段
+    NIMMessageChatroomExtension *ext = [[NIMMessageChatroomExtension alloc] init];
+    ext.roomNickname = self.nickName;
+    message.messageExt = ext;
+    //聊天会话
+    NIMSession *session = [NIMSession session:_viewModel.model.chat.roomid type:NIMSessionTypeChatroom];
+    [[[NIMSDK sharedSDK] chatManager] sendMessage:message toSession:session error:nil];
+    //取消第一响应者
+    [self.bottomView.inputTextField resignFirstResponder];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.row < self.viewModel.chatListArray.count) {
+        NIMMessage *message = self.viewModel.chatListArray[indexPath.row];
+        NSDictionary *extDict = message.remoteExt;
+        NSString *systemNotyMessage = extDict[@"systemNotyMessage"];
+        NSString *giftName = extDict[@"giftName"];
+        NIMMessageChatroomExtension *ext =  message.messageExt;
+        if(systemNotyMessage.length > 0) {
+            //系统的通知
+            NSString *roomText = [NSString stringWithFormat:@"主讲人的的的的的：“%@”打赏了一辆“%@”！",ext.roomNickname,giftName];
+            CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT)  font:MediumFont(font(13))].height;
+            if(height + kHeight(5) > kHeight(20)) {
+                return height + kHeight(5);
+            }
+            kHeight(20);
+        } else {
+            if([message.from isEqualToString:self.viewModel.model.room.accid]) {
+                //学员发的消息
+                NSString *roomText = [NSString stringWithFormat:@"%@：%@",ext.roomNickname,message.text];
+                CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT) font:MediumFont(font(13))].height;
+                if(height + kHeight(5) > kHeight(20)) {
+                    return height + kHeight(5);
+                }
+                kHeight(20);
+            } else {
+                //学生发的消息
+                NSString *roomText = [NSString stringWithFormat:@"主讲人的的的的%@：%@",ext.roomNickname,message.text];
+                CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT)  font:MediumFont(font(13))].height;
+                if(height + kHeight(5) > kHeight(20)) {
+                    return height + kHeight(5);
+                }
+                kHeight(20);
+            }
+        }
+        
+    }
     return  kHeight(50.0);
 }
 
@@ -63,16 +186,53 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 4;
+    return self.viewModel.chatListArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.row < self.viewModel.chatListArray.count) {
+        NIMMessage *message = self.viewModel.chatListArray[indexPath.row];
+        NSDictionary *extDict = message.remoteExt;
+        NSString *systemNotyMessage = extDict[@"systemNotyMessage"];
+        NSString *giftName = extDict[@"giftName"];
+        NIMMessageChatroomExtension *ext =  message.messageExt;
+        if(systemNotyMessage.length > 0) {
+           //系统的通知
+            HJSystemNotyChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSystemNotyChatCell class]) forIndexPath:indexPath];
+            cell.backgroundColor = clear_color;
+            self.tableView.separatorColor = clear_color;
+            cell.hidden = NO;
+            NSString *roomText = [NSString stringWithFormat:@"            ：“%@”打赏了一辆“%@”！",ext.roomNickname,giftName];
+            NSString *giftN = [NSString stringWithFormat:@"“%@”",giftName];
+            cell.nameLabel.attributedText = [roomText attributeWithStr:giftN color:HEXColor(@"#FF4400") font:BoldFont(font(13))];
+            return cell;
+        } else {
+            if(![message.from isEqualToString:self.viewModel.model.room.accid]) {
+                //学生发的
+                HJSchoolDetailChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSchoolDetailChatCell class]) forIndexPath:indexPath];
+                self.tableView.separatorColor = clear_color;
+                cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+                cell.selectedBackgroundView.backgroundColor = RGBA(255, 255, 255, 0.5);
+                cell.hidden = NO;
+                NSString *roomText = [NSString stringWithFormat:@"%@：%@",message.senderName,message.text];
+                NSString *nickName = [NSString stringWithFormat:@"%@：",message.senderName];
+                cell.nameLabel.attributedText = [roomText attributeWithStr:nickName color:HEXColor(@"#999999") font:MediumFont(font(13))];
+                return cell;
+            } else {
+                HJTeacherChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeacherChatCell class]) forIndexPath:indexPath];
+                cell.backgroundColor = clear_color;
+                self.tableView.separatorColor = clear_color;
+                cell.hidden = NO;
+                NSString *roomText = [NSString stringWithFormat:@"           %@：%@",ext.roomNickname,message.text];
+                NSString *nickName = [NSString stringWithFormat:@"%@：",ext.roomNickname];
+                cell.nameLabel.attributedText = [roomText attributeWithStr:nickName color:HEXColor(@"#22476B") font:MediumFont(font(13))];
+                return cell;
+            }
+        }
+    }
     HJSchoolDetailChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSchoolDetailChatCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = clear_color;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
-    cell.selectedBackgroundView.backgroundColor = RGBA(255, 255, 255, 0.5);
-    
+    cell.hidden = YES;
     return cell;
 }
 
@@ -85,6 +245,111 @@
     return 0.000001f;
 }
 
+#pragma mark -- NIMChatManagerDelegate
+
+- (void)commentButtonAction{
+    if(self.viewModel.liveDetailErrorCode == 29) {
+        ShowMessage(@"暂无购买课程或者课程已过期");
+        return;
+    }
+    if (self.isInRoom == NO) {
+        ShowMessage(@"进入聊天室失败");
+        return;
+    }
+    if(self.bottomView.inputTextField.text.length <= 0 ) {
+        ShowMessage(@"请输入聊天内容");
+        return;
+    }
+    NIMMessage *message = [[NIMMessage alloc] init];
+    message.text = self.bottomView.inputTextField.text;
+    NSDictionary *extDict = @{@"systemNotyMessage" : @"",
+                              @"text" : @"",
+                              @"giftName" : @""
+                              };
+    message.remoteExt = extDict;
+    //扩展字段
+    NIMMessageChatroomExtension *ext = [[NIMMessageChatroomExtension alloc] init];
+    ext.roomNickname = self.nickName;
+    message.messageExt = ext;
+    //聊天会话
+    NIMSession *session = [NIMSession session:_viewModel.model.chat.roomid type:NIMSessionTypeChatroom];
+    [[[NIMSDK sharedSDK] chatManager] sendMessage:message toSession:session error:nil];
+    //取消第一响应者
+    [self.bottomView.inputTextField resignFirstResponder];
+}
+
+//发送消息回掉结果
+- (void)sendMessage:(NIMMessage *)message didCompleteWithError:(NSError *)error{
+    if (!error) {
+//        ShowMessage(@"发送成功");
+        [self.viewModel.chatListArray addObject:message];
+        [self.tableView reloadData];
+        self.bottomView.inputTextField.text = nil;
+        if(self.viewModel.chatListArray.count > 1) {
+            CGFloat yOffset = 0; //设置要滚动的位置 0最顶部 CGFLOAT_MAX最底部
+            if (self.tableView.contentSize.height > self.tableView.bounds.size.height) {
+                yOffset = self.tableView.contentSize.height - self.tableView.bounds.size.height;
+            }
+            [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
+        }
+    } else {
+        DLog(@"发送消息失败:%@",error.userInfo);
+    }
+}
+
+//收到消息进行的操作
+- (void)onRecvMessages:(NSArray<NIMMessage *> *)messages{
+    for (NIMMessage *message in messages) {
+        NSLog(@"%@",message.text);
+        if (message.text.length) {
+            [self.viewModel.chatListArray addObject:message];
+        }
+    }
+    [self.tableView reloadData];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
+    NSString *text = @" ";
+    NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
+    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    return nil;
+}
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    return nil;
+}
+
+#pragma mark - 空白数据集 按钮被点击时 触发该方法：
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField.text.length > 0) {
+        [self commentButtonAction];
+        return YES;
+    }
+    return NO;
+}
+
+//键盘即将出现的时候
+- (void)keyboardWillShow:(NSNotification *)sender{
+    self.bottomView.hidden = NO;
+    //    获取键盘的高度
+    NSDictionary *userInfo = [sender userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    int height = keyboardRect.size.height;
+    self.bottomView.transform = CGAffineTransformMakeTranslation(0, -height);
+}
+
+//键盘即将消失的时候
+- (void)keyboardWillHidden:(NSNotification *)sender{
+    self.bottomView.transform = CGAffineTransformIdentity;
+}
 
 @end
 

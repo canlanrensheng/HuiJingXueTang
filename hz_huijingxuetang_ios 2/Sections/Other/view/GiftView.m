@@ -274,13 +274,14 @@
 //                [WXApi sendReq:req];
 
             }
-            SVDismiss;
+//            SVDismiss;
         }else{
             UIViewController *vc = [self getCurrentViewController];
             [ConventionJudge NetCode:code vc:vc type:@"1"];
         }
     } failure:^(NSString *error) {
-        [SVProgressHUD showInfoWithStatus:netError];
+//        [SVProgressHUD showInfoWithStatus:netError];
+        ShowMessage(netError);
         
     }];
     

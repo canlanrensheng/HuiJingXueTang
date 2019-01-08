@@ -7,10 +7,13 @@
 //
 
 #import "LoginViewController.h"
-#import <NIMSDK/NIMSDK.h>
+//#import <NIMSDK/NIMSDK.h>
+#import "BaseOtherWebViewController.h"
+
 
 static NSString *UserName = @"UserName";
 
+#import <WXApi.h>
 @interface LoginViewController ()
 
 @property (nonatomic,strong) UIButton *closeButton;
@@ -28,11 +31,22 @@ static NSString *UserName = @"UserName";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(CGFLOAT_MIN * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.navigationController setNavigationBarHidden:YES animated:NO];
     });
+    
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
+    self.fd_interactivePopDisabled = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = YES;
+    self.fd_interactivePopDisabled = NO;
+
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.fd_prefersNavigationBarHidden = YES;
+    
 }
 
 - (void)hj_configSubViews {
@@ -43,14 +57,28 @@ static NSString *UserName = @"UserName";
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            [self backBtnClicked];
+            NSString *isLoginOut = self.params[@"isLoginOut"];
+            NSString *isFromMineVC = self.params[@"isFromMineVC"];
+//            if(isLoginOut) {
+//                [self.tabBarController setSelectedIndex:0];
+//                [self.navigationController popToRootViewControllerAnimated:YES];
+//            } else if (isFromMineVC) {
+//                [self.tabBarController setSelectedIndex:0];
+//                [self.navigationController popToRootViewControllerAnimated:YES];
+//            }else{
+//                [self backBtnClicked];
+//            }
+            [UserInfoSingleObject shareInstance].isLogined = NO;
+            
+            [self.tabBarController setSelectedIndex:0];
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }];
     }];
     [self.view addSubview:_closeButton];
     [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(kStatusBarHeight + kHeight(15));
         make.left.equalTo(self.view).offset(kWidth(10));
-        make.width.height.mas_equalTo(CGSizeMake(kWidth(15), kWidth(15)));
+        make.width.height.mas_equalTo(CGSizeMake(kWidth(22), kWidth(22)));
     }];
     
     //登陆文本
@@ -61,7 +89,7 @@ static NSString *UserName = @"UserName";
     [self.view addSubview:self.loginLabel];
     [self.loginLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kWidth(10));
-        make.top.offset(kHeight(79));
+        make.top.equalTo(_closeButton.mas_bottom).offset(kHeight(26.0));
     }];
     
     //电话号码的文本输入
@@ -130,18 +158,17 @@ static NSString *UserName = @"UserName";
     [_codeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(lineView.mas_bottom).offset(kHeight(30));
         make.centerX.equalTo(self.view);
-        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+//        make.width.mas_equalTo(kWidth(Screen_Width - kWidth(20.0)));
+        make.left.equalTo(self.view).offset(kWidth(10.0));
+        make.right.equalTo(self.view).offset(-kWidth(10));
         make.height.mas_equalTo(kHeight(40.0));
     }];
     
     
     // 密码登陆
     UIButton *forgetPasswordBtn = [UIButton creatButton:^(UIButton *button) {
-        button.ljTitle_font_titleColor_state(@"密码登录",MediumFont(font(13)),HEXColor(@"#1D3043"),0);
-//        @weakify(self);
+        button.ljTitle_font_titleColor_state(@"密码登录",MediumFont(font(13)),HEXColor(@"#22476B"),0);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-//            @strongify(self);
-            
             // 验证码登陆
             [DCURLRouter pushURLString:@"route://passwordLoginVC" animated:YES];
         }];
@@ -152,41 +179,69 @@ static NSString *UserName = @"UserName";
         make.right.equalTo(_codeBtn);
         make.height.mas_equalTo(kHeight(13));
     }];
+    
+    UIView *loginProtolView = [[UIView alloc] init];
+    loginProtolView.backgroundColor = clear_color;
+    [self.view addSubview:loginProtolView];
+    
+    [loginProtolView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(forgetPasswordBtn.mas_bottom).offset(kHeight(19));
+        make.height.mas_equalTo(kHeight(11));
+        make.centerX.equalTo(self.view);
+        make.left.equalTo(self.view).offset(kWidth(59));
+        make.right.equalTo(self.view).offset(-kWidth(59.0));
+    }];
 
     //登陆注册协议
     UILabel *loginProtolLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"登录注册即代表您已经同意",MediumFont(font(11)),[UIColor colorWithHexString:@"#333333"]);
+        label.textAlignment = NSTextAlignmentLeft;
     }];
-    [self.view addSubview:loginProtolLabel];
+    [loginProtolView addSubview:loginProtolLabel];
     [loginProtolLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(forgetPasswordBtn.mas_bottom).offset(kHeight(19));
+//        make.top.equalTo(forgetPasswordBtn.mas_bottom).offset(kHeight(19));
         make.height.mas_equalTo(kHeight(11));
-        make.centerX.equalTo(self.view).offset(-kWidth(50));
+//        make.centerX.equalTo(self.view).offset(-kWidth(50));
+        make.centerY.equalTo(loginProtolView);
+        make.left.equalTo(loginProtolView);
     }];
 
     //协议按钮
     UIButton *protolBtn = [UIButton creatButton:^(UIButton *button) {
-        button.ljTitle_font_titleColor_state(@"《慧鲸学堂用户协议条款》",MediumFont(font(11)),HEXColor(@"#1D3043"),0);
+        button.ljTitle_font_titleColor_state(@"《慧鲸学堂用户协议条款》",MediumFont(font(11)),HEXColor(@"#22476B"),0);
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-
+            BaseOtherWebViewController *loginProtolVC = [[BaseOtherWebViewController alloc] init];
+            loginProtolVC.webTitle = @"慧鲸学堂服务协议";
+            loginProtolVC.urlStr = @"https://www.huijingschool.com/company/protocol.html";
+            [self.navigationController pushViewController:loginProtolVC animated:YES];
         }];
     }];
-    [self.view addSubview:protolBtn];
+    [loginProtolView addSubview:protolBtn];
     [protolBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(loginProtolLabel);
         make.centerY.equalTo(loginProtolLabel);
         make.left.equalTo(loginProtolLabel.mas_right);
     }];
+    
+    if(MaJia) {
+        loginProtolLabel.hidden = YES;
+        protolBtn.hidden = YES;
+    } else {
+        loginProtolLabel.hidden = NO;
+        protolBtn.hidden = NO;
+    }
 }
 
 - (void)getCode{
     if (!self.phoneTf.text.length) {
-        return SVshowInfo(@"请输入手机号");
+        ShowMessage(@"请输入手机号");
+        return;
     }
     if (![self.phoneTf.text validateMobile]){
-        return SVshowInfo(@"手机号码格式错误");
+        ShowMessage(@"手机号码格式错误");
+        return;
     }
     NSDictionary *paraDict = @{@"phone":self.phoneTf.text};
     [DCURLRouter pushURLString:@"route://inputCodeVC" query:paraDict animated:YES];
@@ -194,33 +249,11 @@ static NSString *UserName = @"UserName";
 
 
 - (void)passwordLoginAction{
-//    CordLoginViewController *vc = [[CordLoginViewController alloc]init];
-//    [self.navigationController pushViewController:vc animated:YES];
     [DCURLRouter pushURLString:@"route://passwordLoginVC" animated:YES];
 }
 
 - (void)backBtnClicked {
-//    if ([self.type integerValue] == 2) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"back" object:self];
-//        [self.navigationController popViewControllerAnimated:YES];
-//
-//    }else if([self.type integerValue] == 1){
-//        NSInteger count = self.navigationController.viewControllers.count - 3;
-//        UIViewController *viewCtl = self.navigationController.viewControllers[count];
-//
-//        //    ZYLog(@"[viewCtl class] %@",[viewCtl class]);
-//        [self.navigationController popToViewController:viewCtl animated:YES];
-//
-//
-//        for(int i = 0; i < self.navigationController.viewControllers.count; i++)
-//        {
-//            NSLog(@"%d,[vcHome class] %@",i,[self.navigationController.viewControllers[i] class]);
-//        }
-//
-//    }else{
-        [self.navigationController popViewControllerAnimated:YES];
-
-//    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

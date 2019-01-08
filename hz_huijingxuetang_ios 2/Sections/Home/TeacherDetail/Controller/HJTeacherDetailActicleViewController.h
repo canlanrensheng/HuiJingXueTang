@@ -7,10 +7,12 @@
 //
 
 #import "BaseTableViewController.h"
-
+#import "HJTeacherDetailViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJTeacherDetailActicleViewController : BaseTableViewController
+
+@property (nonatomic,strong) HJTeacherDetailViewModel *viewModel;
 
 @end
 

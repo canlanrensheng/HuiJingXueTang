@@ -18,4 +18,7 @@
 
 - (void)performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem;
 
+//初始化配置
+- (void)initParams;
+
 @end

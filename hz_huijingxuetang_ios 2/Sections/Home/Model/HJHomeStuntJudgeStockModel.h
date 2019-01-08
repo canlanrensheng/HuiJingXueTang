@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJHomeStuntJudgeStockModel : BaseModel
 
-//@property (nonatomic , copy) NSString              * id;
+@property (nonatomic , copy) NSString              * stuntId;
 @property (nonatomic , copy) NSString              * questiontitle;
 @property (nonatomic , copy) NSString              * updateiconurl;
 @property (nonatomic , copy) NSString              * createtime;

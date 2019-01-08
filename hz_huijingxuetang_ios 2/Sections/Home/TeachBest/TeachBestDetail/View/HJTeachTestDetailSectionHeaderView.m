@@ -10,22 +10,18 @@
 
 @implementation HJTeachTestDetailSectionHeaderView
 
-//- (void)setFrame:(CGRect)frame {
-//    frame.size.height -= 10;
-//    [super setFrame:frame];
-//}
-
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
     if(self = [super initWithReuseIdentifier:reuseIdentifier]){
-        self.backgroundColor =Background_Color;
+        self.backgroundColor = Background_Color;
         
         UIView *backView = [[UIView alloc] init];
         backView.backgroundColor = white_color;
         [self addSubview:backView];
         [backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self);
-            make.top.equalTo(self).offset(kHeight(23));
+            make.top.equalTo(self).offset(kHeight(10));
+            make.height.mas_equalTo(kHeight(39));
         }];
         
         UILabel *timeKillLabel = [UILabel creatLabel:^(UILabel *label) {

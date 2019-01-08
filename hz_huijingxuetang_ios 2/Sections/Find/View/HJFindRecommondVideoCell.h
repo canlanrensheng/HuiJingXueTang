@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJFindRecommondVideoCell : BaseTableViewCell
 
+@property (nonatomic,strong) RACSubject *backRefreshSubject;
+
 
 @property (nonatomic, copy) void(^playCallback)(void);
 

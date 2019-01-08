@@ -7,6 +7,17 @@
 //
 
 #import "HJSearchResultInfomationCell.h"
+#import "HJSearchResultViewModel.h"
+#import "HJSearchResultModel.h"
+@interface HJSearchResultInfomationCell ()
+
+@property (nonatomic,strong) UIImageView *imageV;
+@property (nonatomic,strong) UILabel *contentTitleLabel;
+@property (nonatomic,strong) UILabel *contentDesLabel;
+@property (nonatomic,strong) UILabel *readCountLabel;
+@property (nonatomic,strong) UILabel *dateLabel;
+
+@end
 
 @implementation HJSearchResultInfomationCell
 
@@ -25,10 +36,11 @@
     }];
     [imaV clipWithCornerRadius:kHeight(5.0) borderColor:nil borderWidth:0];
 
+    self.imageV = imaV;
     
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"重温经典系列之新K线战法",BoldFont(font(14)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(14)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -40,9 +52,12 @@
         make.right.equalTo(imaV.mas_left).offset(-kWidth(10.0));
     }];
     
+    self.contentTitleLabel = nameLabel;
+    
+    
     //描述
     UILabel *desLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"如何在动荡股市中求得一颗平常心 唯一可以...",MediumFont(font(11)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 2;
         [label sizeToFit];
@@ -52,8 +67,10 @@
         make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(10.0));
         make.left.equalTo(self).offset(kWidth(10.0));
 //        make.height.mas_equalTo(kHeight(26.0));
-        make.right.equalTo(imaV.mas_left).offset(-kWidth(10.0));
+        make.right.equalTo(imaV.mas_left).offset(-kWidth(20.0));
     }];
+    
+    self.contentDesLabel = desLabel;
     
     //阅读的图标
     UIImageView *readImaV = [[UIImageView alloc] init];
@@ -68,7 +85,7 @@
     
     //阅读的数量
     UILabel *readCountLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"2208",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@"0",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -79,18 +96,55 @@
         make.height.mas_equalTo(kHeight(9.0));
     }];
     
+    self.readCountLabel = readCountLabel;
+    
     //时间
     UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"18/08/29",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
     [self addSubview:timeLabel];
     [timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(imaV.mas_left).offset(-kWidth(10.0));
+        make.right.equalTo(imaV.mas_left).offset(-kWidth(20.0));
         make.centerY.equalTo(readImaV);
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    
+    self.dateLabel = timeLabel;
+    
+    //分割线
+    UIView *lineView = [[UIView alloc] init];
+    lineView.backgroundColor = HEXColor(@"#EAEAEA");
+    [self addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self);
+        make.height.mas_equalTo(kHeight(0.5));
+    }];
+   
+}
+
+//- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+//    HJSearchResultViewModel *listViewModel = (HJSearchResultViewModel *)viewModel;
+//    InformationResponses *model = listViewModel.model.informationResponses[indexPath.row];
+//    if(model){
+//        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+//        self.contentTitleLabel.text = model.infomationtitle;
+//        self.readCountLabel.text = [NSString stringWithFormat:@"%@",model.readcounts];
+//        NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+//        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%ld/%ld",date.year,date.month,date.day];
+//    }
+//}
+
+- (void)setModel:(InformationResponses *)model {
+    _model = model;
+    if(model){
+        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        self.contentTitleLabel.text = model.infomationtitle;
+        self.readCountLabel.text = [NSString stringWithFormat:@"%@",model.readcounts];
+        NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%@/%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+    }
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "HJHomeLatestSatausView.h"
 #import "AdvertScrollView.h"
+#import "HJHomeViewModel.h"
 @interface HJHomeLatestSatausView ()
 
 @property (nonatomic,strong) AdvertScrollView *advertScrollView;
@@ -48,7 +49,7 @@
         make.size.mas_equalTo(CGSizeMake(kWidth(36), kHeight(34)));
     }];
     
-    _advertScrollView = [[AdvertScrollView alloc] initWithFrame:CGRectMake(kWidth(55.0), kHeight(8.0),Screen_Width - kWidth(55.0 + 10.0), kHeight(36.0))];
+    _advertScrollView = [[AdvertScrollView alloc] initWithFrame:CGRectMake(kWidth(55.0), kHeight(8.0),Screen_Width - kWidth(55.0 + 10.0), kHeight(40.0))];
     _advertScrollView.centerY = makeMoneyRankImageView.centerY;
     _advertScrollView.advertScrollViewStyle = AdvertScrollViewStyleMore;
     _advertScrollView.titleFont = MediumFont(font(13.0));
@@ -61,13 +62,24 @@
     [_advertScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(makeMoneyRankImageView.mas_right).offset(10);
         make.right.equalTo(self).offset(-10);
-        make.height.mas_equalTo(36);
+        make.height.mas_equalTo(40);
         make.centerY.equalTo(makeMoneyRankImageView).offset(-kHeight(2.0));
     }];
     
-    _advertScrollView.topTitles = @[@"高盛购刚刚购买了 ",@"余春老师的《三板斧战法》",@"高盛购刚刚购买了 ",@"余春老师的《三板斧战法》"];
-    _advertScrollView.bottomTitles= @[@"高盛购刚刚购买了 ",@"余春老师的《三板斧战法》",@"高盛购刚刚购买了 ",@"余春老师的《三板斧战法》"];
+    UIView *bottomiew = [[UIView alloc] init];
+    bottomiew.backgroundColor = Background_Color;
+    [self addSubview:bottomiew];
+    [bottomiew mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        make.top.equalTo(scrollView.mas_bottom);
+        make.height.mas_equalTo(kHeight(10.0));
+    }];
 }
 
+- (void)setViewModel:(BaseViewModel *)viewModel {
+    HJHomeViewModel *listViewModel = (HJHomeViewModel *)viewModel;
+    _advertScrollView.topTitles = listViewModel.topTitlesArray;
+    _advertScrollView.bottomTitles= listViewModel.bottomTitlesArray;
+}
 
 @end

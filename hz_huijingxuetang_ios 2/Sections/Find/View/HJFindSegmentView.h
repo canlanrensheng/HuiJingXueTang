@@ -12,7 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJFindSegmentView : BaseView
 
+
 @property (nonatomic,strong) RACSubject *clickSubject;
+
+- (instancetype)initWithFrame:(CGRect)frame titleColor:(UIColor *)titleColor selectTitleColor:(UIColor *)selectTitleColor  lineColor:(UIColor *)lineColor  buttons:(NSArray *)itemButtons block:(void (^)(NSInteger index))block;
+
+@property (nonatomic,assign) NSInteger selectIndex;
 
 @end
 

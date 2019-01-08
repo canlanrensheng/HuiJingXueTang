@@ -9,8 +9,11 @@
 #ifndef NotificationConst_h
 #define NotificationConst_h
 
-//刷新车辆信息的数据
-//extern NSString * const MyCarListVCRefreshDataNotification;
+//更新用户数据
+extern NSString * const UpdateUserInfoNotification;
+
+//获取用户信息
+extern NSString * const LoginGetUserInfoNotification;
 
 
 

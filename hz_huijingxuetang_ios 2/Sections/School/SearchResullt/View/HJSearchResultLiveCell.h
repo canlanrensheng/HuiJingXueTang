@@ -7,10 +7,12 @@
 //
 
 #import "BaseTableViewCell.h"
-
+#import "HJSearchResultModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSearchResultLiveCell : BaseTableViewCell
+
+@property (nonatomic,strong) CourseLiveModel *model;
 
 @end
 

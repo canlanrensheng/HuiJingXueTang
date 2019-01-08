@@ -13,8 +13,13 @@
 #import "AppDelegate+Category.h"
 #import "AppDelegate+Share.h"
 
+#import <AlipaySDK/AlipaySDK.h>
 #import <sys/utsname.h>
+#import <WXApi.h>
+#import "HJMyOrderViewController.h"
 
+#import "HJPlaceHoderViewController.h"
+#define CheckOnLineVersion @"1.0.0"
 @interface AppDelegate ()
 
 @end
@@ -25,43 +30,131 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = white_color;
+    self.window.backgroundColor = black_color;
     [self.window makeKeyAndVisible];
-    //设置根视图控制器
-    [self setRootViewController:application];
-    [self autoLogin];
-    [self getNIMSDK];
-    [self registerSharePlatforms];
-    [self location];
-    
-    NSString *deviceModel = [[UIDevice currentDevice] model]; //获取设备的型号 例如：iPhone
-    struct utsname systemInfo;
-    
-    uname(&systemInfo);
-    
-    NSString *platform = [NSString stringWithCString:systemInfo.machine encoding:NSASCIIStringEncoding];
-    DLog(@"获取到的设备的信息是:%@ %@",deviceModel,platform);
-    
     if (@available(iOS 11.0, *)) {
         UITableView.appearance.estimatedRowHeight = 0;
         UITableView.appearance.estimatedSectionFooterHeight = 0;
         UITableView.appearance.estimatedSectionHeaderHeight = 0;
+        [UIScrollView appearance].contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    return YES;
+    
+    HJPlaceHoderViewController *placeHoderVC = [[HJPlaceHoderViewController alloc] init];
+    self.window.rootViewController = placeHoderVC;
+    
+    //检测马甲的部分
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [YJAPPNetwork SetOnlineMaJiaBaoWithCheckVersion:CheckOnLineVersion success:^(NSDictionary *responseObject) {
+            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+           
+            if (code == 200) {
+                NSString *data = [responseObject objectForKey:@"data"];
+                [UserInfoSingleObject shareInstance].isShowMaJia = [data boolValue];
+
+                //自动登录
+                if ([APPUserDataIofo AccessToken].length > 0) {
+                    [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
+                        NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+                        if (code == 200) {
+                            NSDictionary *dic = [responseObject objectForKey:@"data"];
+                            [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
+                            [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
+                            [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+                                
+                                //设置根视图控制器
+                                [self setRootViewController:application];
+                                
+                                [self initParams];
+                                //                    [self autoLogin];
+                                [self getNIMSDK];
+                                [self registerSharePlatforms];
+                                [self location];
+                                //微信支付注册
+                                [WXApi registerApp:@"wx9da5846d2c469754"];
+                                
+                            });
+                        } else if (code == 10) {
+                            //账号被挤掉
+                            NSDictionary *dic = [responseObject objectForKey:@"data"];
+                            [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
+                            [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
+                            [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
+
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
+                                //设置根视图控制器
+                                [self setRootViewController:application];
+
+                                [self initParams];
+                                //                    [self autoLogin];
+                                [self getNIMSDK];
+                                [self registerSharePlatforms];
+                                [self location];
+                                //微信支付注册
+                                [WXApi registerApp:@"wx9da5846d2c469754"];
+
+                            });
+                        } else{
+                            ShowMessage([responseObject objectForKey:@"msg"]);
+                        }
+                    } failure:^(NSString *error) {
+                        ShowMessage(error);
+                    }];
+                } else {
+                    //没有登陆
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+                        
+                        //设置根视图控制器
+                        [self setRootViewController:application];
+                        
+                        [self initParams];
+                        //                    [self autoLogin];
+                        [self getNIMSDK];
+                        [self registerSharePlatforms];
+                        [self location];
+                        //微信支付注册
+                        [WXApi registerApp:@"wx9da5846d2c469754"];
+                        
+                    });
+                }
+            } else {
+                ShowError([responseObject objectForKey:@"msg"]);
+            }
+        } failure:^(NSString *error) {
+            ShowMessage(netError);
+        }];
+    });
+    
+    return NO;
 }
 
+/**
+ *  设置全局支持方向，然后在控制器中单独配置各自的支持方向
+ */
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    return UIInterfaceOrientationMaskAll;
+}
 
+//请求定位
 - (void)location{
     self.locationManager = [[CLLocationManager alloc] init];
-    [self.locationManager  requestAlwaysAuthorization];//请求授权
-    if ([CLLocationManager locationServicesEnabled]) {
+    //如果没有授权则请求用户授权
+    if ([CLLocationManager authorizationStatus]==kCLAuthorizationStatusNotDetermined){
+        [self.locationManager  requestWhenInUseAuthorization];
+    }else if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusAuthorizedWhenInUse){
+        [self.locationManager  requestAlwaysAuthorization ];
+        [self.locationManager   requestWhenInUseAuthorization];
         self.locationManager.delegate = self;
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-        self.locationManager.distanceFilter = 200.0f;
-        [self.locationManager requestAlwaysAuthorization];//位置权限申请
-        [self.locationManager startUpdatingLocation];
-    } else {
-        ShowMessage(@"请开启定位功能！");
+        self.locationManager .desiredAccuracy = kCLLocationAccuracyBest;//精准度
+        self.locationManager .distanceFilter = 1.0;//移动十米定位一次
+        //    位置信息更新最小距离，只有移动大于这个距离才更新位置信息，默认为kCLDistanceFilterNone：不进行距离限制
+        [self.locationManager  startUpdatingLocation];
     }
 }
 
@@ -79,7 +172,7 @@
     [VisibleViewController().navigationController presentViewController:alert animated:YES completion:nil];
 }
 
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
     [self.locationManager stopUpdatingLocation];//停止定位
     //地理反编码
     CLLocation *currentLocation = [locations lastObject];
@@ -99,10 +192,14 @@
             NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
             [defa setValue:[NSString stringWithFormat:@"%@%@",state,city] forKey:@"CurrentLocation"];
             [defa synchronize];
-        } else if (error == nil && placemarks.count == 0 ) {
             
+            DLog(@"定位到的城市是:%@",[NSString stringWithFormat:@"%@%@",state,city]);
+            
+        } else if (error == nil && placemarks.count == 0 ) {
+            DLog(@"定位失败");
         } else if (error) {
             currentCity = @"⟳定位获取失败,点击重试";
+            DLog(@"定位获取失败,点击重试");
         }
         // 还原Device 的语言
         [[NSUserDefaults
@@ -111,6 +208,63 @@
     }];
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url.host isEqualToString:@"safepay"]) {
+        // 支付跳转支付宝钱包进行支付，处理支付结果
+        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+            DLog(@"result = %@",resultDic);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPaySuccessNoty" object:nil userInfo:nil];
+            
+            if([UserInfoSingleObject shareInstance].payType == WxOrAlipayTypeBuy) {
+                for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
+                    if([vc  isKindOfClass:[HJMyOrderViewController class]]){
+                        return;
+                    }
+                }
+                
+                [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
+            } else {
+                //打赏成功
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+            }
+        }];
+
+    }
+    // 在此方法中做如下判断，因为还有可能有其他的支付，如支付宝就是@"safepay"
+    if ([url.host isEqualToString:@"pay"] || [url.host isEqualToString:@"oauth"]) {
+        return [WXApi handleOpenURL:url delegate:self];
+    }
+    return YES;
+}
+
+// NOTE: 9.0以后使用新API接口
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+    if ([url.host isEqualToString:@"safepay"]) {
+        // 支付跳转支付宝钱包进行支付，处理支付结果
+        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+            DLog(@"result = %@",resultDic);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPaySuccessNoty" object:nil userInfo:nil];
+            
+            if([UserInfoSingleObject shareInstance].payType == WxOrAlipayTypeBuy) {
+                for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
+                    if([vc  isKindOfClass:[HJMyOrderViewController class]]){
+                        return;
+                    }
+                }
+                [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
+            } else {
+                //打赏成功
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+            }
+        }];
+    }
+    if ([url.host isEqualToString:@"pay"] || [url.host isEqualToString:@"oauth"]) {
+        return [WXApi handleOpenURL:url delegate:self];
+    }
+    return YES;
+}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -139,85 +293,81 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (void)autoLogin{
-    if ([APPUserDataIofo AccessToken].length > 0) {
-        [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
-            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-            if (code == 200) {
-                NSDictionary *dic = [responseObject objectForKey:@"data"];
-                [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
-                [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-            }else{
-                ShowError([responseObject objectForKey:@"msg"]);
-            }
-        } failure:^(NSString *error) {
-            [SVProgressHUD showInfoWithStatus:netError];
-        }];
-    }
-}
+//- (void)autoLogin{
+//    if ([APPUserDataIofo AccessToken].length > 0) {
+//        [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
+//            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+//            if (code == 200) {
+//                NSDictionary *dic = [responseObject objectForKey:@"data"];
+//                [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
+//                [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
+//                [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
+//            }else{
+//                ShowMessage([responseObject objectForKey:@"msg"]);
+//            }
+//        } failure:^(NSString *error) {
+//            ShowMessage(error);
+//        }];
+//    }
+//}
 
 //网易云信
 - (void)getNIMSDK{
-    [[NIMSDK sharedSDK]registerWithAppID:@"2b5791890612603d6bedb3ddef616ea9" cerName:@"developerPush"];
+    //网易云信 appKey和推送证书
+    [[NIMSDK sharedSDK] registerWithAppID:@"2b5791890612603d6bedb3ddef616ea9" cerName:@"developerPush"];
 }
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    //设置deviceToken
     [[NIMSDK sharedSDK] updateApnsToken:deviceToken];
 }
 
-
-//-(void)getWXApi{
-//    [WXApi registerApp:@"wx9da5846d2c469754"];
-//}
-//
-//-(UIImage *)getnewimage:(UIImage *)image{
-//    UIImage *image1 = image;
-//    UIGraphicsBeginImageContext(CGSizeMake(17, 17));
-//    [image1 drawInRect:CGRectMake(0.0f, 0.0f, 17, 17)];
-//    image1 = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    return image1;
-//}
-//
-//// iOS9.0以前调用此方法
-//- (BOOL)application:(UIApplication *)application  handleOpenURL:(NSURL *)url {
-//    if ([url.host isEqualToString:@"pay"]) {
-//        return [WXApi handleOpenURL:url delegate:self];
-//    }
-//    return YES;
-//}
-//
-//
-//
-//- (void)onResp:(BaseResp *)resp{
-//    if ([resp isKindOfClass:[PayResp class]]) {
-//        // 微信支付
-//        PayResp*response=(PayResp*)resp;
-//        switch(response.errCode){
-//            case 0:
-//                NSLog(@"支付成功");
-//                break;
-//            case -1:
-//                NSLog(@"支付失败！");
-//                break;
-//            case -2:
-//                NSLog(@"支付失败！");
-//                break;
-//            default:
-//                NSLog(@"支付失败！");
-//                break;
-//                  }
-//              }
-//          }
-
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
-    if (self.isForceLandscape) {
-        return UIInterfaceOrientationMaskLandscape;
-    }else if(self.isForcePortrait){
-        return UIInterfaceOrientationMaskPortrait;
+// iOS9.0以前调用此方法
+- (BOOL)application:(UIApplication *)application  handleOpenURL:(NSURL *)url {
+    if ([url.host isEqualToString:@"pay"]) {
+        return [WXApi handleOpenURL:url delegate:self];
     }
-    return UIInterfaceOrientationMaskPortrait;
+    return YES;
 }
+
+//发起微信的请求
+- (void)onResp:(BaseResp *)resp{
+    if ([resp isKindOfClass:[PayResp class]]) {
+        // 微信支付
+        if([UserInfoSingleObject shareInstance].payType == WxOrAlipayTypeBuy) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPaySuccessNoty" object:nil userInfo:nil];
+            
+            for (UIViewController *vc in VisibleViewController().navigationController.viewControllers) {
+                if([vc  isKindOfClass:[HJMyOrderViewController class]]){
+                    return;
+                }
+            }
+             [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
+        }else {
+            //打赏成功
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+        }
+    }
+    //微信登陆
+    if([resp isKindOfClass:[SendAuthResp class]]) {
+        SendAuthResp *resp = (SendAuthResp *)resp;
+        if(resp.errCode == WXSuccess) {
+            
+        }
+        DLog(@"获取到的code的数据是:%@ %ld %@",resp.code,resp.errCode,resp.state);
+    }
+    
+}
+
+
+//- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
+//    if (self.isForceLandscape) {
+//        return UIInterfaceOrientationMaskLandscape;
+//    }else if(self.isForcePortrait){
+//        return UIInterfaceOrientationMaskPortrait;
+//    }
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 
 @end

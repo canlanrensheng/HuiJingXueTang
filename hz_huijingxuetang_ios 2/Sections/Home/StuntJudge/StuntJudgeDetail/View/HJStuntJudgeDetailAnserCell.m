@@ -59,7 +59,7 @@
     
     //日期
     UILabel *dateLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"2018/08/29",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -73,7 +73,7 @@
     
     //问题描述
     UILabel *questionLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"股价均线下降，空头行情中相对走势较弱。中短线看继续调整，均线具有稳定性，是因为它的计算公式是算术平均，所以在偶尔的高价或低价出现时，它不会出现过于明显的变化，除非这些高价或低价连续出现。均线不会因为少数几天的大幅变动而改变原有的趋势，这就说明均线有很好的容错性和稳定性。这也是为什么很多投资者都喜欢使用均线指标的原因。",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];

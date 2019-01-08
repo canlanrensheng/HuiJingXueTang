@@ -11,7 +11,7 @@
 
 #import "HJFindViewModel.h"
 #import "HJFindRecommondModel.h"
-
+#import "HJInfoCheckPwdAlertView.h"
 
 
 @interface HJFindRecommondTextVideoLinkCell ()
@@ -34,6 +34,7 @@
 
 @property (nonatomic,strong) HJFindViewModel *viewModel;
 @property (nonatomic,strong) HJFindRecommondModel *model;
+
 
 @end
 
@@ -78,17 +79,33 @@
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
             if([APPUserDataIofo AccessToken].length <= 0) {
-                ShowMessage(@"您还未登录");
+//                ShowMessage(@"您还未登录");
                 [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                 return;
             }
             if(self.model.isinterest == 0) {
                 [self.viewModel careOrCancleCareWithTeacherId:self.model.teacherid accessToken:[APPUserDataIofo AccessToken] insterest:@"1" Success:^{
                     button.selected = !button.selected;
+                     [self.backRefreshSubject sendNext:@(1)];
+                    self.model.isinterest = 1;
+                    // 刷新关注的列表
+                    if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                    }else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
+                    }
                 }];
             } else {
                 [self.viewModel careOrCancleCareWithTeacherId:self.model.teacherid accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
                     button.selected = !button.selected;
+                    [self.backRefreshSubject sendNext:@(0)];
+                    self.model.isinterest = 0;
+                    // 刷新关注的列表
+                    if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                    }else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
+                    }
                 }];
             }
         }];
@@ -162,6 +179,8 @@
         make.height.mas_equalTo(kHeight(60));
         make.right.equalTo(self).offset(-kWidth(10));
     }];
+    UITapGestureRecognizer *backTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backViewTap)];
+    [backView addGestureRecognizer:backTap];
     
     //图片链接
     UIImageView *linkImageView = [[UIImageView alloc] init];
@@ -175,7 +194,7 @@
     
     //文本
     UILabel *warnLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"点击查阅文章",MediumFont(font(13)),HEXColor(@"#141E2F"));
+        label.ljTitle_font_textColor(@"点击查阅文章",MediumFont(font(13)),HEXColor(@"#22476B"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -236,6 +255,8 @@
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
     HJFindViewModel *listViewModel = (HJFindViewModel *)viewModel;
+    self.viewModel = listViewModel;
+    self.indexPath = indexPath;
     HJFindRecommondModel *model = nil;
     if(listViewModel.findSegmentType == 0) {
         model = listViewModel.findArray[indexPath.row];
@@ -264,6 +285,81 @@
     }
 }
 
+- (void)backViewTap {
+    if (_indexPath.row < self.viewModel.findArray.count) {
+        HJFindRecommondModel *model = self.viewModel.findArray[_indexPath.row];
+        if(model.type == 1) {
+            //免费教验 密码校验
+            HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithTeacherId:model.teacherid BindBlock:^(BOOL success) {
+                NSDictionary *para = @{@"infoId" : model.dynamiclinkid
+                                       };
+                [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
+            }];
+            [alertView show];
+        }
+        
+        if (model.type == 2) {
+            //教参精华 权限校验
+            if([APPUserDataIofo AccessToken].length <= 0) {
+                ShowMessage(@"您还未登录");
+                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                return;
+            }
+            [self.viewModel checkVipInfoPowerWithInfoId:model.dynamiclinkid success:^{
+                NSDictionary *para = @{@"infoId" : model.dynamiclinkid
+                                       };
+                [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
+            }];
+        }
+        
+        if (model.type == 3 || model.type == 4) {
+            //直播详情
+            if(model.dynamiclinkid.integerValue != -1) {
+                if([APPUserDataIofo AccessToken].length <= 0) {
+//                    ShowMessage(@"您还未登录");
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                    });
+                    return;
+                }
+            }
+            [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:model.dynamiclinkid success:^(BOOL isSetPwd){
+                //没有设置密码
+                if(isSetPwd) {
+                    [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.dynamiclinkid,
+                                                                                     @"teacherId" : model.teacherid.length > 0 ? model.teacherid : @""
+                                                                                     } animated:YES];
+                } else {
+                    HJCheckLivePwdAlertView *alertView = [[HJCheckLivePwdAlertView alloc] initWithLiveId:model.dynamiclinkid  teacherId:model.teacherid BindBlock:^(NSString * _Nonnull pwd) {
+                        [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.dynamiclinkid,
+                                                                                         @"teacherId" :  model.teacherid.length > 0 ? model.teacherid : @""
+                                                                                         } animated:YES];
+                    }];
+                    [alertView show];
+                }
+                
+            } error:^{
+                //设置了密码，弹窗提示
+                
+            }];
+        }
+        if(model.type == 5) {
+            //课程详情
+            if([APPUserDataIofo AccessToken].length <= 0) {
+//                ShowMessage(@"您还未登录");
+                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                return;
+            }
+            [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.dynamiclinkid} animated:YES];
+        }
+    }
+}
 
+- (RACSubject *)backRefreshSubject {
+    if(!_backRefreshSubject) {
+        _backRefreshSubject = [[RACSubject alloc] init];
+    }
+    return _backRefreshSubject;
+}
 
 @end

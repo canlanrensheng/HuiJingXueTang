@@ -76,7 +76,10 @@
                 if (buttonIndex == 1) {
                     [self.viewModel deleteWithId:self.model.stuntId Success:^{
                         //刷新列表操作
-                        [self.backSubject sendNext:nil];
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self.backSubject sendNext:nil];
+                        });
+                        
                     }];
                 }
             } otherButtonTitles:@"确定", nil];

@@ -20,7 +20,7 @@
 
 - (UITableView *)tableView{
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectZero
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero
                                                  style:self.tableViewStyle];
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -57,24 +57,23 @@
     
    
     [self.view updateConstraintsIfNeeded];
-#if DEBUG
-    self.fpsLabel = [[YYFPSLabel alloc] init];
-    [self.view addSubview:self.fpsLabel];
-    
-    self.fpsLabel.alpha  = 0;
-    self.fpsLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    [self.fpsLabel sizeToFit];
-    
-    [self.fpsLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_offset(20);
-        make.bottom.equalTo(self.view.mas_bottom).offset(-kBottomBarHeight - 30);
-    }];
-#endif
+//#if DEBUG
+//    self.fpsLabel = [[YYFPSLabel alloc] init];
+//    [self.view addSubview:self.fpsLabel];
+//    
+//    self.fpsLabel.alpha  = 0;
+//    self.fpsLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+//    
+//    [self.fpsLabel sizeToFit];
+//    
+//    [self.fpsLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_offset(20);
+//        make.bottom.equalTo(self.view.mas_bottom).offset(-kBottomBarHeight - 30);
+//    }];
+//#endif
 }
 
 - (void)hj_refreshData{
-    
     
 };
 
@@ -189,11 +188,13 @@
 //    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
 //}
 
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"暂无数据";
-    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:font(16)], NSForegroundColorAttributeName: MYColorFromHEX(0x999999)};
-    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
-}
+//暂无数据空白页
+
+//- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
+//    NSString *text = @"暂无数据";
+//    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:font(16)], NSForegroundColorAttributeName: MYColorFromHEX(0x999999)};
+//    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+//}
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView {
     return Background_Color;
@@ -210,7 +211,43 @@
 //    return [[NSAttributedString alloc] initWithString:buttonTitle attributes:attributes];
 //}
 
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
+    NSString *text = @"";
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        text = @"网络好像出了点问题";
+    } else{
+        text = @"暂无相关数据";
+    }
+    
+    NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
+    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
 
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return [UIImage imageNamed:@"网络问题空白页"];
+    } else {
+        return [UIImage imageNamed:@"暂无数据空白页"];
+    }
+}
+
+
+- (UIImage *)buttonImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        return  [UIImage imageNamed:@"点击刷新"];
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - 空白数据集 按钮被点击时 触发该方法：
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
+        [self hj_loadData];
+    } else {
+        
+    }
+}
 
 
 @end

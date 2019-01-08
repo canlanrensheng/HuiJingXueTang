@@ -10,8 +10,11 @@
 #import "HJPicAndTextButton.h"
 @interface HJSchoolClassSelectToolView ()
 
-@property (nonatomic,strong) UIButton *lastSelectBtn;
+
 @property (nonatomic,strong) UIButton *priceBtn;
+
+@property (nonatomic,strong) UIButton *buyerBtn;
+@property (nonatomic,strong) UIButton *limitTeHuiBtn;
 
 @end
 
@@ -52,6 +55,8 @@
     [buyerBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
     buyerBtn.titleLabel.font = MediumFont(font(13.0));
     [self addSubview:buyerBtn];
+    
+    self.buyerBtn = buyerBtn;
 
     //限时特惠
     UIButton *limitTeHuiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -62,6 +67,7 @@
     [limitTeHuiBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateSelected];
     limitTeHuiBtn.titleLabel.font = MediumFont(font(13.0));
     [self addSubview:limitTeHuiBtn];
+    self.limitTeHuiBtn = limitTeHuiBtn;
 
     
     [selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -92,7 +98,7 @@
     [self addSubview:lineView];
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.height.mas_equalTo(kHeight(1.0));
+        make.height.mas_equalTo(kHeight(0.5));
     }];
 }
 
@@ -104,9 +110,21 @@
             if (btn.selected) {
                 [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
                 [btn setImage:V_IMAGE(@"箭头选中从高到低") forState:UIControlStateNormal];
+                self.viewModel.sort_price = @"desc";
+                self.viewModel.sort_sales = @"";
+                self.viewModel.sort_starlevel = @"";
+                self.viewModel.filter_price = @"";
+                self.viewModel.filter_preference = @"";
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
             } else {
                 [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
                 [btn setImage:V_IMAGE(@"箭头选中从低到高") forState:UIControlStateNormal];
+                self.viewModel.sort_price = @"asc";
+                self.viewModel.sort_sales = @"";
+                self.viewModel.sort_starlevel = @"";
+                self.viewModel.filter_price = @"";
+                self.viewModel.filter_preference = @"";
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
             }
             self.lastSelectBtn = btn;
             [self.clickSubject sendNext:@(btn.tag)];
@@ -115,26 +133,70 @@
             [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
             [btn setImage:V_IMAGE(@"箭头选中从高到低") forState:UIControlStateNormal];
             btn.selected = YES;
+            self.viewModel.sort_price = @"desc";
+            self.viewModel.sort_sales = @"";
+            self.viewModel.sort_starlevel = @"";
+            self.viewModel.filter_price = @"";
+            self.viewModel.filter_preference = @"";
             self.lastSelectBtn = btn;
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
             [self.clickSubject sendNext:@(btn.tag)];
         }
     } else {
         [self.priceBtn setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
         [self.priceBtn setImage:V_IMAGE(@"箭头默认") forState:UIControlStateNormal];
-        self.lastSelectBtn.selected = NO;
-        btn.selected = YES;
-        self.lastSelectBtn.titleLabel.font = BoldFont(font(13));
-        btn.titleLabel.font = MediumFont(font(13));
-        self.lastSelectBtn = btn;
+        
+        //销量
+        if(btn == self.buyerBtn) {
+            self.lastSelectBtn.selected = NO;
+            btn.selected = YES;
+            self.lastSelectBtn.titleLabel.font = BoldFont(font(13));
+            btn.titleLabel.font = MediumFont(font(13));
+            self.lastSelectBtn = btn;
+            
+            self.viewModel.sort_price = @"";
+            self.viewModel.sort_sales = @"desc";
+            self.viewModel.sort_starlevel = @"";
+            self.viewModel.filter_price = @"";
+            self.viewModel.filter_preference = @"";
+            //评分排序
+        } else if (btn == self.limitTeHuiBtn) {
+            self.lastSelectBtn.selected = NO;
+            btn.selected = YES;
+            self.lastSelectBtn.titleLabel.font = BoldFont(font(13));
+            btn.titleLabel.font = MediumFont(font(13));
+            self.lastSelectBtn = btn;
+            
+            self.viewModel.sort_price = @"";
+            self.viewModel.sort_sales = @"";
+            self.viewModel.sort_starlevel = @"desc";
+            self.viewModel.filter_price = @"";
+            self.viewModel.filter_preference = @"";
+        } else  if(btn == self.selectButton){
+            //筛选操作
+            self.lastSelectBtn.selected = NO;
+            btn.selected = YES;
+            self.lastSelectBtn.titleLabel.font = BoldFont(font(13));
+            btn.titleLabel.font = MediumFont(font(13));
+            self.lastSelectBtn = btn;
+            
+        }
+        //刷新数据请求
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"RefreshVideoCourseListData" object:nil userInfo:nil];
         [self.clickSubject sendNext:@(btn.tag)];
     }
 }
 
+//回掉的按钮
 - (RACSubject *)clickSubject {
     if (!_clickSubject) {
         _clickSubject = [RACSubject subject];
     }
     return _clickSubject;
+}
+
+- (void)setViewModel:(HJSchoolCourseListViewModel *)viewModel {
+    _viewModel = viewModel;
 }
 
 @end

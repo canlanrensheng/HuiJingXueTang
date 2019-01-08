@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJFindRecommondViewController : BaseTableViewController
 
+
 @end
 
 NS_ASSUME_NONNULL_END

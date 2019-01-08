@@ -1,0 +1,1 @@
+../../../../NELivePlayer/LivePlayer_iOS_SDK_v1.7.0/NELivePlayerFramework.framework/Headers/NELivePlayerDef.h

@@ -38,7 +38,7 @@
     self.evaluationButton.frame = CGRectMake(Screen_Width / count * 2, 0, Screen_Width / count, Height);
     [self addSubview:self.evaluationButton];
     
-    self.lineView.frame = CGRectMake(0, Height - kHeight(3.0 + 4.0), kWidth(20.0) , kHeight(3.0));
+    self.lineView.frame = CGRectMake(0, Height - kHeight(2.0 + 4.0), kWidth(20.0) , kHeight(2.0));
     [self addSubview:self.lineView];
     
     UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, Height - kHeight(1.0), Screen_Width , kHeight(1.0))];
@@ -62,6 +62,7 @@
             label.numberOfLines = 0;
             [label sizeToFit];
         }];
+        _repleyedRedLabel.hidden = YES;
     }
     return _repleyedRedLabel;
 }
@@ -124,6 +125,7 @@
     if(!_lineView){
         _lineView = [[UIView alloc] init];
         _lineView.backgroundColor = HEXColor(@"#22476B");
+        [_lineView clipWithCornerRadius:kHeight(1.5) borderColor:nil borderWidth:0];
     }
     return _lineView;
 }
@@ -135,5 +137,25 @@
     return _clickSubject;
 }
 
+
+- (void)setSelectIndex:(NSInteger)selectIndex {
+    _selectIndex = selectIndex;
+    if(selectIndex == 0) {
+        [self.lastSelectButton setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
+        [self.classButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+        self.lastSelectButton = self.classButton;
+        self.lineView.centerX = self.lastSelectButton.centerX;
+    } else if (selectIndex == 1) {
+        [self.lastSelectButton setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
+        [self.liveButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+        self.lastSelectButton = self.liveButton;
+        self.lineView.centerX = self.lastSelectButton.centerX;
+    } else {
+        [self.lastSelectButton setTitleColor:HEXColor(@"#333333") forState:UIControlStateNormal];
+        [self.evaluationButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+        self.lastSelectButton = self.evaluationButton;
+        self.lineView.centerX = self.lastSelectButton.centerX;
+    }
+}
 
 @end

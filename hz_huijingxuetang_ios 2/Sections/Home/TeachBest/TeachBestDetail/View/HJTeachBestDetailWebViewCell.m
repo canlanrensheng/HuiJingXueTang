@@ -11,14 +11,13 @@
 @implementation HJTeachBestDetailWebViewCell
 
 - (void)hj_configSubViews {
-    _webView = [[UIWebView alloc]initWithFrame:self.bounds];
-    _webView.dataDetectorTypes = UIDataDetectorTypeLink;
-    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    _webView.scalesPageToFit = YES;
-    [_webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitUserSelect='none';"];
-    [_webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout='none';"];
+    _webView = [[WKWebView alloc] initWithFrame:CGRectMake(kWidth(10), kHeight(10.0), self.bounds.size.width - kWidth(20), self.bounds.size.height )];
+    _webView.backgroundColor = white_color;
+    //开了支持滑动返回
+    _webView.allowsBackForwardNavigationGestures = YES;
     _webView.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
     _webView.scrollView.bounces = NO;
+    _webView.scrollView.scrollEnabled = NO;
     [self addSubview:_webView];
 }
 

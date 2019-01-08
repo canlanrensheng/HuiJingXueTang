@@ -7,6 +7,17 @@
 //
 
 #import "HJTeacherRecommondCell.h"
+#import "HJTeacherRecommentModel.h"
+#import "HJTeacherRecommondViewModel.h"
+
+@interface HJTeacherRecommondCell ()
+
+@property (nonatomic,strong) UIImageView *liveImageV;
+@property (nonatomic,strong) UILabel *titleTextLabel;
+@property (nonatomic,strong) UILabel *desTextLabel;
+@property (nonatomic,strong) UILabel *detailTLabel;
+
+@end
 
 @implementation HJTeacherRecommondCell
 
@@ -38,9 +49,11 @@
     }];
     [liveImageV clipWithCornerRadius:kHeight(30.0) borderColor:nil borderWidth:0.0];
     
+    self.liveImageV = liveImageV;
+    
     //标题
     UILabel *titleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"何晶莹",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = TextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -52,9 +65,11 @@
         make.height.mas_equalTo(kHeight(13));
     }];
     
+    self.titleTextLabel = titleTextLabel;
+    
     //描述
     UILabel *desTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"慧鲸特邀专家",MediumFont(font(11)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#666666"));
         label.textAlignment = TextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -66,9 +81,11 @@
         make.height.mas_equalTo(kHeight(11));
     }];
     
+    self.desTextLabel = desTextLabel;
+    
     //详情信息的数据
     UILabel *detailTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"4门课程 | 1900名学员",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@"0门课程 | 0名学员",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = TextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -80,6 +97,8 @@
         make.height.mas_equalTo(kHeight(11));
     }];
     
+    self.detailTLabel = detailTextLabel;
+    
     //箭头
     UIImageView *arrowImageV = [[UIImageView alloc] init];
     arrowImageV.image = V_IMAGE(@"形状 8371");
@@ -89,6 +108,17 @@
         make.centerY.equalTo(backView);
     }];
     
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJTeacherRecommondViewModel *listViewModel = (HJTeacherRecommondViewModel *)viewModel;
+    HJTeacherRecommentModel *model = listViewModel.recommendTeacherArray[indexPath.row];
+    if(model) {
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图")];
+        self.titleTextLabel.text = model.realname;
+        self.desTextLabel.text = model.teacprofessional;
+        self.detailTLabel.text = [NSString stringWithFormat:@"%ld门课程 | %ld名学员",(long)model.course_count,(long)model.member_count];
+    }
 }
 
 @end

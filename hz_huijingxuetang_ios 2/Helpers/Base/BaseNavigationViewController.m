@@ -8,7 +8,7 @@
 
 #import "BaseNavigationViewController.h"
 
-@interface BaseNavigationViewController ()
+@interface BaseNavigationViewController ()<UIGestureRecognizerDelegate,UINavigationBarDelegate>
 
 @end
 
@@ -18,16 +18,20 @@
     [self setupTheNav];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+//    __weak BaseNavigationViewController *weakSelf = self;
+//    
+//    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)])
+//    {
+//        self.interactivePopGestureRecognizer.delegate = weakSelf;
+//        
+//        self.delegate = weakSelf;
+//    }
 }
 
-+(void)setupTheNav{
++ (void)setupTheNav{
     //设置导航条背景
     UINavigationBar *navBar = [UINavigationBar appearance];
     //设置导航栏图片的话
@@ -40,11 +44,10 @@
     //[navBar setBarTintColor:NavigationBar_Color];
     [navBar setBackgroundImage:[UIImage imageWithColor:NavigationBar_Color] forBarMetrics:UIBarMetricsDefault];
     [navBar setShadowImage:[UIImage new]];
-    
-
 }
+
 #pragma mark------重写系统方法
--(BOOL)shouldAutorotate{
+- (BOOL)shouldAutorotate{
     return [self.visibleViewController shouldAutorotate];
 }
 
@@ -60,18 +63,22 @@
     }
 }
 
--(void)popSelf {
-    [self popViewControllerAnimated:YES];
+- (void)popSelf {
+    [DCURLRouter popViewControllerAnimated:YES];
 }
 
--(UIBarButtonItem*)createBackButton{
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    backButton.frame = CGRectMake(0, 0, 26, 40);
-    [backButton setImage:[UIImage imageNamed:@"back_n"] forState:UIControlStateNormal];
-    [backButton setImage:[UIImage imageNamed:@"back_p"] forState:UIControlStateHighlighted];
+-(NSArray *)createBackButton{
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    backButton.frame = CGRectMake(0, 0, kHeight(24), kHeight(24));
+//    backButton.backgroundColor = red_color;
+    [backButton setImage:[UIImage imageNamed:@"导航返回按钮"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"导航返回按钮"] forState:UIControlStateHighlighted];
     [backButton addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];
     [backButton addTarget:self action:@selector(highlightClick:) forControlEvents:UIControlEventAllTouchEvents];
-    return [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    
+//    UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace                                                                     target:nil action:nil];
+//    negativeSpacer.width = -kWidth(10);
+    return @[[[UIBarButtonItem alloc] initWithCustomView:backButton]];
 }
 
 //去掉返回按钮的点击的高亮的效果
@@ -82,18 +89,34 @@
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (self.viewControllers.count >= 1) {
         viewController.navigationItem.hidesBackButton = YES;
-        viewController.navigationItem.leftBarButtonItem = [self createBackButton];
+        [viewController.navigationItem setLeftBarButtonItems:[self createBackButton]];
         viewController.hidesBottomBarWhenPushed = YES;
     }
     [super pushViewController:viewController animated:animated];
+    
     if (viewController.navigationItem.backBarButtonItem == nil && [self.viewControllers count] > 1) {
     viewController.navigationController.interactivePopGestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)self;
     }
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+//{
+//    if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+//        navigationController.interactivePopGestureRecognizer.enabled = YES;
+//    }
+//
+//    if (navigationController.viewControllers.count == 1) {
+//        navigationController.interactivePopGestureRecognizer.enabled = NO;
+//        navigationController.interactivePopGestureRecognizer.delegate = nil;
+//    }
+//}
+
+
 
 @end

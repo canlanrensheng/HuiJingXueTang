@@ -7,13 +7,16 @@
 //
 
 #import "BaseView.h"
-
+#import "HJSchoolCourseListViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSchoolClassSelectToolView : BaseView
 
+@property (nonatomic,strong) UIButton *lastSelectBtn;
 @property (nonatomic,strong) UIButton *selectButton;
 @property (nonatomic,strong) RACSubject *clickSubject;
+
+@property (nonatomic,strong) HJSchoolCourseListViewModel *viewModel;
 
 @end
 

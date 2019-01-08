@@ -35,6 +35,13 @@
     self.requestSerializer = [AFHTTPRequestSerializer serializer];
     self.requestSerializer.timeoutInterval = 30.0;//设置网络超时
 
+    
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy defaultPolicy];
+    securityPolicy.validatesDomainName = NO;
+    securityPolicy.allowInvalidCertificates = YES;
+    self.securityPolicy = securityPolicy;
+
+
     //设置带蒙版
 //    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
 //    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
@@ -46,6 +53,7 @@
     if ([method isEqualToString:@"GET"]) {
         //调用AFN框架的方法
         [self GET:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            hideHud();
             NSString  *url = URLString;
             if(parameters) {
                 NSUInteger paraCount = parameters.allKeys.count;
@@ -68,31 +76,59 @@
             }
             DLog(@"获取到的请求的url是:%@",url);
             if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
-                
                 erorblock(NOTNETMESSAGE);
-                
-//                return SVshowInfo(NOTNETMESSAGE);
             }
-            
+            NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+            NSInteger code = [[dic objectForKey:@"code"]integerValue];
+            if (code == 10) {
+                ShowMessage(@"未登陆或登录已过期，请重新登录");
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if([UserInfoSingleObject shareInstance].isLogined == NO){
+                        [APPUserDataIofo writeAccessToken:@""];
+                        [UserInfoSingleObject shareInstance].isLogined = YES;
+                        [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                    }
+                });
+            }
             callBack(responseObject);
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             //如果请求失败，控制台打印错误信息
+            
+            DLog(@"获取到网络错误的链接是:%@",URLString);
+            hideHud();
             erorblock(error.localizedDescription);
 //            DLog(@"%@",error.localizedDescription);
         }];
     }
     
+    
     if ([method isEqualToString:@"POST"]) {
         [self POST:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            hideHud();
             if ([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus == AFNetworkReachabilityStatusNotReachable) {
-                
                 erorblock(NOTNETMESSAGE);
-                
-//                return SVshowInfo(NOTNETMESSAGE);
+            }
+            NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+            NSInteger code = [[dic objectForKey:@"code"] integerValue];
+            if (code == 10) {
+                DLog(@"去登陆的请求的url是:%@",URLString);
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if([UserInfoSingleObject shareInstance].isLogined == NO){
+                        [APPUserDataIofo writeAccessToken:@""];
+                        [UserInfoSingleObject shareInstance].isLogined = YES;
+                        [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                    }
+                });
             }
             callBack(responseObject);
 
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            hideHud();
+//            DLog(@"获取到网络错误的链接是:%@ %ld %@",error.localizedDescription,error.code,error.userInfo);
+            NSData * data = error.userInfo[@"com.alamofire.serialization.response.error.data"];
+            NSString * str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+            DLog(@"获取到网络错误的链接是:%@",str);
+            
             erorblock(error.localizedDescription);
             NSLog(@"%@",error);
         }];
@@ -124,7 +160,7 @@
                                                           @"text/json",nil];
     [self POST:URLString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             
-            NSData *imageData =UIImageJPEGRepresentation(img,1);
+            NSData *imageData = UIImageJPEGRepresentation(img,1);
             
             NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
             formatter.dateFormat =@"yyyyMMddHHmmss";
@@ -144,7 +180,8 @@
                 
                 erorblock(NOTNETMESSAGE);
                 
-                return SVshowInfo(NOTNETMESSAGE);
+                ShowMessage(NOTNETMESSAGE);
+                return;
             }
             //如果请求成功，则回调responseObject
             callBack(responseObject);

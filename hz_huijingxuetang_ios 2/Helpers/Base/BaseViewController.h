@@ -17,6 +17,9 @@
 
 @property (nonatomic,strong) UIActivityIndicatorView *activityView;
 
+- (void)startAnimating ;
+- (void)stopLoadingView ;
+
 
 
 @end

@@ -7,12 +7,32 @@
 //
 
 #import "BaseView.h"
-
+#import "HJTextAndPicButoton.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJClassDetailBottomView : BaseView
 
 @property (nonatomic,strong) RACSubject *backSubject;
+
+//购物车按钮
+@property (nonatomic,strong) HJTextAndPicButoton *carBtn;
+//邀请好友砍价
+@property (nonatomic,strong) UIButton *killPriceBtn;
+//立即购买
+@property (nonatomic,strong) UIButton *buyBtn;
+//免费领取按钮
+@property (nonatomic,strong) UIButton *freeGetBtn;
+
+//邀请好友砍价的价格
+@property (nonatomic,strong) UILabel *killPriceLabel;
+//没有砍价的价格
+@property (nonatomic,strong) UILabel *noKillPriceLabel;
+//原价
+@property (nonatomic,strong) UILabel *originPriceLabel;
+//原价的分割线
+@property (nonatomic,strong) UIView *originLineView;
+//砍价后的价格
+@property (nonatomic,strong) UILabel *afterSecondKillPriceLabel;
 
 @end
 

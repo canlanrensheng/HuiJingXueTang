@@ -47,24 +47,42 @@
 }
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
-        if(indexPath.row == 0){
-            self.textTitleLabel.text = @"我的关注";
-        } else {
-            self.textTitleLabel.text = @"历史观看";
+    if(MaJia) {
+        if(indexPath.section == 0) {
+            if(indexPath.row == 0){
+                self.textTitleLabel.text = @"我的关注";
+            } else {
+                self.textTitleLabel.text = @"历史观看";
+            }
+            self.detailTitleLabel.hidden = YES;
+        } else{
+            self.textTitleLabel.text = @"问题反馈";
+            self.detailTitleLabel.hidden = NO;
+            self.detailTextLabel.text = [APPUserDataIofo Problembacktime];
         }
-        self.detailTitleLabel.hidden = YES;
-    } else if (indexPath.section == 1) {
-        if(indexPath.row == 0){
-            self.textTitleLabel.text = @"我的订单";
-        } else {
-            self.textTitleLabel.text = @"我的卡券";
+    } else {
+        if(indexPath.section == 0) {
+            if(indexPath.row == 0){
+                self.textTitleLabel.text = @"我的关注";
+            } else {
+                self.textTitleLabel.text = @"历史观看";
+            }
+            self.detailTitleLabel.hidden = YES;
+        } else if (indexPath.section == 1) {
+            if(indexPath.row == 0){
+                self.textTitleLabel.text = @"我的订单";
+            } else {
+                self.textTitleLabel.text = @"我的卡券";
+            }
+            self.detailTitleLabel.hidden = YES;
+        } else{
+            self.textTitleLabel.text = @"问题反馈";
+            self.detailTitleLabel.hidden = NO;
+            self.detailTextLabel.text = [APPUserDataIofo Problembacktime];
         }
-        self.detailTitleLabel.hidden = YES;
-    } else{
-        self.textTitleLabel.text = @"问题反馈";
-        self.detailTitleLabel.hidden = NO;
     }
+    
+    
 }
 
 @end

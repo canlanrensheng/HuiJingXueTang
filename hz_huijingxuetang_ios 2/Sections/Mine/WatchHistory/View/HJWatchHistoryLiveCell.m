@@ -8,6 +8,15 @@
 
 #import "HJWatchHistoryLiveCell.h"
 
+@interface HJWatchHistoryLiveCell ()
+
+@property (nonatomic,strong) UIImageView *imaV;
+@property (nonatomic,strong) UILabel *nameLabel;
+@property (nonatomic,strong) UILabel *teacherLabel;
+@property (nonatomic,strong) UILabel *timeLabel;
+
+@end
+
 @implementation HJWatchHistoryLiveCell
 
 - (void)hj_configSubViews {
@@ -25,23 +34,27 @@
         make.height.mas_equalTo(kHeight(70));
     }];
     [imaV clipWithCornerRadius:kHeight(2.5) borderColor:nil borderWidth:0];
+    self.imaV = imaV;
     
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"重温经典系列之新K线战法",BoldFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
+        label.numberOfLines = 2;
         [label sizeToFit];
     }];
     [self addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(imaV).offset(kHeight(5.0));
         make.left.equalTo(imaV.mas_right).offset(kWidth(10.0));
-        make.height.mas_equalTo(kHeight(13.0));
+//        make.height.mas_equalTo(kHeight(13.0));
+        make.right.equalTo(self).offset(-kWidth(10));
     }];
+    self.nameLabel = nameLabel;
     
     //天数
     UILabel *dayLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"讲师：金建",MediumFont(font(11)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"讲师：",MediumFont(font(11)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -51,10 +64,11 @@
         make.bottom.equalTo(imaV).offset(-kHeight(5.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    self.teacherLabel = dayLabel;
     
     //时间
     UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"7小时前",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@"继续学习",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
@@ -64,7 +78,20 @@
         make.right.equalTo(self).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    self.timeLabel = timeLabel;
     
+}
+
+- (void)setModel:(HJLiveDetailModel *)model {
+    Course *courseModel = model.course;
+    [self.imaV sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+    self.nameLabel.text = courseModel.coursename;
+    self.teacherLabel.text = [NSString stringWithFormat:@"讲师：%@",courseModel.realname];
+    NSDate *endDate = [NSDate date];
+    NSDate *startDate = model.course.date;
+    DTTimePeriod *timePeriod =[[DTTimePeriod alloc] initWithStartDate:startDate endDate:endDate];
+    double durationInHours  = [timePeriod durationInHours];
+    self.timeLabel.text = [NSString stringWithFormat:@"%ld小时前",(long)durationInHours];
 }
 
 

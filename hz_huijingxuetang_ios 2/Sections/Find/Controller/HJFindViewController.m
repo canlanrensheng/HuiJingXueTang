@@ -9,15 +9,17 @@
 #import "HJFindViewController.h"
 #import "HJFindRecommondViewController.h"
 #import "HJFindCareViewController.h"
-
 #import "HJFindSegmentView.h"
-@interface HJFindViewController ()
+@interface HJFindViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) NSArray *controllersClass;
 @property (nonatomic,assign) NSInteger  selectIndex;
 @property (nonatomic,strong) UIScrollView *scrollView;
 
+@property (nonatomic,strong) HJFindRecommondViewController *findRecommondVC;
+@property (nonatomic,strong) HJFindCareViewController *findCareVC;
 
+@property (nonatomic,strong) HJFindSegmentView *toolView;
 
 @end
 
@@ -43,17 +45,18 @@
     navView.backgroundColor = NavAndBtnColor;
     [self.view addSubview:navView];
     //工具条的按钮的操作
-    HJFindSegmentView *toolView = [[HJFindSegmentView alloc] initWithFrame:CGRectMake(0, kStatusBarHeight, Screen_Width, kHeight(44))];
-    [navView addSubview:toolView];
-    @weakify(self);
-    [toolView.clickSubject subscribeNext:^(id  _Nullable x) {
-        @strongify(self);
-        //刷新数据
-        self.selectIndex = [x integerValue];
-        [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshFindData" object:nil userInfo:@{@"index" :@(self.selectIndex)}];
-    }];
+    __weak typeof(self)weakSelf = self;
+    HJFindSegmentView *toolView = [[HJFindSegmentView alloc] initWithFrame:CGRectMake(0, navView.frame.size.height - kHeight(44), Screen_Width, kHeight(44)) titleColor:white_color selectTitleColor:white_color lineColor:HEXColor(@"#FAD466")  buttons:@[@"推荐",@"关注"] block:^(NSInteger index) {
+        weakSelf.selectIndex = index;
+        [UIView animateWithDuration:0.25 animations:^{
+            [UIView animateWithDuration:0.25 animations:^{
+                [weakSelf.scrollView setContentOffset:CGPointMake(weakSelf.selectIndex * Screen_Width, 0)];
+            }];
+        }];
 
+    }];
+    [navView addSubview:toolView];
+    self.toolView = toolView;
 }
 
 - (void)hj_configSubViews {
@@ -62,8 +65,10 @@
     [self.view addSubview:scrollView];
     scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kNavigationBarHeight - kBottomBarHeight);
     scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.delegate = self;
     scrollView.pagingEnabled = YES;
-    scrollView.scrollEnabled = NO;
+    scrollView.scrollEnabled = YES;
+    scrollView.delegate = self;
     scrollView.bounces = NO;
     
     [self.view addSubview:scrollView];
@@ -75,14 +80,24 @@
             listVC.view.frame = CGRectMake(0, 0, Screen_Width, Screen_Height  - kNavigationBarHeight - kBottomBarHeight);
             [self addChildViewController:listVC];
             [scrollView addSubview:listVC.view];
+            self.findRecommondVC = listVC;
         }  else if (index == 1){
             HJFindCareViewController *listVC = [[HJFindCareViewController alloc] init];
             listVC.view.frame = CGRectMake(Screen_Width * 1, 0, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight);
             [self addChildViewController:listVC];
             [scrollView addSubview:listVC.view];
+            self.findCareVC = listVC;
         }
     }
 }
 
+//滚动切换控制器
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat width = self.view.frame.size.width;
+    CGFloat offsetX = scrollView.contentOffset.x;
+    //获取索引
+    NSInteger scrollIndex = offsetX / width;
+    self.toolView.selectIndex = scrollIndex;
+}
 
 @end

@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJShopCarTotalMoneyCell : BaseTableViewCell
 
+//价格
+@property (nonatomic,strong) UILabel *priceLabel;
+//描述
+@property (nonatomic,strong) UILabel *desLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

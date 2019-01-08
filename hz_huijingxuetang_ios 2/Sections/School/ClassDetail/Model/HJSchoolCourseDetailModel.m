@@ -1,0 +1,13 @@
+//
+//  HJSchoolCourseDetailModel.m
+//  HuiJingSchool
+//
+//  Created by 张金山 on 2018/11/14.
+//  Copyright © 2018年 Junier. All rights reserved.
+//
+
+#import "HJSchoolCourseDetailModel.h"
+
+@implementation HJSchoolCourseDetailModel
+
+@end

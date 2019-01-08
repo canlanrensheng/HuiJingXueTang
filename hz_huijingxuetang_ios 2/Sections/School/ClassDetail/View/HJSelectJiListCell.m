@@ -7,12 +7,27 @@
 //
 
 #import "HJSelectJiListCell.h"
+#import "HJClassDetailViewModel.h"
+#import "HJCourseSelectJiModel.h"
+
+@interface HJSelectJiListCell ()
+
+@property (nonatomic,strong) UILabel *jiNameLabel;
+@property (nonatomic,strong) UILabel *liveStatusLabel;
+@property (nonatomic,strong) UILabel *onLiveStatusLabel;
+//点击试看
+@property (nonatomic,strong) UILabel *tryToWatchLabel;
+//播放的图片
+@property (nonatomic,strong) UIImageView *liveStatusImageV;
+@property (nonatomic,strong) UILabel *playCountLabel;
+
+@end
 
 @implementation HJSelectJiListCell
 
 - (void)hj_configSubViews {
     UILabel *jiNameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"1.识别K线",MediumFont(font(14)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(14)),HEXColor(@"#333333"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -22,39 +37,24 @@
         make.left.equalTo(self).offset(kWidth(11.0));
         make.height.mas_equalTo(kHeight(13));
     }];
+    self.jiNameLabel = jiNameLabel;
     
-    //直播的状态
-    UILabel *liveStatusLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"点播",MediumFont(font(10)),HEXColor(@"#22476B"));
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = white_color;
+    //点击试看的操作
+    UILabel *tryToWatchLabel = [UILabel creatLabel:^(UILabel *label) {
+        label.ljTitle_font_textColor(@"点击试看",MediumFont(font(10)),HEXColor(@"#22476B"));
+        label.textAlignment = TextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
-    [liveStatusLabel clipWithCornerRadius:kHeight(2.5) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(1.0)];
-    [self addSubview:liveStatusLabel];
-    [liveStatusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:tryToWatchLabel];
+    [tryToWatchLabel clipWithCornerRadius:kHeight(2.0) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(1.0)];
+    [tryToWatchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(jiNameLabel);
-        make.left.equalTo(jiNameLabel.mas_right).offset(kWidth(8.0));
-        make.size.mas_equalTo(CGSizeMake(kWidth(25), kHeight(15)));
+        make.size.mas_equalTo(CGSizeMake(kWidth(47.0), kHeight(15.0)));
+        make.left.equalTo(jiNameLabel.mas_right).offset(kWidth(12.0));
     }];
-    
-    liveStatusLabel.hidden = YES;
-    
-    UILabel *onLiveStatusLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"正在播放",MediumFont(font(10)),white_color);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = HEXColor(@"#0ABC64");
-        label.numberOfLines = 0;
-        [label sizeToFit];
-    }];
-    [onLiveStatusLabel clipWithCornerRadius:kHeight(2.5) borderColor:nil borderWidth:0];
-    [self addSubview:onLiveStatusLabel];
-    [onLiveStatusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(jiNameLabel);
-        make.left.equalTo(jiNameLabel.mas_right).offset(kWidth(8.0));
-        make.size.mas_equalTo(CGSizeMake(kWidth(47), kHeight(15)));
-    }];
+    tryToWatchLabel.hidden = YES;
+    self.tryToWatchLabel = tryToWatchLabel;
     
     UIImageView *liveStatusImageV = [[UIImageView alloc] init];
     liveStatusImageV.image = V_IMAGE(@"播放");
@@ -64,10 +64,11 @@
         make.right.equalTo(self).offset(-kWidth(10));
         make.width.height.mas_equalTo(kWidth(24));
     }];
+    self.liveStatusImageV = liveStatusImageV;
     
     //课程的播放的次数
     UILabel *playCountLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"俞春 1500次播放",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
@@ -77,6 +78,37 @@
         make.left.equalTo(self).offset(kWidth(11.0));
         make.height.mas_equalTo(kHeight(11.0));
     }];
+    self.playCountLabel = playCountLabel;
+    
+}
+
+- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+    HJClassDetailViewModel *listViewModel = (HJClassDetailViewModel *)viewModel;
+    HJCourseSelectJiModel *model = listViewModel.selectJiArray[indexPath.row];
+    if(model){
+        self.jiNameLabel.text = model.videoname;
+        if (model.isOnPlay) {
+            self.tryToWatchLabel.hidden = YES;
+            self.liveStatusImageV.image = V_IMAGE(@"正在播放状态");
+        } else {
+            if([listViewModel.model.buy isEqualToString:@"n"]){
+                self.tryToWatchLabel.hidden = NO;
+            } else {
+                self.tryToWatchLabel.hidden = YES;
+            }
+            self.liveStatusImageV.image = V_IMAGE(@"播放");
+        }
+
+        //名称的图片
+        NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+        NSString *videoValue = [defa valueForKey:model.videourl];
+        if (videoValue.integerValue == 1) {
+            self.jiNameLabel.textColor = HEXColor(@"#6e6e6e");
+        } else {
+            self.jiNameLabel.textColor = HEXColor(@"#333333");
+        }
+        self.playCountLabel.text = [NSString stringWithFormat:@"%@ | %@次播放",listViewModel.model.username,model.hits];
+    }
 }
 
 @end

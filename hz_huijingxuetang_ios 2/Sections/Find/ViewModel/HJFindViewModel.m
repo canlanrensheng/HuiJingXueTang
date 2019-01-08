@@ -13,25 +13,82 @@
 
 @implementation HJFindViewModel
 
-- (void)teacherDynamicRecommondListWithSuccess:(void (^)(void))success {
+//检测资讯VIP权限
+- (void)checkVipInfoPowerWithInfoId:(NSString *)infoId success:(void (^)(void))success {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/cangetvipnews",API_BASEURL];
+    NSDictionary *parameters = nil;
+    parameters = @{
+                   @"accesstoken" : [APPUserDataIofo AccessToken],
+                   @"infoid" : infoId
+                   };
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
+            NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+            NSInteger code = [[dic objectForKey:@"code"]integerValue];
+            if (code == 200) {
+                success();
+            } else {
+                ShowError([dic objectForKey:@"msg"]);
+            }
+        } fail:^(id error) {
+            hideHud();
+            ShowError(error);
+        }];
+    });
+}
+
+//推荐列表的数据
+- (void)teacherDynamicRecommondListWithTeacherid:(NSString *)teacherid Success:(void (^)(BOOL successFlag))success{
     
+    if(self.isDynamicRecommondFirstLoad.length <= 0) {
+        [self.loadingView startAnimating];
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/teacherdynamiclist",API_BASEURL];
         NSDictionary *parameters = nil;
-        if([APPUserDataIofo AccessToken].length <= 0){
+        if(teacherid.length > 0) {
+            //老师的动态
             parameters =  @{
-                           @"page" : [NSString stringWithFormat:@"%ld",self.page]
-                          };
-        } else {
-            parameters =  @{
-                            @"page" : [NSString stringWithFormat:@"%ld",self.page],
-                            @"accesstoken" : [APPUserDataIofo AccessToken]
+                            @"teacherid" : teacherid.length > 0 ? teacherid : @""
                             };
+            if(MaJia) {
+                parameters = @{
+                               @"teacherid" : teacherid.length > 0 ? teacherid : @"",
+                               @"vesttype" : @"free"
+                               };
+            }
+        } else {
+            if([APPUserDataIofo AccessToken].length <= 0){
+                parameters =  @{
+                                @"page" : [NSString stringWithFormat:@"%ld",self.page]
+                                };
+                if(MaJia) {
+                    parameters =  @{
+                                    @"page" : [NSString stringWithFormat:@"%ld",self.page],
+                                   @"vesttype" : @"free"
+                                   };
+                }
+            } else {
+                parameters =  @{
+                                @"page" : [NSString stringWithFormat:@"%ld",self.page],
+                                @"accesstoken" : [APPUserDataIofo AccessToken]
+                                };
+                if(MaJia) {
+                    parameters =  @{
+                                    @"page" : [NSString stringWithFormat:@"%ld",self.page],
+                                    @"accesstoken" : [APPUserDataIofo AccessToken],
+                                    @"vesttype" : @"free"
+                                    };
+                }
+            }
         }
-//        if (self.page == 1) {
-//            ShowHint(@"");
-//        }
+        STARTTIME;
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+            if(self.isDynamicRecommondFirstLoad.length <= 0) {
+                [self.loadingView stopLoadingView];
+                self.isDynamicRecommondFirstLoad = @"1";
+            }
+            STOPTIME;
             hideHud();
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
@@ -41,165 +98,120 @@
                 self.totalpage = [dataDict[@"totalpage"] intValue];
                 self.currentpage = [dataDict[@"currentpage"] intValue];
                 NSMutableArray *marr = [NSMutableArray array];
-                for(NSDictionary *daDic in stocklistArr) {
+                for(int i = 0; i < stocklistArr.count;i++) {
+                    NSDictionary *daDic = stocklistArr[i];
                     HJFindRecommondModel *model = [HJFindRecommondModel mj_objectWithKeyValues:daDic];
                     CGFloat height = [model.dynamiccontent calculateSize:CGSizeMake(Screen_Width - kWidth(65), MAXFLOAT) font:MediumFont(font(13))].height;
                     
-//                    model.dynamicpic1 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic2 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic3 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic4 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic5 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic6 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic7 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-//                    model.dynamicpic8 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
+////                    if(i == stocklistArr.count - 1) {
+//                        model.dynamiccontent = @"发表内容";
+//                        model.dynamicvideo = @"http://vodcvzretw1.vod.126.net/vodcvzretw1/fd94631e-92dd-4beb-a806-33efe5604a98.mp4";
+//                        model.dynamiclinkid = @"";
+////                    }
                     
-//                    model.dynamiclinkid = @"100";
+                    NSMutableArray *picArr = [[NSMutableArray alloc] init];
+                    if(model.dynamicpic1.length > 0) {
+                        [picArr addObject:model.dynamicpic1];
+                    }
+                    if(model.dynamicpic2.length > 0) {
+                        [picArr addObject:model.dynamicpic2];
+                    }
+                    if(model.dynamicpic3.length > 0) {
+                        [picArr addObject:model.dynamicpic3];
+                    }
+                    if(model.dynamicpic4.length > 0) {
+                        [picArr addObject:model.dynamicpic4];
+                    }
+                    if(model.dynamicpic5.length > 0) {
+                        [picArr addObject:model.dynamicpic5];
+                    }
+                    if(model.dynamicpic6.length > 0) {
+                        [picArr addObject:model.dynamicpic6];
+                    }
+                    if(model.dynamicpic7.length > 0) {
+                        [picArr addObject:model.dynamicpic7];
+                    }
+                    if(model.dynamicpic8.length > 0) {
+                        [picArr addObject:model.dynamicpic8];
+                    }
+                    if(model.dynamicpic9.length > 0) {
+                        [picArr addObject:model.dynamicpic9];
+                    }
                     
-//                    model.dynamicvideo = @"http://tb-video.bdstatic.com/tieba-smallvideo/68_20df3a646ab5357464cd819ea987763a.mp4";
+                    
                     //纯文字
                     if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length <= 0  &&
+                       picArr.count <= 0  &&
                        model.dynamicvideo.length <=0 &&
                        model.dynamiclinkid.length <= 0) {
                         
-                        model.findType = FindTypeText;
-                        model.cellHeight = kHeight(85) + height;
-                    }
-                    
-                    //文字图片类型
-                    if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length > 0 &&
-                       model.dynamicvideo.length <=0 &&
-                       model.dynamiclinkid.length <= 0) {
+                       model.findType = FindTypeText;
+                       model.cellHeight = kHeight(85) + height;
                         
-                        NSMutableArray *picArr = [NSMutableArray array];
-                        if(model.dynamicpic1.length > 0) {
-                            [picArr addObject:model.dynamicpic1];
-                        }
-                        if(model.dynamicpic2.length > 0) {
-                            [picArr addObject:model.dynamicpic2];
-                        }
-                        if(model.dynamicpic3.length > 0) {
-                            [picArr addObject:model.dynamicpic3];
-                        }
-                        if(model.dynamicpic4.length > 0) {
-                            [picArr addObject:model.dynamicpic4];
-                        }
-                        if(model.dynamicpic5.length > 0) {
-                            [picArr addObject:model.dynamicpic5];
-                        }
-                        if(model.dynamicpic6.length > 0) {
-                            [picArr addObject:model.dynamicpic6];
-                        }
-                        if(model.dynamicpic7.length > 0) {
-                            [picArr addObject:model.dynamicpic7];
-                        }
-                        if(model.dynamicpic8.length > 0) {
-                            [picArr addObject:model.dynamicpic8];
-                        }
-                        if(model.dynamicpic9.length > 0) {
-                            [picArr addObject:model.dynamicpic9];
-                        }
-                        
-                        model.picArray = picArr;
-                        CGFloat padding = kWidth(10);
-                        CGFloat onePicHeight = (Screen_Width - kWidth(55) - kWidth(10) - padding * 2 ) / 3;
-                        CGFloat scrollViewHeight = 0;
-                        if(model.picArray.count <= 3) {
-                            scrollViewHeight = onePicHeight;
-                        } else if (model.picArray.count <= 6) {
-                            scrollViewHeight = onePicHeight * 2 + padding;
-                        } else if (model.picArray.count <= 9) {
-                            scrollViewHeight = onePicHeight * 3 + padding * 2;
-                        }
-                        model.findType = FindTypePic;
-                        model.cellHeight = kHeight(85) + height + scrollViewHeight + kHeight(15);
-                    }
-                    
-                    //文字加链接
-                    if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length <= 0 &&
-                       model.dynamicvideo.length <=0 &&
-                       model.dynamiclinkid.length > 0) {
-                        
-                       model.findType = FindTypeLink;
-                       model.cellHeight = kHeight(85) + height + kHeight(60) + kHeight(15);
-                    }
-                    
-                    //文字加视频
-                    if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length <= 0 &&
-                       model.dynamicvideo.length > 0 &&
-                       model.dynamiclinkid.length <= 0) {
-                       
-                       model.coverVideoImg = [self getImageWithVideoURL:URL(model.dynamicvideo) size:CGSizeMake(Screen_Width - kWidth(65), (Screen_Width - kWidth(65)) / 16 * 9)];
-                       model.findType = FindTypeVideo;
-                       model.cellHeight = kHeight(85) + height + (Screen_Width - kWidth(65)) / 16 * 9 + kHeight(15);
-                    }
-                    
+                        //文字加链接
+                    } else if(model.dynamiccontent.length > 0 &&
+                           picArr.count <= 0 &&
+                           model.dynamicvideo.length <=0 &&
+                           model.dynamiclinkid.length > 0) {
+                            
+                           model.findType = FindTypeLink;
+                           model.cellHeight = kHeight(85) + height + kHeight(60) + kHeight(15);
+                        //文字图片类型
+                    } else if(model.dynamiccontent.length > 0 &&
+                           picArr.count > 0 &&
+                           model.dynamicvideo.length <=0 &&
+                           model.dynamiclinkid.length <= 0) {
+                           model.picArray = picArr;
+                            CGFloat padding = kWidth(10);
+                            CGFloat onePicHeight = (Screen_Width - kWidth(55) - kWidth(10) - padding * 2 ) / 3;
+                            CGFloat scrollViewHeight = 0;
+                            if(model.picArray.count <= 3) {
+                                scrollViewHeight = onePicHeight;
+                            } else if (model.picArray.count <= 6) {
+                                scrollViewHeight = onePicHeight * 2 + padding;
+                            } else if (model.picArray.count <= 9) {
+                                scrollViewHeight = onePicHeight * 3 + padding * 2;
+                            }
+                            model.findType = FindTypePic;
+                            model.cellHeight = kHeight(85) + height + scrollViewHeight + kHeight(15);
                     //文字加图片加链接
-                    if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length > 0 &&
-                       model.dynamicvideo.length <= 0 &&
-                       model.dynamiclinkid.length > 0) {
-                        
-                        NSMutableArray *picArr = [NSMutableArray array];
-                        if(model.dynamicpic1.length > 0) {
-                            [picArr addObject:model.dynamicpic1];
-                        }
-                        if(model.dynamicpic2.length > 0) {
-                            [picArr addObject:model.dynamicpic2];
-                        }
-                        if(model.dynamicpic3.length > 0) {
-                            [picArr addObject:model.dynamicpic3];
-                        }
-                        if(model.dynamicpic4.length > 0) {
-                            [picArr addObject:model.dynamicpic4];
-                        }
-                        if(model.dynamicpic5.length > 0) {
-                            [picArr addObject:model.dynamicpic5];
-                        }
-                        if(model.dynamicpic6.length > 0) {
-                            [picArr addObject:model.dynamicpic6];
-                        }
-                        if(model.dynamicpic7.length > 0) {
-                            [picArr addObject:model.dynamicpic7];
-                        }
-                        if(model.dynamicpic8.length > 0) {
-                            [picArr addObject:model.dynamicpic8];
-                        }
-                        if(model.dynamicpic9.length > 0) {
-                            [picArr addObject:model.dynamicpic9];
-                        }
-                        
-                        model.picArray = picArr;
-                        CGFloat padding = kWidth(10);
-                        CGFloat onePicHeight = (Screen_Width - kWidth(55) - kWidth(10) - padding * 2 ) / 3;
-                        CGFloat scrollViewHeight = 0;
-                        if(model.picArray.count <= 3) {
-                            scrollViewHeight = onePicHeight;
-                        } else if (model.picArray.count <= 6) {
-                            scrollViewHeight = onePicHeight * 2 + padding;
-                        } else if (model.picArray.count <= 9) {
-                            scrollViewHeight = onePicHeight * 3 + padding * 2;
-                        }
-                        
-                       model.findType = FindTypePicLink;
-                       model.cellHeight = (kHeight(85) + height) + (scrollViewHeight + kHeight(15)) + (kHeight(60) + kHeight(15));
+                    } else if(model.dynamiccontent.length > 0 &&
+                           picArr.count > 0 &&
+                           model.dynamicvideo.length <= 0 &&
+                           model.dynamiclinkid.length > 0) {
+                            model.picArray = picArr;
+                            CGFloat padding = kWidth(10);
+                            CGFloat onePicHeight = (Screen_Width - kWidth(55) - kWidth(10) - padding * 2 ) / 3;
+                            CGFloat scrollViewHeight = 0;
+                            if(model.picArray.count <= 3) {
+                                scrollViewHeight = onePicHeight;
+                            } else if (model.picArray.count <= 6) {
+                                scrollViewHeight = onePicHeight * 2 + padding;
+                            } else if (model.picArray.count <= 9) {
+                                scrollViewHeight = onePicHeight * 3 + padding * 2;
+                            }
+                            
+                            model.findType = FindTypePicLink;
+                            model.cellHeight = (kHeight(85) + height) + (scrollViewHeight + kHeight(15)) + (kHeight(60) + kHeight(15));
+                        //文字加视频
+                    } else  if(model.dynamiccontent.length > 0 &&
+                           picArr.count <= 0 &&
+                           model.dynamicvideo.length > 0 &&
+                           model.dynamiclinkid.length <= 0) {
+                            
+                           model.coverVideoImg = [self getImageWithVideoURL:URL(model.dynamicvideo) size:CGSizeMake(Screen_Width - kWidth(65), (Screen_Width - kWidth(65)) / 16 * 9)];
+                           model.findType = FindTypeVideo;
+                           model.cellHeight = kHeight(85) + height + (Screen_Width - kWidth(65)) / 16 * 9 + kHeight(15);
+                        //文字视频加链接
+                    } else  if(model.dynamiccontent.length > 0 &&
+                           picArr.count <= 0 &&
+                           model.dynamicvideo.length > 0 &&
+                           model.dynamiclinkid.length > 0) {
+                            
+                            model.coverVideoImg = [self getImageWithVideoURL:URL(model.dynamicvideo) size:CGSizeMake(Screen_Width - kWidth(65), (Screen_Width - kWidth(65)) / 16 * 9)];
+                            model.findType = FindTypeVideoLink;
+                            model.cellHeight = (kHeight(85) + height) + ((Screen_Width - kWidth(65)) / 16 * 9 + kHeight(15)) + (kHeight(60) + kHeight(15));
                     }
-                    
-                    //文字视频加链接
-                    if(model.dynamiccontent.length > 0 &&
-                       model.dynamicpic1.length <= 0 &&
-                       model.dynamicvideo.length > 0 &&
-                       model.dynamiclinkid.length > 0) {
-                       
-                       model.coverVideoImg = [self getImageWithVideoURL:URL(model.dynamicvideo) size:CGSizeMake(Screen_Width - kWidth(65), (Screen_Width - kWidth(65)) / 16 * 9)];
-                       model.findType = FindTypeVideoLink;
-                       model.cellHeight = (kHeight(85) + height) + ((Screen_Width - kWidth(65)) / 16 * 9 + kHeight(15)) + (kHeight(60) + kHeight(15));
-                    }
-                    
                     [marr addObject:model];
                 }
                 if(self.page == 1) {
@@ -211,11 +223,21 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden =  self.findArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                if(self.isDynamicRecommondFirstLoad.length <= 0) {
+                    [self.loadingView stopLoadingView];
+                    self.isDynamicRecommondFirstLoad = @"1";
+                }
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
+            if(self.isDynamicRecommondFirstLoad.length <= 0) {
+                [self.loadingView stopLoadingView];
+                self.isDynamicRecommondFirstLoad = @"1";
+            }
+            success(NO);
             hideHud();
             ShowError(error);
         }];
@@ -231,9 +253,14 @@
                                      @"accesstoken" : [APPUserDataIofo AccessToken] ,
                                      @"isinterest" : @"2"
                                      };
-//        if (self.page == 1) {
-//            ShowHint(@"");
-//        }
+        if(MaJia) {
+            parameters = @{
+                           @"page" : [NSString stringWithFormat:@"%ld",self.page],
+                           @"accesstoken" : [APPUserDataIofo AccessToken] ,
+                           @"isinterest" : @"2",
+                           @"vesttype" : @"free"
+                           };
+        }
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
             hideHud();
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -247,19 +274,6 @@
                 for(NSDictionary *daDic in stocklistArr) {
                     HJFindRecommondModel *model = [HJFindRecommondModel mj_objectWithKeyValues:daDic];
                     CGFloat height = [model.dynamiccontent calculateSize:CGSizeMake(Screen_Width - kWidth(65), MAXFLOAT) font:MediumFont(font(13))].height;
-                    
-                    //                    model.dynamicpic1 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic2 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic3 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic4 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic5 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic6 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic7 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    //                    model.dynamicpic8 = @"http://imgsrc.baidu.com/forum/eWH%3D240%2C176/sign=183252ee8bd6277ffb784f351a0c2f1c/5d6034a85edf8db15420ba310523dd54564e745d.jpg";
-                    
-//                    model.dynamiclinkid = @"100";
-                    
-//                    model.dynamicvideo = @"http://tb-video.bdstatic.com/tieba-smallvideo/68_20df3a646ab5357464cd819ea987763a.mp4";
                     //纯文字
                     if(model.dynamiccontent.length > 0 &&
                        model.dynamicpic1.length <= 0  &&
@@ -436,18 +450,19 @@
                                  @"teacherid" : teacherId,
                                  @"interest" :insterest
                                  };
-    ShowHint(@"");
+//    ShowHint(@"");
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
-        hideHud();
+//        hideHud();
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSInteger code = [[dic objectForKey:@"code"]integerValue];
         if (code == 200) {
+            //刷新数据
             success();
         } else {
             ShowError([dic objectForKey:@"msg"]);
         }
     } fail:^(id error) {
-        hideHud();
+//        hideHud();
         ShowError(error);
     }];
 }

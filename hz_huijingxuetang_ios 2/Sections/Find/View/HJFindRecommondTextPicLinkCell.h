@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJFindRecommondTextPicLinkCell : BaseTableViewCell
 
+@property (nonatomic,strong) RACSubject *backRefreshSubject;
+
 @end
 
 NS_ASSUME_NONNULL_END

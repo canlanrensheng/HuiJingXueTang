@@ -72,6 +72,12 @@ typedef void (^backBlock)(NSInteger type);
             backView.backgroundColor = white_color;
             [_contentView addSubview:backView];
             
+            
+            backView.tag = i;
+            UITapGestureRecognizer *backTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+            backView.userInteractionEnabled = YES;
+            [backView addGestureRecognizer:backTap];
+            
             UIImageView *imav = [[UIImageView alloc] init];
             imav.image = V_IMAGE(@"支付宝");
             [backView addSubview:imav];
@@ -96,6 +102,7 @@ typedef void (^backBlock)(NSInteger type);
                 button.ljTitle_font_titleColor_state(@"",H15,clear_color,0);
                 [button setImage:[UIImage imageNamed:@"未选中"] forState:UIControlStateNormal];
                 [button setImage:[UIImage imageNamed:@"勾选"] forState:UIControlStateSelected];
+                button.tag = i;
                 @weakify(self);
                 [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
                     @strongify(self);
@@ -130,7 +137,9 @@ typedef void (^backBlock)(NSInteger type);
             @weakify(self);
             [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
                 @strongify(self);
-                
+                if(self.backBlock){
+                    self.backBlock(self.lastSelectButton.tag);
+                }
             }];
         }];
         [_contentView addSubview:payButton];
@@ -142,6 +151,20 @@ typedef void (^backBlock)(NSInteger type);
         }];
     }
     return self;
+}
+
+- (void)backTap:(UITapGestureRecognizer *)tap {
+    UIView *backView = (UIView *)tap.view;
+    self.lastSelectButton.selected = NO;
+    for(UIView *subView in backView.subviews) {
+        if([subView isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton *)subView;
+            button.selected = YES;
+            self.lastSelectButton = button;
+            break;
+        }
+    }
+    
 }
 
 - (void)tapClick:(UITapGestureRecognizer *)tap{
@@ -156,13 +179,17 @@ typedef void (^backBlock)(NSInteger type);
         _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, kHeight(205));
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
-        if(_backBlock){
-            //点击空白的回调
-            _backBlock(-1);
-        }
     }];
 }
 
+
+- (void)dismiss {
+    [UIView animateWithDuration:0.5 animations:^{
+        _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, kHeight(205));
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+    }];
+}
 
 @end
 

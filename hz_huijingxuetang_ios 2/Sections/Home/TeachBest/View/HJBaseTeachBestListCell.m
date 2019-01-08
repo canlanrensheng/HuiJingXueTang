@@ -46,7 +46,7 @@
     [contentTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(kHeight(16.0));
         make.left.equalTo(self).offset(kWidth(10));
-        make.right.equalTo(liveImageV.mas_left).offset(-kWidth(30));
+        make.right.equalTo(liveImageV.mas_left).offset(-kWidth(20));
         make.height.mas_equalTo(kHeight(14.0));
     }];
     
@@ -72,17 +72,18 @@
         make.centerY.equalTo(readImageV);
         make.left.equalTo(readImageV.mas_right).offset(kWidth(5.0));
     }];
+    self.readCountLabel = readCountLabel;
     
     //日期
     UILabel *dateLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"18/08/29",MediumFont(font(11)),HEXColor(@"#999999"));
-        label.textAlignment = NSTextAlignmentLeft;
+        label.textAlignment = NSTextAlignmentRight;
         [label sizeToFit];
     }];
     [self addSubview:dateLabel];
     [dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(readImageV);
-        make.right.equalTo(liveImageV.mas_left).offset(-kWidth(30.0));
+        make.right.equalTo(liveImageV.mas_left).offset(-kWidth(20.0));
     }];
     
     self.imageV = liveImageV;
@@ -97,9 +98,9 @@
     if(model){
         [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
         self.contentTitleLabel.text = model.articaltitle;
-        self.readCountLabel.text = [NSString stringWithFormat:@"%ld",model.readcount];
+        self.readCountLabel.text = [NSString stringWithFormat:@"%ld",model.readcount.integerValue];
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
-        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%ld/%ld",date.year,date.month,date.day];
+        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%@/%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
     }
 }
 

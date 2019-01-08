@@ -8,20 +8,48 @@
 
 #import "HJPostEvaluationViewController.h"
 #import "BMTextView.h"
+#import "HJPostEvaluationViewModel.h"
 @interface HJPostEvaluationViewController ()
 
 @property (nonatomic,strong) BMTextView *textView;
 @property (nonatomic,strong) NSMutableArray *starImgeViewArray;
 
+//星星的数量
+@property (nonatomic,assign) NSInteger starCount;
+@property (nonatomic,strong) HJPostEvaluationViewModel *viewModel;
+
 @end
 
 @implementation HJPostEvaluationViewController
+
+- (HJPostEvaluationViewModel *)viewModel {
+    if(!_viewModel){
+        _viewModel = [[HJPostEvaluationViewModel alloc] init];
+    }
+    return _viewModel;
+}
 
 - (void)hj_setNavagation {
     self.view.backgroundColor = Background_Color;
     self.title = @"发表评论";
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:@"发表" font:MediumFont(font(13)) action:^(id sender) {
-    
+        if(self.starCount <= 0){
+            ShowMessage(@"请输入课程评分");
+            return ;
+        }
+        if(self.textView.text.length <= 0){
+            ShowMessage(@"写点什么吧");
+            return ;
+        }
+        self.viewModel.courseid = self.params[@"courseid"];
+        self.viewModel.content = self.textView.text;
+        self.viewModel.star = [NSString stringWithFormat:@"%ld",self.starCount];
+        __weak typeof(self)weakSelf = self;
+        [self.viewModel addCommentWithSuccess:^{
+            RACSubject *backSubject = weakSelf.params[@"subject"];
+            [backSubject sendNext:@""];
+            [DCURLRouter popViewControllerAnimated:YES];
+        }];
     }];
 }
 
@@ -95,7 +123,7 @@
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
         make.top.equalTo(topView.mas_bottom);
-        make.height.mas_equalTo(kHeight(1.0));
+        make.height.mas_equalTo(kHeight(0.5));
     }];
     
     [self.view addSubview:self.textView];
@@ -117,6 +145,7 @@
         UIImageView *iconImageV = self.starImgeViewArray[i];
         iconImageV.image = V_IMAGE(@"评价星 暗色");
     }
+    self.starCount = imV.tag + 1;
 }
 
 @end

@@ -18,7 +18,7 @@
                    @"infoid" : infoid.length > 0 ? infoid : @""
                    };
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
+        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
@@ -110,24 +110,29 @@
 }
 
 //校验资讯密码
-- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoPwd Success:(void (^)(void))success {
+- (void)verifyInfoPwdWithInfoPwd:(NSString *)infoPwd Success:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/verifyinfopwd",API_BASEURL];
     NSDictionary *parameters = @{
                                  @"infopwd" : infoPwd
                                  };
-    ShowHint(@"");
+//    ShowHint(@"");
+//    [MBProgressHUD showHUD:[UIApplication sharedApplication].keyWindow];
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         hideHud();
-        [MBProgressHUD showMessage:@"校验成功" view:[UIApplication sharedApplication].keyWindow];
+//        [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//        [MBProgressHUD showMessage:@"校验成功" view:[UIApplication sharedApplication].keyWindow];
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSInteger code = [[dic objectForKey:@"code"]integerValue];
+        NSInteger code = [[dic objectForKey:@"code"] integerValue];
         if (code == 200) {
-            success();
+            success(YES);
         } else {
-            ShowError([dic objectForKey:@"msg"]);
+            success(NO);
+//            ShowError([dic objectForKey:@"msg"]);
         }
     } fail:^(id error) {
         hideHud();
+//        [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        success(NO);
         ShowError(error);
     }];
 }

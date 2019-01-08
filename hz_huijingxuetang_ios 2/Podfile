@@ -2,20 +2,15 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform:ios,'8.0'
 
 target 'HuiJingSchool' do
-    
+
+#常规三方库
 pod 'ReactiveObjC'
 pod 'Masonry'
 pod 'AFNetworking'
-pod 'SVProgressHUD'
 pod 'SDWebImage'
 pod 'MJRefresh'
-
-pod 'ZFPlayer', '~> 3.0'
-pod 'ZFPlayer/AVPlayer', '~> 3.0'
-pod 'ZFPlayer/ControlView', '~> 3.0'
-
-pod 'NIMSDK'
-
+pod 'TZImagePickerController'
+pod 'SMPageControl', '~> 1.2'
 pod 'DZNEmptyDataSet', '~> 1.8.1'
 pod 'IQKeyboardManager'
 pod 'FDFullscreenPopGesture', '~> 1.1'
@@ -25,10 +20,25 @@ pod 'MBProgressHUD', '~> 1.1.0'
 pod 'MJExtension', '~> 3.0.13'
 pod 'DateTools'
 
+#视频播放
+pod 'ZFPlayer', '~> 3.0'
+pod 'ZFPlayer/AVPlayer', '~> 3.0'
+pod 'ZFPlayer/ControlView', '~> 3.0'
+
+#网易云信 IM SDK
+pod 'NIMSDK_LITE'
+#直播
+pod 'NELivePlayer', '~> 1.7.0'
+
+#分享含有微信支付
 pod 'mob_sharesdk'
 pod 'mob_sharesdk/ShareSDKPlatforms/QQ'
 pod 'mob_sharesdk/ShareSDKPlatforms/SinaWeibo'
-pod 'mob_sharesdk/ShareSDKPlatforms/WeChat'
+pod 'mob_sharesdk/ShareSDKPlatforms/WeChatFull'
+
+#支付宝支付
+pod 'AlipaySDK-iOS'
+
 
 
 

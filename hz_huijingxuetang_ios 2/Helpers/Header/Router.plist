@@ -4,6 +4,56 @@
 <dict>
 	<key>route</key>
 	<dict>
+		<key>route://shareCommunityDetailVC</key>
+		<string>HJMyShareCommunityDetailViewController</string>
+		<key>route://shareMoneyHelpVC</key>
+		<string>HJShareMakeMoneyHelpViewController</string>
+		<key>route://freeLiveListVC</key>
+		<string>HJFreeLiveListViewController</string>
+		<key>route://selectCourseVC</key>
+		<string>HJSelectCourseViewController</string>
+		<key>route://orderDetailVC</key>
+		<string>HJOrderDetailViewController</string>
+		<key>route://shareCommunityVC</key>
+		<string>HJMyShareCommunityViewController</string>
+		<key>route://liveReviewVC</key>
+		<string>HJLiveReviewViewController</string>
+		<key>route://buyCourseProtocolVC</key>
+		<string>HJBuyCourseProtocolViewController</string>
+		<key>route://recommentCourseVC</key>
+		<string>HJRecommentCourseViewController</string>
+		<key>route://searchResultMoreLiveVC</key>
+		<string>HJSearchResultMoreLiveViewController</string>
+		<key>route://addAccountVC</key>
+		<string>HJAddAccountViewController</string>
+		<key>route://accountManagerVC</key>
+		<string>HJAccountManagerViewController</string>
+		<key>route://withDrawRecordVC</key>
+		<string>HJWithDrawRecordViewController</string>
+		<key>route://brokerageDetailVC</key>
+		<string>HJBrokerageDetailViewController</string>
+		<key>route://brokerageListVC</key>
+		<string>HJBrokerageListViewController</string>
+		<key>route://dataStatisticsVC</key>
+		<string>HJDataStatisticsViewController</string>
+		<key>route://shareMakeMoneyVC</key>
+		<string>HJShareMakeMoneyViewController</string>
+		<key>route://myOrderVC</key>
+		<string>HJMyOrderViewController</string>
+		<key>route://riskEvaluationVC</key>
+		<string>HJRiskEvaluationViewController</string>
+		<key>route://searchMoreInfoVC</key>
+		<string>HJSearchResultMoreInfoViewController</string>
+		<key>route://searchMoreTeacherVC</key>
+		<string>HJSearchResultMoreTeacherViewController</string>
+		<key>route://searchMoreCourseVC</key>
+		<string>HJSearchResultMoreCourseViewController</string>
+		<key>route://mySuggestionVC</key>
+		<string>HJMySuggestionViewController</string>
+		<key>route://myInfoVC</key>
+		<string>HJMyInfoViewController</string>
+		<key>route://teacherMoreDetailVC</key>
+		<string>HJTeacherMoreDetailViewController</string>
 		<key>route://infoDetailVC</key>
 		<string>HJInfoDetailViewController</string>
 		<key>route://myCardVoucherVC</key>

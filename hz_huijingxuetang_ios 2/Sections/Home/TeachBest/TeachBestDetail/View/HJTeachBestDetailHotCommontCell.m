@@ -53,7 +53,7 @@
     
     //日期
     UILabel *dateLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"8月23日",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentRight;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -67,7 +67,7 @@
     
     //地址
     UILabel *addressLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"四川省内江市网友  Iphone 6",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -81,7 +81,7 @@
     
     //问题描述
     UILabel *desLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"哈哈哈，老师的预测和我估算的都差不了多少，真是羡慕老师这么机智，希望以后老师多多发文章看老师的文章真的很有意思 ",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -107,8 +107,12 @@
         [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
         self.nameLabel.text = model.nickname;
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
-        self.dateLabel.text = [NSString stringWithFormat:@"%ld月%ld日",date.month,date.day];
-        self.addressLabel.text = [NSString stringWithFormat:@"%@网友 %@",model.userzone,model.userterminal];
+        self.dateLabel.text = [NSString stringWithFormat:@"%@月%@日",[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+        if ([HJDealNullTool isNotNULL:model.userzone] && [HJDealNullTool isNotNULL:model.userterminal]) {
+            self.addressLabel.text = [NSString stringWithFormat:@"%@网友 %@",model.userzone,model.userterminal];
+        } else {
+            self.addressLabel.text = [NSString stringWithFormat:@"未知区域网友"];
+        }
         self.desLabel.text = model.commentcontent;
     }
 }

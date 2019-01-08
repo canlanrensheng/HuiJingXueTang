@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (nonatomic,strong) NSMutableArray *findArray;
-- (void)teacherDynamicRecommondListWithSuccess:(void (^)(void))success;
+- (void)teacherDynamicRecommondListWithTeacherid:(NSString *)teacherid Success:(void (^)(BOOL successFlag))success;
 
 @property (nonatomic,strong) NSMutableArray *careArray;
 - (void)teacherDynamicCareListWithSuccess:(void (^)(void))success;
@@ -38,6 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
                           accessToken:(NSString *)accessToken
                             insterest:(NSString *)insterest
                               Success:(void (^)(void))success;
+
+//检测资讯VIP权限
+- (void)checkVipInfoPowerWithInfoId:(NSString *)infoId success:(void (^)(void))success;
+
+//动态推荐页面的加载情况
+@property (nonatomic,copy) NSString *isDynamicRecommondFirstLoad;
 
 @end
 

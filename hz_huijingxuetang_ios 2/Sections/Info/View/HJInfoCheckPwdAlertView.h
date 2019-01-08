@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^bindBlock)(BOOL success);
+typedef void(^infoBindBlock)(BOOL success);
 
 @interface HJInfoCheckPwdAlertView : BaseView
 
-@property (nonatomic,copy)bindBlock bindBlock;
+@property (nonatomic,copy)infoBindBlock bindBlock;
 
-- (HJInfoCheckPwdAlertView * )initWithBindBlock:(void(^)(BOOL success))bindBlock;
+- (HJInfoCheckPwdAlertView * )initWithTeacherId:(NSString *)teacherid BindBlock:(void(^)(BOOL success))bindBlock;
 
 - (void)show;
 

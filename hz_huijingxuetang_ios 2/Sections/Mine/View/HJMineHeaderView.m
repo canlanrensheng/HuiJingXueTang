@@ -7,10 +7,13 @@
 //
 
 #import "HJMineHeaderView.h"
-
+#import "LJAvatarBrowser.h"
 @interface HJMineHeaderView ()
 
 @property (nonatomic,strong) UIView *teamBackView;
+
+@property (nonatomic,strong) UIButton *notyBtn;
+@property (nonatomic,strong) UILabel *redBotLabel;
 
 @end
 
@@ -42,6 +45,7 @@
         make.top.equalTo(self).offset(kHeight(10) + kStatusBarHeight);
 //        make.size.mas_equalTo(CGSizeMake(kWidth(24), kHeight(24)));
     }];
+    self.notyBtn = notyBtn;
     
     UILabel *redBotLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"0",MediumFont(font(11)),white_color);
@@ -58,45 +62,27 @@
         make.centerY.equalTo(notyBtn).offset(-kHeight(9.0));
     }];
     
-//    if(self.viewModel.notreadednum > 0 ) {
-//        self.viewModel.toolView.repleyedRedLabel.hidden = NO;
-//        if(self.viewModel.notreadednum < 10) {
-//            self.viewModel.toolView.repleyedRedLabel.text = [NSString stringWithFormat:@"%ld",(long)self.viewModel.notreadednum];
-//            [self.viewModel.toolView.repleyedRedLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
-//            [self.viewModel.toolView.repleyedRedLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.size.mas_equalTo(CGSizeMake(kWidth(15), kHeight(15)));
-//                make.centerX.equalTo(self.viewModel.toolView.liveButton).offset(kWidth(25));
-//                make.centerY.equalTo(self.viewModel.toolView).offset(-kHeight(9.0));
-//            }];
-//        } else if (self.viewModel.notreadednum < 100) {
-//            self.viewModel.toolView.repleyedRedLabel.text = [NSString stringWithFormat:@"%ld",self.viewModel.notreadednum];
-//            [self.viewModel.toolView.repleyedRedLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
-//            [self.viewModel.toolView.repleyedRedLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.size.mas_equalTo(CGSizeMake(kWidth(20), kHeight(15)));
-//                make.centerX.equalTo(self.viewModel.toolView.liveButton).offset(kWidth(25));
-//                make.centerY.equalTo(self.viewModel.toolView).offset(-kHeight(9.0));
-//            }];
-//        } else  if(self.viewModel.notreadednum > 99){
-//            self.viewModel.toolView.repleyedRedLabel.text = @"99+";
-//            [self.viewModel.toolView.repleyedRedLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
-//            [self.viewModel.toolView.repleyedRedLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.size.mas_equalTo(CGSizeMake(kWidth(28), kHeight(15)));
-//                make.centerX.equalTo(self.viewModel.toolView.liveButton).offset(kWidth(25));
-//                make.centerY.equalTo(self.viewModel.toolView.liveButton).offset(-kHeight(9.0));
-//            }];
-//        }
-//    } else {
-//        self.viewModel.toolView.repleyedRedLabel.hidden = YES;
-//    }
+    if(MaJia) {
+        notyBtn.hidden = YES;
+        redBotLabel.hidden = YES;
+    }
+    
+    self.redBotLabel = redBotLabel;
+
+
     
     //客服按钮
     UIButton *csBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
         [button setBackgroundImage:V_IMAGE(@"联系客服") forState:UIControlStateNormal];
-        @weakify(self);
+//        @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
-            NSURL *url = URL(string(@"telprompt://", @"10086"));
+//            @strongify(self);
+            if([APPUserDataIofo Contact].length <= 0) {
+                ShowMessage(@"暂无客服联系方式");
+                return;
+            }
+            NSURL *url = URL(string(@"telprompt://", [APPUserDataIofo Contact]));
             if ([[UIApplication sharedApplication] canOpenURL:url]) {
                 [[UIApplication sharedApplication] openURL:url];
             }
@@ -113,10 +99,10 @@
     UIButton *backViewBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
         button.backgroundColor = clear_color;
-        @weakify(self);
+//        @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
-            
+//            @strongify(self);
+            [DCURLRouter pushURLString:@"route://myInfoVC" animated:YES];
         }];
     }];
     [self addSubview:backViewBtn];
@@ -136,10 +122,15 @@
         make.bottom.equalTo(backViewBtn);
         make.size.mas_equalTo(CGSizeMake(kWidth(60), kHeight(60)));
     }];
+    self.iconImageV = liveImageV;
+    
+    UITapGestureRecognizer *iconImagTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(iconTap)];
+    liveImageV.userInteractionEnabled = YES;
+    [liveImageV addGestureRecognizer:iconImagTap];
     
     //名称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"慧明智行",MediumFont(font(17)),white_color);
+        label.ljTitle_font_textColor(@"未设置",MediumFont(font(17)),white_color);
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -148,21 +139,23 @@
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(liveImageV).offset(kHeight(11));
         make.left.equalTo(liveImageV.mas_right).offset(kWidth(11.0));
-        make.height.mas_offset(kHeight(16));
+        make.height.mas_offset(kHeight(18));
     }];
+    self.nameLable = nameLabel;
     
     //会员等级图片
     UIImageView *vipLevelImageV = [[UIImageView alloc] init];
-//    vipLevelImageV.image = V_IMAGE(@"学习小组");
+    vipLevelImageV.image = V_IMAGE(@"合伙人标签");
     [backViewBtn addSubview:vipLevelImageV];
     [vipLevelImageV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(nameLabel.mas_right).offset(kWidth(12));
+        make.left.equalTo(nameLabel.mas_right).offset(kWidth(10));
         make.centerY.equalTo(nameLabel);
     }];
+    self.vipLevelImageV = vipLevelImageV;
     
     //成员名称
     UILabel *vipLevelLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"普通会员",MediumFont(font(13)),white_color);
+        label.ljTitle_font_textColor(@"点击编辑个人信息",MediumFont(font(13)),RGBA(255, 255, 255, 0.3));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -190,13 +183,21 @@
         make.right.equalTo(backViewBtn).offset(-kWidth(10.0));
     }];
     
-    //下边的
-    [self addSubview:self.teamBackView];
-    [self.teamBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(topView.mas_bottom);
-        make.left.right.equalTo(self);
-        make.height.mas_equalTo(kHeight(100.0));
-    }];
+    if(MaJia) {
+        
+    } else {
+        //下边的
+        [self addSubview:self.teamBackView];
+        [self.teamBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(topView.mas_bottom);
+            make.left.right.equalTo(self);
+            make.height.mas_equalTo(kHeight(100.0));
+        }];
+    }
+}
+
+- (void)iconTap {
+    [LJAvatarBrowser showImageView:self.iconImageV];
 }
 
 - (UIView *)teamBackView{
@@ -250,15 +251,66 @@
             break;
         case 1:{
             //学习小组
-           
+            NSArray *clickArray = @[@"程序猿小哥哥说还在开发中，尽情期待！",@"程序猿小哥哥已经很努力了！",@"怎么回事？都告诉你在开发中怎么还点？",@"不要再点了！😢"];
+            NSString *warnString = clickArray.firstObject;
+//            if([UserInfoSingleObject shareInstance].clickStudentGroupCount == 0) {
+//                warnString = clickArray[[UserInfoSingleObject shareInstance].clickStudentGroupCount];
+//                [UserInfoSingleObject shareInstance].clickStudentGroupCount++;
+//            } else if([UserInfoSingleObject shareInstance].clickStudentGroupCount == 1) {
+//                warnString = clickArray[[UserInfoSingleObject shareInstance].clickStudentGroupCount];
+//                [UserInfoSingleObject shareInstance].clickStudentGroupCount++;
+//            }else if([UserInfoSingleObject shareInstance].clickStudentGroupCount == 2) {
+//                warnString = clickArray[[UserInfoSingleObject shareInstance].clickStudentGroupCount];
+//                [UserInfoSingleObject shareInstance].clickStudentGroupCount++;
+//            }else  {
+//                warnString = clickArray[3];
+//                [UserInfoSingleObject shareInstance].clickStudentGroupCount = 0;
+//            }
+            ShowMessage(warnString);
         }
             break;
             
         default:{
             //推广赚钱
-           
+            [DCURLRouter pushURLString:@"route://shareMakeMoneyVC" animated:YES];
         }
             break;
+    }
+}
+
+- (void)setUnReadMessageCount:(NSInteger)unReadMessageCount{
+    _unReadMessageCount = unReadMessageCount;
+    if(self.unReadMessageCount < 10) {
+        if(self.unReadMessageCount == 0) {
+            self.redBotLabel.hidden = YES;
+        } else {
+            self.redBotLabel.hidden = NO;
+            self.redBotLabel.text = [NSString stringWithFormat:@"%ld",(long)self.unReadMessageCount ];
+            [self.redBotLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
+            [self.redBotLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(kWidth(15), kHeight(15)));
+                make.left.equalTo(self.notyBtn.mas_right).offset(-kWidth(5.0));
+                make.centerY.equalTo(self.notyBtn).offset(-kHeight(9.0));
+            }];
+        }
+    } else if (unReadMessageCount < 100) {
+        self.redBotLabel.hidden = NO;
+        self.redBotLabel.text = [NSString stringWithFormat:@"%ld",unReadMessageCount];
+        [self.redBotLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
+        [self.redBotLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(kWidth(20), kHeight(15)));
+            make.left.equalTo(self.notyBtn.mas_right).offset(-kWidth(5.0));
+            make.centerY.equalTo(self.notyBtn).offset(-kHeight(9.0));
+        }];
+    } else  if(unReadMessageCount > 99){
+        self.redBotLabel.hidden = NO;
+        self.redBotLabel.text = @"99+";
+        [self.redBotLabel clipWithCornerRadius:kHeight(7.5) borderColor:nil borderWidth:0];
+        [self.redBotLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(kWidth(28), kHeight(15)));
+            make.left.equalTo(self.notyBtn.mas_right).offset(-kWidth(5.0));
+            make.centerY.equalTo(self.notyBtn).offset(-kHeight(9.0));
+        }];
     }
 }
 

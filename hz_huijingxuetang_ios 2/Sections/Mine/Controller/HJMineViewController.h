@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJMineViewController : BaseTableViewController
 
+
 @end
 
 NS_ASSUME_NONNULL_END

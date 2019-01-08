@@ -189,7 +189,7 @@
 }
 
 - (void)deleteWithId:(NSString *)stuntId Success:(void (^)(void))success {
-    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delstoc",API_BASEURL];
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delstock",API_BASEURL];
     NSDictionary *parameters = @{
                                  @"id" : stuntId
                                  ,@"accesstoken" : [APPUserDataIofo AccessToken]
@@ -211,23 +211,6 @@
     }];
 }
 
-- (void)stockAnsrReadsSettedWithId:(NSString *)stuntId Success:(void (^)(void))success {
-    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/stockansreadsetted",API_BASEURL];
-    NSDictionary *parameters = @{
-                                 @"id" : stuntId
-                                 ,@"accesstoken" : [APPUserDataIofo AccessToken]
-                                 };
-    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
-        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        NSInteger code = [[dic objectForKey:@"code"]integerValue];
-        if (code == 200) {
-            success();
-        } else {
-            ShowError([dic objectForKey:@"msg"]);
-        }
-    } fail:^(id error) {
-        ShowError(error);
-    }];
-}
+
 
 @end

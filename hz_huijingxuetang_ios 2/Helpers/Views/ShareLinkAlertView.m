@@ -11,6 +11,8 @@
 
 typedef void (^backBlock)(NSInteger type);
 
+#define KAlertHeight kHeight(240)
+
 @interface ShareLinkAlertView ()
 
 @property (nonatomic,strong) UIView * contentView;
@@ -23,7 +25,7 @@ typedef void (^backBlock)(NSInteger type);
 @implementation ShareLinkAlertView
 
 - (ShareLinkAlertView*)initWithBlock:(void(^)(ShareObjectType shareObjectType))block {
-    ShareLinkAlertView * sheet = [[ShareLinkAlertView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)  block:block];
+    ShareLinkAlertView *sheet = [[ShareLinkAlertView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)  block:block];
     [sheet set];
     return sheet;
 }
@@ -34,7 +36,8 @@ typedef void (^backBlock)(NSInteger type);
 
 - (void)set{
     [UIView animateWithDuration:0.3 animations:^{
-        _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - kHeight(140), [UIScreen mainScreen].bounds.size.width, kHeight(140));
+        _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - KAlertHeight - KHomeIndicatorHeight, [UIScreen mainScreen].bounds.size.width, KAlertHeight);
+//        _contentView.transform = CGAffineTransformMakeRotation(M_PI/2);
         _contentView.backgroundColor = [UIColor whiteColor];
     }];
 }
@@ -49,16 +52,19 @@ typedef void (^backBlock)(NSInteger type);
         
         [self addSubview:back];
         
-        _contentView = [[UIView alloc]initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height,  [UIScreen mainScreen].bounds.size.width,_alertViewHeight)];
+        _contentView = [[UIView alloc]initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - KHomeIndicatorHeight,  [UIScreen mainScreen].bounds.size.width,_alertViewHeight)];
         [self addSubview:_contentView];
     
         //链接
         CGFloat width = Screen_Width / 4;
         CGFloat height = kHeight(100.0);
-        NSArray *moneyTextArray = @[@"微信",@"微信朋友圈",@"QQ",@"微博"];
-        NSArray *moneyImgArray = @[@"微信",@"朋友圈",@"qq",@"微博"];
-        for(int i = 0 ;i < 4;i++){
-            UIView *backView = [[UIView alloc] initWithFrame:CGRectMake((width + 1) * i, 0, width, height)];
+        NSArray *moneyTextArray = @[@"微信",@"微信朋友圈",@"QQ",@"微博",@"复制链接"];
+        NSArray *moneyImgArray = @[@"微信",@"朋友圈",@"qq",@"微博",@"复制链接"];
+        for(int i = 0 ;i < moneyTextArray.count;i++){
+            NSInteger hang = i / 4;
+            NSInteger lie = i % 4;
+            
+            UIView *backView = [[UIView alloc] initWithFrame:CGRectMake((width + 1) * lie, hang * height, width, height)];
             backView.tag = i + 10;
             [_contentView addSubview:backView];
             
@@ -92,11 +98,11 @@ typedef void (^backBlock)(NSInteger type);
         [cancalBtn setTitle:@"取消" forState:UIControlStateNormal];
         cancalBtn.backgroundColor = white_color;
         cancalBtn.titleLabel.font = MediumFont(font(13));
-        [cancalBtn setTitleColor:HEXColor(@"#1D3043") forState:UIControlStateNormal];
+        [cancalBtn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
         [cancalBtn addTarget:self action:@selector(TapGesture) forControlEvents:UIControlEventTouchUpInside];
         [_contentView addSubview:cancalBtn];
         [cancalBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_contentView).offset(kHeight(100.0));
+            make.top.equalTo(_contentView).offset(KAlertHeight - kHeight(40));
             make.left.right.equalTo(_contentView);
             make.bottom.equalTo(_contentView);
         }];
@@ -107,8 +113,8 @@ typedef void (^backBlock)(NSInteger type);
         [_contentView addSubview:lineView];
         [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.equalTo(_contentView);
-            make.top.equalTo(_contentView).offset(kHeight(100.0));
-            make.height.mas_equalTo(kHeight(1.0));
+            make.top.equalTo(_contentView).offset(KAlertHeight - kHeight(40));
+            make.height.mas_equalTo(kHeight(0.5));
         }];
     }
     return self;
@@ -123,7 +129,7 @@ typedef void (^backBlock)(NSInteger type);
 
 - (void)TapGesture{
     [UIView animateWithDuration:0.5 animations:^{
-        _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, self.alertViewHeight);
+        _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - KHomeIndicatorHeight, [UIScreen mainScreen].bounds.size.width, self.alertViewHeight);
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
         if(_backBlock){

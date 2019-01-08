@@ -34,7 +34,7 @@
     
     //昵称
     UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"咨询用户",MediumFont(font(13)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"资讯用户",MediumFont(font(13)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -59,7 +59,7 @@
     
     //日期
     UILabel *dateLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"2018/08/29",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -73,7 +73,7 @@
     
     //问题描述
     UILabel *questionLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"中原环保（000554）求帮忙分析一下这只股票的好坏K线图看不懂？",BoldFont(font(15)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(15)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -93,7 +93,7 @@
 
 - (void)setModel:(HJStuntJudgeListModel *)model {
     [self.iconImageV sd_setImageWithURL:URL(model.createiconurl) placeholderImage:V_IMAGE(@"默认头像")];
-    self.nameLabel.text = model.updatename.length > 0 ? model.updatename : @"咨询用户";
+    self.nameLabel.text = model.createname.length > 0 ? model.createname : @"咨询用户";
     if (model.createtime) {
         self.dateLabel.text = [model.createtime componentsSeparatedByString:@" "].firstObject;
     } else {

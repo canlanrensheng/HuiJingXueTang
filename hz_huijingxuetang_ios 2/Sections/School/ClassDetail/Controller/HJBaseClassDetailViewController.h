@@ -7,10 +7,13 @@
 //
 
 #import "BaseTableViewController.h"
-
+#import "HJClassDetailViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HJBaseClassDetailViewController : BaseTableViewController
+
+@property (nonatomic,strong) HJClassDetailViewModel *viewModel;
+@property (nonatomic,strong) RACSubject *courseMessageSubject;
 
 @end
 
