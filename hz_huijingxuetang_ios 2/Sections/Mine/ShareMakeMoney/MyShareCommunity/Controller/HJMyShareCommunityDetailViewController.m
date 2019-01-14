@@ -101,7 +101,7 @@
     
     //手机号
     UILabel * brokerageLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"佣金",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"手机号",MediumFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentRight;
         label.numberOfLines = 1;
         [label sizeToFit];
@@ -162,8 +162,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getCommunityDetailModelSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

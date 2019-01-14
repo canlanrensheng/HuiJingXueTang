@@ -18,7 +18,7 @@
 
 - (void)hj_configSubViews {
     _titleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"最近您的家庭预计进行证券投资的资金占家庭现有资产(不含自住，自用房产及汽车等固定资产)的比例是",BoldFont(font(15)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",BoldFont(font(14)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
     }];
@@ -27,7 +27,7 @@
         make.left.equalTo(self).offset(kWidth(10.0));
         make.right.equalTo(self).offset(-kWidth(10));
         make.top.equalTo(self);
-        make.height.mas_equalTo(kHeight(45));
+//        make.height.mas_equalTo(kHeight(45));
     }];
 }
 

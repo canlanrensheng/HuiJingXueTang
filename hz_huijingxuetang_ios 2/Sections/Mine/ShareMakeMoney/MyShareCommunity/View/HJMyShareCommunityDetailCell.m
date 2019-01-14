@@ -93,10 +93,8 @@
     HJMyShareCommunityDetailModel *model = listViewModel.communityDetailDataArray[indexPath.row];
     self.courseNameLabel.text = model.coursename;
     self.moneyLabel.text = [NSString stringWithFormat:@"¥%.2f",model.coursemoney];
-//    NSDate *date = [NSDate dateWithString:model.paytime formatString:@"yyyy-MM-dd HH:mm:ss"];
-//    self.timeLabel.text = [NSString stringWithFormat:@"%@年%@月%@日",[NSString convertDateSingleData:date.year],[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
     self.timeLabel.text = [model.paytime componentsSeparatedByString:@" "].firstObject;
-    self.phoneLabel.text = [NSString stringWithFormat:@"%@****%@",[model.telno substringToIndex:3],[model.telno substringFromIndex:7]];
+    self.phoneLabel.text = model.telno;
 }
 
 @end

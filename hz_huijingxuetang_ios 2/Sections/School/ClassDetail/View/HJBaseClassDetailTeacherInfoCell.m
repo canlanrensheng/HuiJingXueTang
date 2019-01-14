@@ -91,7 +91,7 @@
 
 - (void)setModel:(HJSchoolCourseDetailModel *)model {
     _model = model;
-    [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+    [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
     self.nameLabel.text = model.username;
     self.desLabel.text = model.introduction;
 }

@@ -16,7 +16,7 @@
 @property (nonatomic,strong) UILabel *commutityNumLabel;
 //账户余额
 @property (nonatomic,strong) UILabel *accountMoneyLabel;
-//保证金
+//冻结金
 @property (nonatomic,strong) UILabel *depositLabel;
 //上月成交单数
 @property (nonatomic,strong) UILabel *lastFinishOrderLabel;
@@ -41,7 +41,7 @@
     [self addSubview:lineView];
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
-        make.size.mas_equalTo(CGSizeMake(kWidth(1.0), kHeight(65)));
+        make.size.mas_equalTo(CGSizeMake(kWidth(0.5), kHeight(65)));
         make.top.equalTo(self).offset(kHeight(57));
     }];
     
@@ -115,7 +115,7 @@
     
     CGFloat width = Screen_Width / 3;
     CGFloat height = kHeight(100.0);
-    NSArray *moneyTextArray = @[@"账户余额（元）",@"保证金（元）",@"本期成交订单（单）"];
+    NSArray *moneyTextArray = @[@"账户余额（元）",@"冻结金（元）",@"本期成交订单（单）"];
     NSArray *moneyArray = @[@"0.00",@"0.00",@"0.00"];
     for(int i = 0 ;i < 3;i++){
         UIView *backView = [[UIView alloc] initWithFrame:CGRectMake((width + 1) * i, 0, width, height)];
@@ -175,7 +175,7 @@
         //账户余额
         self.accountMoneyLabel.text = [NSString stringWithFormat:@"%.2f",model.canWithedSum];
         
-        //保证金
+        //冻结金
         self.depositLabel.text = [NSString stringWithFormat:@"%.2f",model.freezingsum];
         
         //上月成交单数

@@ -38,7 +38,7 @@
          parameters:shareParams
      onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
          // 回调处理....
-         DLog(@"获取到的失败的原因是:%@ %ld",[error.userInfo objectForKey:@"description"],error.code);
+//         DLog(@"获取到的失败的原因是:%ld %@ %ld %@",state,[NSString convertToJsonData:userData],error.code,error.userInfo);
          
          switch (state) {
              case SSDKResponseStateSuccess:

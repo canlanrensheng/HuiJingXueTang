@@ -10,6 +10,7 @@
 #import "HJMyOrderViewModel.h"
 #import "HJMyOrderListModel.h"
 
+#import "HJEdgeInsetLabel.h"
 @interface HJKillPriceOrderListCell ()
 
 @property (nonatomic,strong) UILabel *dateLabel;
@@ -59,7 +60,7 @@
     self.topView = topView;
     //时间
     UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"订单日期:  2018.10.21",MediumFont(font(11)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"订单日期： 2018.10.21",MediumFont(font(11)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -102,7 +103,7 @@
     self.killPriceStateLabel = killPriceStateLabel;
     
     UILabel *lastTimeLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"还剩22小时60分",MediumFont(font(10)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"还剩00小时00分",MediumFont(font(10)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentRight;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -237,9 +238,11 @@
     }];
     self.totalMoneyLabel = totalMoneyLabel;
     
-    //
+    
+    
+    //当前价格的文本
     UILabel *totalMoneyTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"当前价格: ",MediumFont(font(11)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@"当前价格：",MediumFont(font(11)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentRight;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -260,7 +263,7 @@
     [totalMoneyView addSubview:killedLabel];
     [killedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(totalMoneyView);
-        make.right.equalTo(totalMoneyTextLabel.mas_left);
+        make.right.equalTo(totalMoneyTextLabel.mas_left).offset(-kWidth(5.0));
     }];
     self.killedLabel = killedLabel;
     
@@ -315,7 +318,9 @@
                 [TXAlertView showAlertWithTitle:@"温馨提示" message:@"确认要删除该订单吗?" cancelButtonTitle:@"取消" style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                     if (buttonIndex == 1) {
                         [self.listViewModel deleteOrderWithOrderId:self.model.orderno success:^{
-                            [self.backSub sendNext:@""];
+                            if(self.backSub) {
+                                [self.backSub sendNext:@""];
+                            }
                         }];
                     }
                 } otherButtonTitles:@"确定", nil];
@@ -327,10 +332,10 @@
                 //订单有效 砍价中 或者砍价已完成
                 if(self.courseModel.bargainstatus.integerValue == 1) {
                     //砍价结束 去支付
-                    [[HJPayTool shareInstance] payWithOrderId:self.model.orderno couponid:self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @""];
+                    [self payOperation];
                 } else {
                     //砍价中的操作 继续砍价
-                    NSString *courceName = @"动动手，快来帮我砍一刀";
+                    NSString *courceName = @"嗨！我超喜欢它，求求你帮我砍一刀吧！爱你哟！！";
                     NSString *coursedes = @"慧鲸学堂 全民砍价 乐享好课！在有效时限内砍价到最低价，即可享受最大购课优惠！";
                     id shareImg = self.courseModel.coursepic;
                     if(self.courseModel.coursepic.length <= 0) {
@@ -364,7 +369,7 @@
             @strongify(self);
             //订单有效 砍价中
 //            if(self.courseModel.bargainstatus.integerValue == 0) {
-                [[HJPayTool shareInstance] payWithOrderId:self.model.orderno couponid:self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @""];
+            [self payOperation];
 //            }
         }];
     }];
@@ -385,6 +390,46 @@
     return _backSub;
 }
 
+- (void)payOperation {
+    BOOL isLargeMoney = false;
+    for(CourseResponsesModel *model in _model.courseResponses) {
+        //不能推广是大额度
+        if(model.ispromote == 0) {
+            isLargeMoney = YES;
+        }
+    }
+    RACSubject *backSubject = [[RACSubject alloc] init];
+    @weakify(self);
+    [backSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self dealSureOrderBtnWithIsLargeMoney:isLargeMoney];
+    }];
+    NSString *orderId = self.model.orderno;
+    NSDictionary *para = @{@"isLargeMoney" : @(isLargeMoney),
+                           @"subject" : backSubject,
+                           @"orderId" : DealNil(orderId)
+                           };
+    [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+}
+
+//判断是小额还是大额
+- (void)dealSureOrderBtnWithIsLargeMoney:(BOOL)isLargeMoney {
+    //判断是大额支付还是小额支付
+    if(isLargeMoney) {
+        //大额联系客户
+        [TXAlertView showAlertWithTitle:@"温馨提示" message:@"您现在购买的慧鲸学堂专属课程金额较大，请联系慧鲸客服(0571-57571670)完成支付，谢谢合作。" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if (buttonIndex == 1) {
+                
+            }
+        } otherButtonTitles:@"我知道了", nil];
+    } else {
+        //小额支付
+        NSString *orderId = self.model.orderno;
+        NSString *couponid = self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @"";
+        [[HJPayTool shareInstance] payWithOrderId:orderId couponid:couponid];
+    }
+}
+
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
     HJMyOrderViewModel *listViewModel = (HJMyOrderViewModel *)viewModel;
     self.listViewModel = listViewModel;
@@ -392,7 +437,7 @@
     self.model = model;
     
     NSDate *date = [NSDate dateWithString:model.ordercreatetime formatString:@"yyyy-MM-dd HH:mm:ss"];
-    self.dateLabel.text = [NSString stringWithFormat:@"订单日期:  %ld.%@.%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+    self.dateLabel.text = [NSString stringWithFormat:@"订单日期： %ld.%@.%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
     
     CourseResponsesModel *courseModel = model.courseResponses.firstObject;
     self.courseModel = courseModel;
@@ -479,7 +524,7 @@
         }
     }
     
-    [self.courseImageView sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+    [self.courseImageView sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
     self.courseNameLabel.text = courseModel.coursename;
     if(courseModel.periods.integerValue <= 0) {
         self.limitDateLabel.text = @"有效期限：";
@@ -508,16 +553,17 @@
         
         self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",price];
     }
-    
+
     //当前的价格
     NSString *totalMoney = [NSString stringWithFormat:@"¥%.2f",courseModel.currentprice];
     self.totalMoneyLabel.attributedText = [totalMoney attributeWithStr:@"¥" color:HEXColor(@"#FF4400") font:MediumFont(font(11))];
     
     //已经砍到的价格
     NSString *killPrice = [NSString stringWithFormat:@"已砍%.2f元   ",courseModel.feepromotemoney];
-    self.killedLabel.attributedText = [killPrice attributeWithStr:@"¥" color:HEXColor(@"#FF4400") font:MediumFont(font(11))];
+    self.killedLabel.attributedText = [killPrice attributeWithStr:[NSString stringWithFormat:@"%.2f",courseModel.feepromotemoney] color:HEXColor(@"#FF4400") font:MediumFont(font(11))];
 }
 
+//点击课程列表的数据跳转到课程详情
 - (void)backTap:(UITapGestureRecognizer *)tap {
     CourseResponsesModel *model = self.model.courseResponses[tap.view.tag];
     [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.courseid} animated:YES];

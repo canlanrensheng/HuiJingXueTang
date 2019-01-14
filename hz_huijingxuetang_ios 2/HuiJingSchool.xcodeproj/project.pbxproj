@@ -24,17 +24,10 @@
 		131AD63221C228E100E7E8E1 /* HJVersionUpdateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD63121C228E100E7E8E1 /* HJVersionUpdateCell.m */; };
 		131AD63521C231D800E7E8E1 /* HJSelectToUpdateVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD63421C231D800E7E8E1 /* HJSelectToUpdateVersionView.m */; };
 		131AD63F21C2753500E7E8E1 /* HJFreeLiveListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD63E21C2753400E7E8E1 /* HJFreeLiveListViewController.m */; };
+		131B1D4221DC60EF00899A69 /* HJEdgeInsetLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 131B1D4121DC60EF00899A69 /* HJEdgeInsetLabel.m */; };
 		131D73C02177302F00DC94C7 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D732C2177302F00DC94C7 /* HomePageViewController.m */; };
 		131D73DB2177302F00DC94C7 /* ForgetPWDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73642177302F00DC94C7 /* ForgetPWDViewController.m */; };
 		131D73DC2177302F00DC94C7 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73662177302F00DC94C7 /* LoginViewController.m */; };
-		131D73E92177302F00DC94C7 /* OrderListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73822177302F00DC94C7 /* OrderListCell.m */; };
-		131D73EA2177302F00DC94C7 /* OrderViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73842177302F00DC94C7 /* OrderViewCell.m */; };
-		131D73EB2177302F00DC94C7 /* ShopCartCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73862177302F00DC94C7 /* ShopCartCell.m */; };
-		131D73EC2177302F00DC94C7 /* orderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73892177302F00DC94C7 /* orderModel.m */; };
-		131D73F12177302F00DC94C7 /* AlertTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73952177302F00DC94C7 /* AlertTableViewCell.m */; };
-		131D73F22177302F00DC94C7 /* AlertTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 131D73962177302F00DC94C7 /* AlertTableViewCell.xib */; };
-		131D73F32177302F00DC94C7 /* GiftView.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D73982177302F00DC94C7 /* GiftView.m */; };
-		131D73F52177302F00DC94C7 /* YJAlertview.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D739C2177302F00DC94C7 /* YJAlertview.m */; };
 		131D74412177308E00DC94C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 131D74002177308E00DC94C7 /* AppDelegate.m */; };
 		131D74422177308E00DC94C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 131D74022177308E00DC94C7 /* Assets.xcassets */; };
 		131D74432177308E00DC94C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 131D74032177308E00DC94C7 /* LaunchScreen.storyboard */; };
@@ -488,27 +481,14 @@
 		131AD63421C231D800E7E8E1 /* HJSelectToUpdateVersionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSelectToUpdateVersionView.m; sourceTree = "<group>"; };
 		131AD63D21C2753400E7E8E1 /* HJFreeLiveListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJFreeLiveListViewController.h; sourceTree = "<group>"; };
 		131AD63E21C2753400E7E8E1 /* HJFreeLiveListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJFreeLiveListViewController.m; sourceTree = "<group>"; };
+		131B1D4021DC60EF00899A69 /* HJEdgeInsetLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJEdgeInsetLabel.h; sourceTree = "<group>"; };
+		131B1D4121DC60EF00899A69 /* HJEdgeInsetLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJEdgeInsetLabel.m; sourceTree = "<group>"; };
 		131D732B2177302F00DC94C7 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomePageViewController.h; sourceTree = "<group>"; };
 		131D732C2177302F00DC94C7 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageViewController.m; sourceTree = "<group>"; };
 		131D73632177302F00DC94C7 /* ForgetPWDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgetPWDViewController.h; sourceTree = "<group>"; };
 		131D73642177302F00DC94C7 /* ForgetPWDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetPWDViewController.m; sourceTree = "<group>"; };
 		131D73652177302F00DC94C7 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		131D73662177302F00DC94C7 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		131D73812177302F00DC94C7 /* OrderListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderListCell.h; sourceTree = "<group>"; };
-		131D73822177302F00DC94C7 /* OrderListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderListCell.m; sourceTree = "<group>"; };
-		131D73832177302F00DC94C7 /* OrderViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderViewCell.h; sourceTree = "<group>"; };
-		131D73842177302F00DC94C7 /* OrderViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderViewCell.m; sourceTree = "<group>"; };
-		131D73852177302F00DC94C7 /* ShopCartCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopCartCell.h; sourceTree = "<group>"; };
-		131D73862177302F00DC94C7 /* ShopCartCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopCartCell.m; sourceTree = "<group>"; };
-		131D73882177302F00DC94C7 /* orderModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = orderModel.h; sourceTree = "<group>"; };
-		131D73892177302F00DC94C7 /* orderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = orderModel.m; sourceTree = "<group>"; };
-		131D73942177302F00DC94C7 /* AlertTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertTableViewCell.h; sourceTree = "<group>"; };
-		131D73952177302F00DC94C7 /* AlertTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertTableViewCell.m; sourceTree = "<group>"; };
-		131D73962177302F00DC94C7 /* AlertTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlertTableViewCell.xib; sourceTree = "<group>"; };
-		131D73972177302F00DC94C7 /* GiftView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftView.h; sourceTree = "<group>"; };
-		131D73982177302F00DC94C7 /* GiftView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftView.m; sourceTree = "<group>"; };
-		131D739B2177302F00DC94C7 /* YJAlertview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJAlertview.h; sourceTree = "<group>"; };
-		131D739C2177302F00DC94C7 /* YJAlertview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJAlertview.m; sourceTree = "<group>"; };
 		131D73FF2177308E00DC94C7 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		131D74002177308E00DC94C7 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		131D74012177308E00DC94C7 /* AppOtherConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppOtherConfig.h; sourceTree = "<group>"; };
@@ -1495,47 +1475,8 @@
 		131D737F2177302F00DC94C7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				131D73802177302F00DC94C7 /* cell */,
-				131D73872177302F00DC94C7 /* model */,
-				131D73932177302F00DC94C7 /* view */,
 			);
 			path = Other;
-			sourceTree = "<group>";
-		};
-		131D73802177302F00DC94C7 /* cell */ = {
-			isa = PBXGroup;
-			children = (
-				131D73812177302F00DC94C7 /* OrderListCell.h */,
-				131D73822177302F00DC94C7 /* OrderListCell.m */,
-				131D73832177302F00DC94C7 /* OrderViewCell.h */,
-				131D73842177302F00DC94C7 /* OrderViewCell.m */,
-				131D73852177302F00DC94C7 /* ShopCartCell.h */,
-				131D73862177302F00DC94C7 /* ShopCartCell.m */,
-			);
-			path = cell;
-			sourceTree = "<group>";
-		};
-		131D73872177302F00DC94C7 /* model */ = {
-			isa = PBXGroup;
-			children = (
-				131D73882177302F00DC94C7 /* orderModel.h */,
-				131D73892177302F00DC94C7 /* orderModel.m */,
-			);
-			path = model;
-			sourceTree = "<group>";
-		};
-		131D73932177302F00DC94C7 /* view */ = {
-			isa = PBXGroup;
-			children = (
-				131D73942177302F00DC94C7 /* AlertTableViewCell.h */,
-				131D73952177302F00DC94C7 /* AlertTableViewCell.m */,
-				131D73962177302F00DC94C7 /* AlertTableViewCell.xib */,
-				131D73972177302F00DC94C7 /* GiftView.h */,
-				131D73982177302F00DC94C7 /* GiftView.m */,
-				131D739B2177302F00DC94C7 /* YJAlertview.h */,
-				131D739C2177302F00DC94C7 /* YJAlertview.m */,
-			);
-			path = view;
 			sourceTree = "<group>";
 		};
 		131D739D2177302F00DC94C7 /* School */ = {
@@ -1681,6 +1622,8 @@
 				139201E0217D6693007C133A /* MBProgressHUD+HJHud.m */,
 				1377CE10219EC02800EFF59A /* HJDealNullTool.h */,
 				1377CE11219EC02800EFF59A /* HJDealNullTool.m */,
+				131B1D4021DC60EF00899A69 /* HJEdgeInsetLabel.h */,
+				131B1D4121DC60EF00899A69 /* HJEdgeInsetLabel.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -4249,7 +4192,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				131D74442177308E00DC94C7 /* Main.storyboard in Resources */,
-				131D73F22177302F00DC94C7 /* AlertTableViewCell.xib in Resources */,
 				1377CE1C219EDC2A00EFF59A /* city.plist in Resources */,
 				135E58EB217874F20050641D /* Router.plist in Resources */,
 				131D74422177308E00DC94C7 /* Assets.xcassets in Resources */,
@@ -4405,7 +4347,6 @@
 				136BE0CE2193D75900DE5E5F /* HJMessageViewController.m in Sources */,
 				13A52C24217DA73000A3852D /* SDCycleScrollView.m in Sources */,
 				136BE0B92192ADD800DE5E5F /* HJMineHeaderView.m in Sources */,
-				131D73F12177302F00DC94C7 /* AlertTableViewCell.m in Sources */,
 				13A52C8B2180706600A3852D /* HJConfirmOrderViewController.m in Sources */,
 				13410986218335F900287F93 /* HJSchoolLiveInputView.m in Sources */,
 				13F652FF21BBDA3B00BAE0CE /* HJKillPriceOrderListCell.m in Sources */,
@@ -4422,7 +4363,6 @@
 				1309F1D721C8D9C700E1B540 /* HJTextAndPicButoton.m in Sources */,
 				1328D74621BF641A00FE2C3D /* HJSelectCourseViewController.m in Sources */,
 				13A52C5F217F3C7900A3852D /* HJSchoolSementView.m in Sources */,
-				131D73EC2177302F00DC94C7 /* orderModel.m in Sources */,
 				1378DB3321D610A800A3B58D /* HJShareMakeMoneyHelpCell.m in Sources */,
 				132B945421A3CE0A007FFD6C /* HJSearchResultMoreInfoViewController.m in Sources */,
 				13A0CB1C2182E95A00028DE0 /* HJSearchResultCourceCell.m in Sources */,
@@ -4439,7 +4379,6 @@
 				133A9631218FD17D0092B5CD /* HJTeachBestDetailHotCommontCell.m in Sources */,
 				13F55969218857740089BABB /* HJFindViewController.m in Sources */,
 				13FF0E402184653000F6B6AD /* HJStuntJudgeToolView.m in Sources */,
-				131D73EB2177302F00DC94C7 /* ShopCartCell.m in Sources */,
 				132B94EA21A670FA007FFD6C /* HJExclusiveInfoModel.m in Sources */,
 				132B94B621A55B4D007FFD6C /* HJMyOrderViewController.m in Sources */,
 				135E58BD217821220050641D /* BaseViewController.m in Sources */,
@@ -4509,7 +4448,6 @@
 				135E58F1217897BC0050641D /* HJSetPasswordViewController.m in Sources */,
 				133A9665219122380092B5CD /* HJInfoSegmentView.m in Sources */,
 				13466DBF21AD54B5003714AC /* HJConfirmOrderModel.m in Sources */,
-				131D73F32177302F00DC94C7 /* GiftView.m in Sources */,
 				132B94C221A55BE7007FFD6C /* HJFinishOrderViewController.m in Sources */,
 				13A52CAB2181608C00A3852D /* HJClassDetailToolView.m in Sources */,
 				4BB9FAB4206BB62B002243B5 /* YJAPPNetwork.m in Sources */,
@@ -4577,7 +4515,6 @@
 				13F652E821BA4D6500BAE0CE /* HJMessageDetailViewModel.m in Sources */,
 				1377CDE0219E67DF00EFF59A /* HJTeacherMoreDetailCell.m in Sources */,
 				1341097A2183298400287F93 /* HJSchoolDetailTeacherInfoView.m in Sources */,
-				131D73EA2177302F00DC94C7 /* OrderViewCell.m in Sources */,
 				13A52C28217DADAA00A3852D /* HJHomeLimitKillViewCell.m in Sources */,
 				132B94E721A6596D007FFD6C /* HJLimitKillMoreViewModel.m in Sources */,
 				135E5856217813A90050641D /* UIViewController+TXSystemBackButtonHandler.m in Sources */,
@@ -4596,6 +4533,7 @@
 				13466DB421ACE74B003714AC /* HJRiskEvaluationModel.m in Sources */,
 				13F559B6218972200089BABB /* HJFindRecommondVideoCell.m in Sources */,
 				13A52C20217DA73000A3852D /* TAAnimatedDotView.m in Sources */,
+				131B1D4221DC60EF00899A69 /* HJEdgeInsetLabel.m in Sources */,
 				13A52CAE2181A08F00A3852D /* HJBaseClassDetailTeacherInfoCell.m in Sources */,
 				135E58BE217821220050641D /* BaseViewModel.m in Sources */,
 				13F559D9218AF48F0089BABB /* DateFormatter.m in Sources */,
@@ -4658,7 +4596,6 @@
 				13A52CCD2181C15D00A3852D /* BMTextView.m in Sources */,
 				131D74E82177513200DC94C7 /* CustomTabbarController.m in Sources */,
 				135E58EE217885B10050641D /* HJInputCodeViewController.m in Sources */,
-				131D73E92177302F00DC94C7 /* OrderListCell.m in Sources */,
 				135E5866217814850050641D /* TXDataManage.m in Sources */,
 				135F567F21A24727002F4390 /* HJMySuggestionViewController.m in Sources */,
 				13A52CB12181A0C000A3852D /* HJBaseClassDetailCourceInfoCell.m in Sources */,
@@ -4758,7 +4695,6 @@
 				132B94F321A6A95D007FFD6C /* HJTeacherInfoCell.m in Sources */,
 				1377CDDD219E66F900EFF59A /* HJTeacherMoreDetailViewController.m in Sources */,
 				13F6530A21BBE3DF00BAE0CE /* HJOrderDetailCourseMessageCell.m in Sources */,
-				131D73F52177302F00DC94C7 /* YJAlertview.m in Sources */,
 				13A7290C21A7EC2E00C04622 /* HJAddAccountViewController.m in Sources */,
 				13B25F8121957AB800DD3647 /* HJMyCardVoucherViewController.m in Sources */,
 				13A728F921A7E4D100C04622 /* HJWithDrawRecordCell.m in Sources */,

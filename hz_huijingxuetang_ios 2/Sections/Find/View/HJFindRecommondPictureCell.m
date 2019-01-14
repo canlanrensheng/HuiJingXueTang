@@ -25,6 +25,8 @@
 @property (nonatomic,strong) HJFindViewModel *viewModel;
 @property (nonatomic,strong) HJFindRecommondModel *model;
 
+@property (nonatomic,strong) NSIndexPath *indexPath;
+
 @end
 
 @implementation HJFindRecommondPictureCell
@@ -78,21 +80,40 @@
                     self.model.isinterest = 1;
                     // 刷新关注的列表
                     if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                        //点击推荐模块关注的时候
+                        //刷新关注模块的数据
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                        //本地刷新推荐模块的数据
+                        NSDictionary *para = @{@"row" : @(self.indexPath.row),
+                                               @"select" : @(1)
+                                               };
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"FindRecommendVCClickOperation" object:nil userInfo:para];
                     }else {
+                        //点击关注模块 刷新推荐模块的数据 不可能的情况因为关注模块不能点击关注，只能取消关注
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
                     }
                 }];
             } else {
                 [self.viewModel careOrCancleCareWithTeacherId:self.model.teacherid accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
                     button.selected = !button.selected;
-                     [self.backRefreshSubject sendNext:@(0)];
                     self.model.isinterest = 0;
                     // 刷新关注的列表
                     if(self.viewModel.findSegmentType == FindSegmentTypeRecommond) {
+                        //点击推荐模块的取消关注的时候
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCareData" object:nil userInfo:nil];
+                        //本地刷新推荐列表的数据
+                        NSDictionary *para = @{@"row" : @(self.indexPath.row),
+                                               @"select" : @(0)
+                                               };
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"FindRecommendVCClickOperation" object:nil userInfo:para];
                     }else {
+                        //点击关注模块取消选中的时候
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreFindCommondData" object:nil userInfo:nil];
+                        //本地刷新关注模块列表的数据
+                        NSDictionary *para = @{@"row" : @(self.indexPath.row),
+                                               @"select" : @(0)
+                                               };
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"FindCareVCClickOperation" object:nil userInfo:para];
                     }
                 }];
             }
@@ -167,7 +188,7 @@
             imaView.frame = CGRectMake((width + padding) * lie, (height + padding) * hang, width, height);
             imaView.backgroundColor = Background_Color;
             imaView.userInteractionEnabled = YES;
-            [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"占位图")];
+            [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
             [self.scrollView addSubview:imaView];
             UITapGestureRecognizer *ta = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
             [imaView addGestureRecognizer:ta];
@@ -190,6 +211,7 @@
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
     HJFindViewModel *listViewModel = (HJFindViewModel *)viewModel;
     self.viewModel = listViewModel;
+    self.indexPath = indexPath;
     HJFindRecommondModel *model = nil;
     if(listViewModel.findSegmentType == 0) {
         model = listViewModel.findArray[indexPath.row];
@@ -198,7 +220,7 @@
     }
     self.viewModel = (HJFindViewModel *)viewModel;
     self.model = model;
-    [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+    [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
     self.nameLabel.text = model.realname;
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;

@@ -37,7 +37,7 @@
             @strongify(self);
             if(_model.paystatus == 0) {
                 //等待支付 去支付按钮
-                 [[HJPayTool shareInstance] payWithOrderId:self.model.orderno couponid:self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @""];
+                [self payOperation];
             } else if (_model.paystatus == 1) {
                 //购买成功 去学习
                 if(self.model.courseResponses.count > 1) {
@@ -54,7 +54,7 @@
                 [TXAlertView showAlertWithTitle:@"温馨提示" message:@"确认要删除该订单吗?" cancelButtonTitle:@"取消" style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                     if (buttonIndex == 1) {
                         [self.viewModel deleteOrderWithOrderId:self.model.orderno success:^{
-                            [self.backSub sendNext:@""];
+                           [self.backSub sendNext:@""];
                         }];
                     }
                 } otherButtonTitles:@"确定", nil];
@@ -109,6 +109,46 @@
     self.right2Btn = right2Btn;
 }
 
+- (void)payOperation {
+    BOOL isLargeMoney = false;
+    for(CourseResponsesModel *model in _model.courseResponses) {
+        //不能推广是大额度
+        if(model.ispromote == 0) {
+            isLargeMoney = YES;
+        }
+    }
+    RACSubject *backSubject = [[RACSubject alloc] init];
+    @weakify(self);
+    [backSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self dealSureOrderBtnWithIsLargeMoney:isLargeMoney];
+    }];
+    NSString *orderId = self.model.orderno;
+    NSDictionary *para = @{@"isLargeMoney" : @(isLargeMoney),
+                           @"subject" : backSubject,
+                           @"orderId" : DealNil(orderId)
+                           };
+    [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+}
+
+//判断是小额还是大额
+- (void)dealSureOrderBtnWithIsLargeMoney:(BOOL)isLargeMoney {
+    //判断是大额支付还是小额支付
+    if(isLargeMoney) {
+        //大额联系客户
+        [TXAlertView showAlertWithTitle:@"温馨提示" message:@"您现在购买的慧鲸学堂专属课程金额较大，请联系慧鲸客服(0571-57571670)完成支付，谢谢合作。" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if (buttonIndex == 1) {
+                
+            }
+        } otherButtonTitles:@"我知道了", nil];
+    } else {
+        //小额支付
+        NSString *orderId = self.model.orderno;
+        NSString *couponid = self.viewModel.model.cashcouponid.length > 0 ? self.viewModel.model.cashcouponid : @"";
+        [[HJPayTool shareInstance] payWithOrderId:orderId couponid:couponid];
+    }
+}
+
 - (void)setModel:(HJMyOrderListModel *)model {
     _model = model;
     if(model.paystatus == 0) {
@@ -146,16 +186,13 @@
         [self.right1Btn setTitleColor:white_color forState:UIControlStateNormal];
         [self.right1Btn clipWithCornerRadius:kHeight(5.0) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(1.0)];
         
-        
-        
-        
     } else {
         //订单失效 删除订单
         self.right2Btn.hidden = YES;
-        self.right2Btn.backgroundColor = white_color;
-        [self.right2Btn setTitle:@"删除订单" forState:UIControlStateNormal];
-        [self.right2Btn setTitleColor:HEXColor(@"#666666") forState:UIControlStateNormal];
-        [self.right2Btn clipWithCornerRadius:kHeight(5.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(1.0)];
+        self.right1Btn.backgroundColor = white_color;
+        [self.right1Btn setTitle:@"删除订单" forState:UIControlStateNormal];
+        [self.right1Btn setTitleColor:HEXColor(@"#666666") forState:UIControlStateNormal];
+        [self.right1Btn clipWithCornerRadius:kHeight(5.0) borderColor:HEXColor(@"#999999") borderWidth:kHeight(1.0)];
     }
 }
 

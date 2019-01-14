@@ -187,6 +187,7 @@
         if(!cell){
             cell = [[HJSearchResultNoDataCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([HJSearchResultNoDataCell class])];
         }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
         return cell;
     }
@@ -195,6 +196,7 @@
             if(indexPath.section == 0) {
                 HJSearchResultCourceCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultCourceCell class]) forIndexPath:indexPath];
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 if(self.viewModel.model.courseResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.courseResponses.count){
                         CourseResponses *model = self.viewModel.model.courseResponses[indexPath.row];
@@ -207,6 +209,7 @@
                 return cell;
             } else if (indexPath.section == 1) {
                 HJSearchResultTeacherCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultTeacherCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.teacherResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.teacherResponses.count){
@@ -220,6 +223,7 @@
                 return cell;
             } else if (indexPath.section == 2) {
                 HJSearchResultLiveCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultLiveCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.courseLiveResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.courseLiveResponses.count){
@@ -233,6 +237,7 @@
                 return cell;
             } else {
                 HJSearchResultInfomationCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultInfomationCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.informationResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.informationResponses.count){
@@ -249,6 +254,7 @@
             //课程
             if(indexPath.section == 0) {
                 HJSearchResultCourceCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultCourceCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.courseResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.courseResponses.count){
@@ -262,6 +268,7 @@
                 return cell;
             } else {
                 HJSearchResultTeacherCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultTeacherCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.teacherResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.teacherResponses.count){
@@ -278,6 +285,7 @@
             //直播
             if(indexPath.section == 0) {
                 HJSearchResultLiveCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultLiveCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.courseLiveResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.courseLiveResponses.count){
@@ -291,6 +299,7 @@
                 return cell;
             } else {
                 HJSearchResultTeacherCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSearchResultTeacherCell class]) forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.searchResultTableView.separatorColor = HEXColor(@"#EAEAEA");
                 if(self.viewModel.model.teacherResponses.count  > 0){
                     if (indexPath.row < self.viewModel.model.teacherResponses.count){
@@ -311,6 +320,7 @@
     if(!cell){
         cell = [[HJSearchResultListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([HJSearchResultListCell class])];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
     NSArray* reversedArray = [[self.historyArray reverseObjectEnumerator] allObjects];
     cell.searchResultLabel.text = reversedArray[indexPath.row];
@@ -723,12 +733,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    kRepeatClickTime(1.0);
+//    kRepeatClickTime(1.0);
     if(self.searchText.text.length > 0) {
         if(self.viewModel.searchResultType == SearchResultTypeAll) {
             if(indexPath.section == 0) {
+                //课程
                 if([APPUserDataIofo AccessToken].length <= 0) {
-//                    ShowMessage(@"您还未登录");
                     [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                     return;
                 }
@@ -738,14 +748,14 @@
                 }
                
             } else if (indexPath.section == 1) {
+                //老师
                 if(indexPath.row < self.viewModel.model.teacherResponses.count) {
                     TeacherResponses *model = self.viewModel.model.teacherResponses[indexPath.row];
                     [DCURLRouter pushURLString:@"route://teacherDetailVC" query:@{@"teacherId" : model.userid} animated:YES];
                 }
-               
             } else if (indexPath.section == 2) {
+                //直播
                 if (indexPath.row  < self.viewModel.model.courseLiveResponses.count) {
-                    kRepeatClickTime(1.0);
                     CourseLiveModel *model = self.viewModel.model.courseLiveResponses[indexPath.row];
                     NSString *liveId = @"";
                     if (model.l_courseid.length > 0) {
@@ -789,6 +799,7 @@
                     }];
                 }
             } else {
+                //文章
                 if(indexPath.row < self.viewModel.model.informationResponses.count) {
                     InformationResponses *model = self.viewModel.model.informationResponses[indexPath.row];
                     NSDictionary *para = @{@"infoId" : model.informationId
@@ -799,6 +810,7 @@
         } else if (self.viewModel.searchResultType == SearchResultTypeCourse) {
             //课程
             if(indexPath.section == 0) {
+                //课程
                 if([APPUserDataIofo AccessToken].length <= 0) {
 //                    ShowMessage(@"您还未登录");
                     [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
@@ -810,16 +822,15 @@
                 }
                 
             } else {
+                //老师
                 if(indexPath.row < self.viewModel.model.teacherResponses.count)  {
                     TeacherResponses *model = self.viewModel.model.teacherResponses[indexPath.row];
                     [DCURLRouter pushURLString:@"route://teacherDetailVC" query:@{@"teacherId" : model.userid} animated:YES];
                 }
-               
             }
         } else {
             //直播
             if(indexPath.section == 0) {
-                kRepeatClickTime(1.0);
                 if([APPUserDataIofo AccessToken].length <= 0) {
 //                    ShowMessage(@"您还未登录");
                     [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
@@ -874,11 +885,9 @@
                 }
                
             } else {
-                if(indexPath.row < self.viewModel.model.courseResponses.count) {
-                    InformationResponses *model = self.viewModel.model.informationResponses[indexPath.row];
-                    NSDictionary *para = @{@"infoId" : model.informationId
-                                           };
-                    [DCURLRouter pushURLString:@"route://infoDetailVC" query:para animated:YES];
+                if(indexPath.row < self.viewModel.model.teacherResponses.count)  {
+                    TeacherResponses *model = self.viewModel.model.teacherResponses[indexPath.row];
+                    [DCURLRouter pushURLString:@"route://teacherDetailVC" query:@{@"teacherId" : model.userid} animated:YES];
                 }
             }
         }

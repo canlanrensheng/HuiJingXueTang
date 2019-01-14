@@ -134,7 +134,11 @@
         [self.viewModel addNewsCommentWithInfoId:infoId content:x Success:^{
             weakSelf.viewModel.page = 1;
             [weakSelf.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-                [weakSelf.tableView reloadData];
+//                [weakSelf.tableView reloadData];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:1];
+                    [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                });
             }];
         }];
         weakSelf.bottomView.inputTextField.text = @"";
@@ -168,7 +172,7 @@
         NSDate *date = [NSDate dateWithString:self.viewModel.model.tdays formatString:@"yyyy-MM-dd HH:mm:ss"];
         NSString *dateString = [NSString stringWithFormat:@"%ld年%@月%@日",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
         self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %ld",dateString,self.viewModel.model.realname,self.viewModel.model.readcount.integerValue];
-        [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
@@ -203,8 +207,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

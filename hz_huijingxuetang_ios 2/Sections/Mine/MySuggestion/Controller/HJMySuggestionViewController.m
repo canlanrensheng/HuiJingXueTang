@@ -150,7 +150,7 @@ static const  NSInteger MaxCount  = 9;
             imaView.userInteractionEnabled = YES;
             [self.scrollView addSubview:imaView];
             if([assets[i] isKindOfClass:[NSString class]]) {
-                [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"占位图")];
+                [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
             } else {
                 imaView.image = assets[i];
             }

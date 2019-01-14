@@ -20,17 +20,17 @@
 - (void)viewDidLoad {
     self.tableViewStyle = UITableViewStyleGrouped;
     [super viewDidLoad];
-    
 }
 
 - (void)hj_configSubViews{
+    self.tableView.mj_footer.hidden = YES;
     [self.tableView registerClassCell:[HJSchoolDetailReviewPastCell class]];
-    
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
 }
 
+//数据加载
 - (void)setViewModel:(HJSchoolLiveDetailViewModel *)viewModel {
     _viewModel = viewModel;
     self.viewModel.tableView = self.tableView;
@@ -45,6 +45,7 @@
 
 - (void)hj_refreshData {
     @weakify(self);
+    //下拉刷新
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page = 1;
@@ -61,14 +62,16 @@
             [self.tableView.mj_footer resetNoMoreData];
         });
     }];
-    
+    //上拉加载
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getPastCourseListDataWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -76,6 +79,8 @@
         }
     }];
 }
+
+#pragma mark UITableView delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return  kHeight(48.0);
 }
@@ -102,6 +107,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < self.viewModel.pastListArray.count) {
+        //延时防止重复点击
         kRepeatClickTime(1.0);
         HJPastListModel *model = self.viewModel.pastListArray[indexPath.row];
         self.lastModel.isPlay = NO;
@@ -113,13 +119,22 @@
         if([NSString dealNullStringWithObject:playUrl].length <= 0) {
             playUrl = @"";
         }
+        RACSubject *reloadTeacherCarOrNotCarSubject = [[RACSubject alloc] init];
+        @weakify(self);
+        [reloadTeacherCarOrNotCarSubject subscribeNext:^(id  _Nullable x) {
+            @strongify(self);
+            if(self.careSubject) {
+                [self.careSubject sendNext:x];
+            }
+        }];
         [DCURLRouter pushURLString:@"route://liveReviewVC" query:@{
                                                                    @"videourl" : playUrl,
                                                                    @"liveId" : self.viewModel.liveId,
                                                                    @"teacherId" : self.viewModel.teacherId,
                                                                    @"isFree" : @(self.viewModel.isFree) ,
                                                                    @"courseid" : model.courseid ,
-                                                                   @"coursename" : model.coursename.length > 0 ? model.coursename : @""
+                                                                   @"coursename" : model.coursename.length > 0 ? model.coursename : @"",
+                                                                   @"subject" : reloadTeacherCarOrNotCarSubject
                                                                    } animated:YES];
     }
 }
@@ -128,5 +143,12 @@
     return 0.000001f;
 }
 
+
+- (RACSubject *)careSubject {
+    if(!_careSubject) {
+        _careSubject = [[RACSubject alloc] init];
+    }
+    return  _careSubject;
+}
 
 @end

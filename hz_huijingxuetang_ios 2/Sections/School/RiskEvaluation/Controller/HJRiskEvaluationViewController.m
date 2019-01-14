@@ -113,15 +113,23 @@
     self.title = @"风险评估";
     NSArray *selectArray = self.params[@"selectMarr"];
     [self.selectMarr addObjectsFromArray:selectArray];
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    backButton.frame = CGRectMake(0, 0, 26, 40);
+    [backButton setImage:[UIImage imageNamed:@"导航返回按钮"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backSelf) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *leftBarItem1 = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItems = @[leftBarItem1];
 }
+
+- (void)backSelf {
+     [DCURLRouter popToRootViewControllerAnimated:YES];
+}
+
 
 - (void)hj_configSubViews{
     self.tableView.backgroundColor = white_color;
-    
     self.numberOfSections = 1;
-    
     self.sectionFooterHeight = 0.001f;
-    
     [self.tableView registerClass:[HJRiskEvaluationTitleCell class] forCellReuseIdentifier:NSStringFromClass([HJRiskEvaluationTitleCell class])];
     [self.tableView registerClassCell:[HJRiskEvaluationAnswerCell class]];
     
@@ -139,8 +147,6 @@
         NSString *page = self.params[@"index"];
         self.procress.progressValue = (page.integerValue + 1) * kWidth(110) / self.viewModel.riskEvaluationListArray.count;
         self.pageCountLabel.text = [NSString stringWithFormat:@"%ld/%ld",page.integerValue + 1,self.viewModel.riskEvaluationListArray.count];
-        //        Question *model = self.viewModel.riskEvaluationListArray[page.integerValue];
-        //        Answer *anwerModel = model.answer.firstObject;
         if (page.integerValue != 0) {
             [self.view addSubview:self.lastItemButton];
             [self.lastItemButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -162,16 +168,10 @@
         NSString *page = self.params[@"index"];
         Question *model = self.viewModel.riskEvaluationListArray[page.integerValue];
         return model.questionCellHeight;
-//        NSString *questionDes = [NSString stringWithFormat:@"%@：%@",model.classname,model.questionname];
-//        CGFloat cellHeight = [questionDes calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT) font:BoldFont(font(15))].height;
-//        return kHeight(34.0) + cellHeight;
     }
     NSString *page = self.params[@"index"];
     Question *model = self.viewModel.riskEvaluationListArray[page.integerValue];
     Answer *answerModel = model.answer[indexPath.row];
-//    NSString *anwerDes = [NSString stringWithFormat:@"%@",answerModel.answername];
-//    CGFloat cellHeight = [anwerDes calculateSize:CGSizeMake(Screen_Width - kWidth(40), MAXFLOAT) lineSpace:kHeight(5.0) font:MediumFont(font(13))].height;
-//    return  kHeight(28.0) + cellHeight;
     return answerModel.answerCellHeight + kHeight(24.0);
 }
 
@@ -197,7 +197,9 @@
         NSString *page = self.params[@"index"];
         Question *model = self.viewModel.riskEvaluationListArray[page.integerValue];
         NSString *questionDes = [NSString stringWithFormat:@"%@：%@",model.classname,model.questionname];
-        cell.titleTextLabel.attributedText = [questionDes attributeWithStr:[NSString stringWithFormat:@"%@：",model.classname] color:HEXColor(@"#22476B") font:BoldFont(font(15))];
+        cell.titleTextLabel.attributedText = [questionDes attributeWithStr:[NSString stringWithFormat:@"%@：",model.classname] color:HEXColor(@"#22476B") font:BoldFont(font(14))];
+        
+//        cell.backgroundColor = red_color;
         return cell;
     }
     HJRiskEvaluationAnswerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJRiskEvaluationAnswerCell class]) forIndexPath:indexPath];
@@ -209,6 +211,7 @@
         Answer *answerModel = model.answer[indexPath.row];
         cell.model = answerModel;
     }
+//    cell.backgroundColor = blue_color;
     return cell;
 }
 
@@ -225,9 +228,7 @@
             [self.selectMarr addObject:answerModel.answerid];
             
             DLog(@"获取到的选中的答案的ids是:%@",self.selectMarr);
-            NSString *courseId = self.params[@"courseId"];
-            NSDictionary *para = @{@"index" : [NSString stringWithFormat:@"%ld",page.integerValue + 1],@"selectMarr" : self.selectMarr,@"courseId" : courseId.length > 0 ? courseId : @"",
-                                   @"isKillPrice" : self.params[@"isKillPrice"]
+            NSDictionary *para = @{@"index" : [NSString stringWithFormat:@"%ld",page.integerValue + 1],@"selectMarr" : self.selectMarr
                                    };
             [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
         } else {
@@ -239,20 +240,13 @@
             DLog(@"获取到的选中的答案的ids是:%@",self.selectMarr);
             //提交风险评估的数据操作
             NSString *ids = [self.selectMarr componentsJoinedByString:@","];
-            ShowHint(@"正在提交...");
+//            ShowHint(@"正在提交...");
             [self.viewModel submmitRiskEvaluationDataWithAnserids:ids Success:^{
-                hideHud();
+//                hideHud();
                 [APPUserDataIofo getEval:@"1"];
                 ShowMessage(@"评估成功");
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    [DCURLRouter popViewControllerWithTimes:self.viewModel.riskEvaluationListArray.count animated:YES];
-                    NSString *courseId = self.params[@"courseId"];
-                    NSString *coursepic = self.params[@"coursepic"];
-                    NSDictionary *para = @{@"courseId" : courseId.length > 0 ? courseId : @"",
-                                           @"isKillPrice" : self.params[@"isKillPrice"],
-                                           @"coursepic" : coursepic.length > 0 ? coursepic : @""
-                                           };
-                    [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [DCURLRouter popToRootViewControllerAnimated:YES];
                 });
             }];
         }

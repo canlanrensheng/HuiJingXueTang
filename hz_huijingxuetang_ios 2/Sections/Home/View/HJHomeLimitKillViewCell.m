@@ -64,7 +64,7 @@
         HJHomeLimitKillModel *model = assets[i];
         //图片
         UIImageView *imaV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, kHeight(85.0))];
-        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.top.equalTo(backView);

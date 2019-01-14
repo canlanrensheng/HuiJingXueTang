@@ -38,7 +38,8 @@
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
                 NSString *dataString = dic[@"data"];
-                success(dataString);
+//                DLog(@"获取到的VIP的数据是:%@",dataString);
+                success(dataString.integerValue);
             } else {
                 ShowError([dic objectForKey:@"msg"]);
             }

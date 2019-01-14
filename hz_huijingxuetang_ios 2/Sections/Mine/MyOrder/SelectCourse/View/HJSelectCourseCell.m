@@ -21,7 +21,6 @@
 
 - (void)hj_configSubViews {
     UIImageView *imaV = [[UIImageView alloc] init];
-//    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -67,7 +66,7 @@
 
 - (void)setModel:(CourseResponsesModel *)model {
     _model = model;
-    [self.courseImageView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+    [self.courseImageView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
     self.courseNameLabel.text = model.coursename;
     NSString *isToStudy = VisibleViewController().params[@"isToStudy"];
     if([isToStudy integerValue] == 1) {

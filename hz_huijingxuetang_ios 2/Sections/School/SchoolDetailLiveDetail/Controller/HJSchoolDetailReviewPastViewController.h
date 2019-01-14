@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) HJSchoolLiveDetailViewModel *viewModel;
 
+@property (nonatomic,strong) RACSubject *careSubject;
+
 @end
 
 NS_ASSUME_NONNULL_END

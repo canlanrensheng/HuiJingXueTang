@@ -22,8 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger totalpage;
 @property (nonatomic,assign) NSInteger currentpage;
 @property (nonatomic,assign) NSInteger page;
+//是否逾期邀请好友 1 逾期未邀请, 0 逾期进行邀请
+@property (nonatomic,assign) NSInteger overdueInvitationStatus;
 @property (nonatomic,strong) NSMutableArray *courseListArray;
-- (void)getShareCourceListSuccess:(void (^)(void))success;
+- (void)getShareCourceListSuccess:(void (^)(BOOL successFlag))success;
 
 //获取推广收益信息
 @property (nonatomic,strong) HJPromoteProfitModel *profitModel;

@@ -19,6 +19,13 @@
 #import "HJMyOrderViewController.h"
 
 #import "HJPlaceHoderViewController.h"
+
+#import <Contacts/Contacts.h>
+#import <AddressBook/AddressBookDefines.h>
+#import <AddressBook/ABRecord.h>
+
+#import <Bugly/Bugly.h>
+
 #define CheckOnLineVersion @"1.0.0"
 @interface AppDelegate ()
 
@@ -61,21 +68,8 @@
                             [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
                             [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
                             
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-                                
-                                //设置根视图控制器
-                                [self setRootViewController:application];
-                                
-                                [self initParams];
-                                //                    [self autoLogin];
-                                [self getNIMSDK];
-                                [self registerSharePlatforms];
-                                [self location];
-                                //微信支付注册
-                                [WXApi registerApp:@"wx9da5846d2c469754"];
-                                
-                            });
+                            //加载配置
+                            [self loadApplicationConfigWithApplication:application];
                         } else if (code == 10) {
                             //账号被挤掉
                             NSDictionary *dic = [responseObject objectForKey:@"data"];
@@ -83,21 +77,8 @@
                             [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
                             [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
 
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-                                //设置根视图控制器
-                                [self setRootViewController:application];
-
-                                [self initParams];
-                                //                    [self autoLogin];
-                                [self getNIMSDK];
-                                [self registerSharePlatforms];
-                                [self location];
-                                //微信支付注册
-                                [WXApi registerApp:@"wx9da5846d2c469754"];
-
-                            });
+                            //加载配置
+                            [self loadApplicationConfigWithApplication:application];
                         } else{
                             ShowMessage([responseObject objectForKey:@"msg"]);
                         }
@@ -106,21 +87,8 @@
                     }];
                 } else {
                     //没有登陆
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-                        
-                        //设置根视图控制器
-                        [self setRootViewController:application];
-                        
-                        [self initParams];
-                        //                    [self autoLogin];
-                        [self getNIMSDK];
-                        [self registerSharePlatforms];
-                        [self location];
-                        //微信支付注册
-                        [WXApi registerApp:@"wx9da5846d2c469754"];
-                        
-                    });
+                    //加载配置
+                    [self loadApplicationConfigWithApplication:application];
                 }
             } else {
                 ShowError([responseObject objectForKey:@"msg"]);
@@ -133,11 +101,103 @@
     return NO;
 }
 
+//加载配置
+- (void)loadApplicationConfigWithApplication:(UIApplication *)application {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        //设置根视图控制器
+        [self setRootViewController:application];
+        
+        [self initParams];
+        //                    [self autoLogin];
+        [self getNIMSDK];
+        [self registerSharePlatforms];
+        [self location];
+        //微信支付注册
+        [WXApi registerApp:@"wx9da5846d2c469754"];
+        //Bugly
+        [Bugly startWithAppId:@"820d27c14f"];
+    });
+}
+
+//#pragma mark 请求通讯录权限
+//- (void)requestContactAuthorAfterSystemVersion9{
+//    CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
+//    if (status == CNAuthorizationStatusNotDetermined) {
+//        CNContactStore *store = [[CNContactStore alloc] init];
+//        [store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError*  _Nullable error) {
+//            if (error) {
+//                DLog(@"授权失败");
+//            }else {
+//                DLog(@"成功授权");
+//                [self openContact];
+//            }
+//        }];
+//    } else if(status == CNAuthorizationStatusRestricted) {
+//        DLog(@"用户拒绝");
+//        [self showAlertViewAboutNotAuthorAccessContact];
+//    } else if (status == CNAuthorizationStatusDenied) {
+//        DLog(@"用户拒绝");
+//        [self showAlertViewAboutNotAuthorAccessContact];
+//    } else if (status == CNAuthorizationStatusAuthorized) {
+//        //已经授权
+//        //有通讯录权限-- 进行下一步操作
+//        [self openContact];
+//    }
+//}
+//
+////有通讯录权限-- 进行下一步操作
+//- (void)openContact{
+//    // 获取指定的字段,并不是要获取所有字段，需要指定具体的字段
+//    NSArray *keysToFetch = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey];
+//    CNContactFetchRequest *fetchRequest = [[CNContactFetchRequest alloc] initWithKeysToFetch:keysToFetch];
+//    CNContactStore *contactStore = [[CNContactStore alloc] init];
+//    [contactStore enumerateContactsWithFetchRequest:fetchRequest error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+//
+//        NSString *givenName = contact.givenName;
+//        NSString *familyName = contact.familyName;
+//        NSLog(@"givenName=%@, familyName=%@", givenName, familyName);
+//        //拼接姓名
+////        NSString *nameStr = [NSString stringWithFormat:@"%@%@",contact.familyName,contact.givenName];
+//        NSArray *phoneNumbers = contact.phoneNumbers;
+//
+//        NSMutableArray *marr = [NSMutableArray array];
+//        for (CNLabeledValue *labelValue in phoneNumbers) {
+//            //遍历一个人名下的多个电话号码
+//            CNPhoneNumber *phoneNumber = labelValue.value;
+//            NSString * string = phoneNumber.stringValue ;
+//            //去掉电话中的特殊字符
+//            string = [string stringByReplacingOccurrencesOfString:@"+86" withString:@""];
+//            string = [string stringByReplacingOccurrencesOfString:@"-" withString:@""];
+//            string = [string stringByReplacingOccurrencesOfString:@"(" withString:@""];
+//            string = [string stringByReplacingOccurrencesOfString:@")" withString:@""];
+//            string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+//            string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+//
+//            [marr addObject:string];
+//        }
+////        DLog(@"获取到的数据是:%@",marr);
+//    }];
+//
+//}
+//
+////提示没有通讯录权限
+//- (void)showAlertViewAboutNotAuthorAccessContact{
+//
+//    UIAlertController *alertController = [UIAlertController
+//                                          alertControllerWithTitle:@"请授权通讯录权限"
+//                                          message:@"请在iPhone的\"设置-隐私-通讯录\"选项中,允许慧鲸学堂访问你的通讯录"
+//                                          preferredStyle: UIAlertControllerStyleAlert];
+//
+//    UIAlertAction *OKAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
+//    [alertController addAction:OKAction];
+//    [VisibleViewController() presentViewController:alertController animated:YES completion:nil];
+//}
+
 /**
  *  设置全局支持方向，然后在控制器中单独配置各自的支持方向
  */
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
-{
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
     return UIInterfaceOrientationMaskAll;
 }
 
@@ -222,11 +282,12 @@
                         return;
                     }
                 }
-                
                 [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
             } else {
-                //打赏成功
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+                if ([resultDic[@"resultStatus"] isEqualToString:@"9000"]) {
+                    //打赏成功
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+                }
             }
         }];
 
@@ -256,7 +317,10 @@
                 [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
             } else {
                 //打赏成功
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+                if ([resultDic[@"resultStatus"] isEqualToString:@"9000"]) {
+                    //打赏成功
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+                }
             }
         }];
     }
@@ -293,23 +357,6 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-//- (void)autoLogin{
-//    if ([APPUserDataIofo AccessToken].length > 0) {
-//        [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
-//            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-//            if (code == 200) {
-//                NSDictionary *dic = [responseObject objectForKey:@"data"];
-//                [APPUserDataIofo writeAccessToken:[dic objectForKey:@"accesstoken"]];
-//                [APPUserDataIofo getUserID:[dic objectForKey:@"userid"]];
-//                [APPUserDataIofo getEval:[NSString stringWithFormat:@"%@",[dic objectForKey:@"eval"]]];
-//            }else{
-//                ShowMessage([responseObject objectForKey:@"msg"]);
-//            }
-//        } failure:^(NSString *error) {
-//            ShowMessage(error);
-//        }];
-//    }
-//}
 
 //网易云信
 - (void)getNIMSDK{
@@ -345,17 +392,20 @@
              [DCURLRouter pushURLString:@"route://myOrderVC" query:@{@"isFromOrderPay" : @"YES"} animated:YES];
         }else {
             //打赏成功
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+            if(resp.errCode == WXSuccess) {
+                DLog(@"微信打赏的次数是");
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftRewardSuccessNoty" object:nil userInfo:nil];
+            }
         }
     }
-    //微信登陆
-    if([resp isKindOfClass:[SendAuthResp class]]) {
-        SendAuthResp *resp = (SendAuthResp *)resp;
-        if(resp.errCode == WXSuccess) {
-            
-        }
-        DLog(@"获取到的code的数据是:%@ %ld %@",resp.code,resp.errCode,resp.state);
-    }
+//    //微信登陆
+//    if([resp isKindOfClass:[SendAuthResp class]]) {
+//        SendAuthResp *resp = (SendAuthResp *)resp;
+//        if(resp.errCode == WXSuccess) {
+//
+//        }
+//        DLog(@"获取到的code的数据是:%@ %ld %@",resp.code,resp.errCode,resp.state);
+//    }
     
 }
 

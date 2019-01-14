@@ -34,6 +34,7 @@
     return _viewModel;
 }
 
+//筛选的视图
 - (HJSchoolClassSelectView *)selectView {
     if(!_selectView){
         _selectView = [[HJSchoolClassSelectView alloc] initWithFrame:CGRectMake(-Screen_Width, kNavigationBarHeight, Screen_Width, Screen_Height - kNavigationBarHeight)];
@@ -55,6 +56,7 @@
     return _selectView;
 }
 
+//加载页面视图
 - (void)hj_configSubViews{
     [self.tableView registerClass:[HJSchoolClassCell class] forCellReuseIdentifier:NSStringFromClass([HJSchoolClassCell class])];
     //点击的处理
@@ -78,13 +80,13 @@
     
     self.toolView = toolView;
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0), 0, 0, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0), 0, kBottomBarHeight, 0));
     }];
-    
     //添加筛选的试图
     [[UIApplication sharedApplication].keyWindow addSubview:self.selectView];
 }
 
+//加载数据请求
 - (void)hj_loadData {
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.tableView = self.tableView;
@@ -97,6 +99,7 @@
     }];
 }
 
+//监听通知的操作
 - (void)hj_bindViewModel {
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshVideoCourseListData" object:nil] subscribeNext:^(id x) {
@@ -116,13 +119,17 @@
     }];
 }
 
+//上拉加载和下拉刷新的操作
 - (void)hj_refreshData {
     @weakify(self);
+    //下拉刷新
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page = 1;
         [self.viewModel getListWithSuccess:^{
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
@@ -130,13 +137,16 @@
         });
     }];
     
+    //上拉加载
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getListWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -145,6 +155,7 @@
     }];
 }
 
+#pragma mark UITableView delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return  kHeight(111.0);
 }
@@ -161,7 +172,6 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJSchoolClassCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSchoolClassCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setViewModel:self.viewModel indexPath:indexPath];
     return cell;
 }
@@ -170,8 +180,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < self.viewModel.videoCourseListArray.count){
         kRepeatClickTime(1.0);
-        if([APPUserDataIofo AccessToken].length <= 0) {
-//            ShowMessage(@"您还未登录");
+        if ([APPUserDataIofo AccessToken].length <= 0) {
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }

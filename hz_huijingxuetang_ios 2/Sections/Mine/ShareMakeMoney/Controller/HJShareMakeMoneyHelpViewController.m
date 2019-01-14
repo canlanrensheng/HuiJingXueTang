@@ -32,12 +32,20 @@
 }
 
 - (void)hj_loadData {
-    
+    NSString *fromShare = self.params[@"fromShare"];
+    if([fromShare boolValue]) {
+        //滚动到指定的位置
+//         CGPoint offset = CGPointMake(0, (Screen_Width / 375 * 1800.0));
+//         [self.tableView setContentOffset:offset animated:YES];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]  atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 }
+
+
 
 #pragma UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return  kHeight(100.0);
+    return  (Screen_Width / 375.0 * 2631.0) + kHeight(28.0);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -51,7 +59,7 @@
     HJShareMakeMoneyHelpCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJShareMakeMoneyHelpCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    cell.helpImageView.image = V_IMAGE(@"");
+    cell.helpImageView.image = V_IMAGE(@"帮助-1");
     return cell;
 }
 

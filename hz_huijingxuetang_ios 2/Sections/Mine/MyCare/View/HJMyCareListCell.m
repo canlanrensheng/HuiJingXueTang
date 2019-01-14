@@ -70,7 +70,7 @@
     HJMyCareViewModel *listViewModel = (HJMyCareViewModel *)viewModel;
     HJMyCareListModle *model = listViewModel.myCareArray[indexPath.row];
     if (model) {
-        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.titleTextLabel.text = model.realname;
         self.desTextLabel.text = model.teacprofessional;
     }

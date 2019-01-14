@@ -126,8 +126,7 @@
     }];
 }
 
-
-
+//添加提问的按钮
 - (UIButton *)addReplyBtn {
     if(!_addReplyBtn) {
         _addReplyBtn = [UIButton creatButton:^(UIButton *button) {

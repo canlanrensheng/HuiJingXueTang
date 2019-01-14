@@ -42,7 +42,9 @@
     self.viewModel.tableView = self.tableView;
     self.viewModel.page = 1;
     [self.viewModel getListWithSuccess:^{
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -52,7 +54,9 @@
         @strongify(self);
         self.viewModel.page = 1;
         [self.viewModel getListWithSuccess:^{
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
@@ -65,8 +69,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getListWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

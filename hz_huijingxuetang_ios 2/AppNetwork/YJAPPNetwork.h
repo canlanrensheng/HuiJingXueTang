@@ -10,6 +10,9 @@
 
 @interface YJAPPNetwork : NSObject
 
+//生成电子签名操作
++(void)CreateEleSignatureWithOrderId:(NSString *)orderId picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
+
 //上线马甲包控制
 +(void)SetOnlineMaJiaBaoWithCheckVersion:(NSString *)checkVersion success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure;
 

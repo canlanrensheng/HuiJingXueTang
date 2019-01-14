@@ -13,13 +13,16 @@
 - (void)hj_configSubViews {
     [self addSubview:self.helpImageView];
     [self.helpImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.equalTo(self);
+        make.top.equalTo(self).offset(kHeight(28.0));
+        make.bottom.equalTo(self);
+        make.left.right.equalTo(self);
     }];
 }
 
 - (UIImageView *)helpImageView {
     if(!_helpImageView) {
         _helpImageView = [[UIImageView alloc] init];
+        _helpImageView.userInteractionEnabled = YES;
     }
     return _helpImageView;
 }

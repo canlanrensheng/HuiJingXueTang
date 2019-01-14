@@ -48,9 +48,16 @@
         NSDictionary *parameters = nil;
         if(teacherid.length > 0) {
             //老师的动态
-            parameters =  @{
-                            @"teacherid" : teacherid.length > 0 ? teacherid : @""
-                            };
+            if( [APPUserDataIofo AccessToken].length <= 0) {
+                parameters =  @{
+                                @"teacherid" : teacherid.length > 0 ? teacherid : @""
+                                };
+            } else {
+                parameters =  @{
+                                @"teacherid" : teacherid.length > 0 ? teacherid : @"",
+                                @"accesstoken" : [APPUserDataIofo AccessToken]
+                                };
+            }
             if(MaJia) {
                 parameters = @{
                                @"teacherid" : teacherid.length > 0 ? teacherid : @"",
@@ -102,12 +109,6 @@
                     NSDictionary *daDic = stocklistArr[i];
                     HJFindRecommondModel *model = [HJFindRecommondModel mj_objectWithKeyValues:daDic];
                     CGFloat height = [model.dynamiccontent calculateSize:CGSizeMake(Screen_Width - kWidth(65), MAXFLOAT) font:MediumFont(font(13))].height;
-                    
-////                    if(i == stocklistArr.count - 1) {
-//                        model.dynamiccontent = @"发表内容";
-//                        model.dynamicvideo = @"http://vodcvzretw1.vod.126.net/vodcvzretw1/fd94631e-92dd-4beb-a806-33efe5604a98.mp4";
-//                        model.dynamiclinkid = @"";
-////                    }
                     
                     NSMutableArray *picArr = [[NSMutableArray alloc] init];
                     if(model.dynamicpic1.length > 0) {

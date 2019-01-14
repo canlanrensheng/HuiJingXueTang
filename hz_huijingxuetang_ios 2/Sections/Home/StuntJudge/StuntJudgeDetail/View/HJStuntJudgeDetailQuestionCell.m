@@ -92,7 +92,7 @@
 }
 
 - (void)setModel:(HJStuntJudgeListModel *)model {
-    [self.iconImageV sd_setImageWithURL:URL(model.createiconurl) placeholderImage:V_IMAGE(@"默认头像")];
+    [self.iconImageV sd_setImageWithURL:URL(model.createiconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
     self.nameLabel.text = model.createname.length > 0 ? model.createname : @"咨询用户";
     if (model.createtime) {
         self.dateLabel.text = [model.createtime componentsSeparatedByString:@" "].firstObject;

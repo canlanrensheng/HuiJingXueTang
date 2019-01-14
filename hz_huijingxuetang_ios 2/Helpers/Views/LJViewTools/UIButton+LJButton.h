@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <objc/runtime.h>
 @interface UIButton(UIButton)
 + (UIButton *)creatButton:(void(^)(UIButton *button))block;
 /*
@@ -60,4 +60,9 @@
 
 //设置左文字右图片
 - (void)setButtonLeftTextAndRightImage;
+
+//扩大按钮的点击的区域的方法
+- (void)setEnlargeEdge:(CGFloat) size;
+- (void)setEnlargeEdgeWithTop:(CGFloat) top right:(CGFloat) right bottom:(CGFloat) bottom left:(CGFloat) left;
+
 @end

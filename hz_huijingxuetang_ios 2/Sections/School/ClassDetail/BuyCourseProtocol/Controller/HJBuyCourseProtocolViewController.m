@@ -53,7 +53,7 @@
 - (void)hj_setNavagation {
     self.title = @"购课协议";
     self.view.backgroundColor = white_color;
-    self.navigationItem.leftBarButtonItem = [self createBackButton];
+//    self.navigationItem.leftBarButtonItem = [self createBackButton];
 }
 
 - (UIActivityIndicatorView *)indicatorView {
@@ -134,7 +134,16 @@
         make.right.equalTo(self.view).offset(-kWidth(10));
         make.bottom.equalTo(self.view).offset(-(kHeight(49) + KHomeIndicatorHeight));
     }];
-    NSURLRequest *reuest = [NSURLRequest requestWithURL:URL(@"https://www.huijingschool.com/company/protocol.html")];
+    //小额协议
+//    https://www.huijingschool.com/company/hj_protocol.html
+    //大额协议
+//    https://www.huijingschool.com/company/protocol.html
+    NSURL *url = URL(@"https://www.huijingschool.com/company/hj_protocol.html");
+    NSNumber *isLargeMoney = self.params[@"isLargeMoney"];
+    if([isLargeMoney boolValue]) {
+        url = URL(@"https://www.huijingschool.com/company/protocol.html");
+    }
+    NSURLRequest *reuest = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:reuest];
     
     //加载试图
@@ -152,61 +161,79 @@
 
 //提交的操作
 - (void)onSubmitBtn:(UIImage *)signatureImg {
-//    UIImageWriteToSavedPhotosAlbum(signatureImg, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *)self);
+//    NSString *isKillPrice = self.params[@"isKillPrice"];
+//    NSString *coursepic = self.params[@"coursepic"];
+//    if([isKillPrice intValue] == 1) {
+//        //生成砍价的订单
+//        NSString *courseId = self.params[@"courseId"];
+//        NSString *base64String = [self UIImageToBase64Str:signatureImg];
+//        ShowHint(@"");
+//        [YJAPPNetwork CreateKillPriceOrderWithAccesstoken:[APPUserDataIofo AccessToken] courseId:courseId picData:base64String success:^(NSDictionary *responseObject) {
+//            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+//            hideHud();
+//            if (code == 200) {
+//                NSString *orderid = [responseObject objectForKey:@"data"];
+//                //分享的操作
+//                NSString *courceName = @"嗨！我超喜欢它，求求你帮我砍一刀吧！爱你哟！！";
+//                NSString *coursedes = @"慧鲸学堂 全民砍价 乐享好课！在有效时限内砍价到最低价，即可享受最大购课优惠！";
+//                id shareImg = coursepic;
+//                if(coursepic.length <= 0) {
+//                    shareImg = V_IMAGE(@"shareImg");
+//                }
+//
+//                NSString *shareUrl = [NSString stringWithFormat:@"%@bargain?orderid=%@",API_SHAREURL,orderid];
+//                if([APPUserDataIofo UserID].length > 0) {
+//                    shareUrl = [NSString stringWithFormat:@"%@&userid=%@",shareUrl,[APPUserDataIofo UserID]];
+//                }
+//                [HJShareTool shareWithTitle:courceName content:coursedes images:@[shareImg] url:shareUrl];
+//            }else{
+//                ShowMessage([responseObject valueForKey:@"msg"]);
+//            }
+//        } failure:^(NSString *error) {
+//            hideHud();
+//            ShowMessage(error);
+//        }];
+//    } else {
+//        //生成普通的订单
+//        ShowHint(@"");
+//        NSString *courseId = self.params[@"courseId"];
+//        NSString *base64String = [self UIImageToBase64Str:signatureImg];
+//        [YJAPPNetwork WillPayWithAccesstoken:[APPUserDataIofo AccessToken] cids:courseId picData:base64String  success:^(NSDictionary *responseObject) {
+//            hideHud();
+//            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+//            if (code == 200) {
+//                NSString *orderid = [responseObject objectForKey:@"data"];
+//                //确认订单页面
+//                NSDictionary *para = @{@"orderId" : orderid};
+//                [DCURLRouter pushURLString:@"route://confirmOrderVC" query:para animated:YES];
+//            } else {
+//                ShowMessage([responseObject valueForKey:@"msg"]);
+//            }
+//        } failure:^(NSString *error) {
+//            hideHud();
+//            ShowMessage(error);
+//        }];
+//    }
     
-    NSString *isKillPrice = self.params[@"isKillPrice"];
-    NSString *coursepic = self.params[@"coursepic"];
-    if([isKillPrice intValue] == 1) {
-        //生成砍价的订单
-        NSString *courseId = self.params[@"courseId"];
-        NSString *base64String = [self UIImageToBase64Str:signatureImg];
-        ShowHint(@"");
-        [YJAPPNetwork CreateKillPriceOrderWithAccesstoken:[APPUserDataIofo AccessToken] courseId:courseId picData:base64String success:^(NSDictionary *responseObject) {
-            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-            hideHud();
-            if (code == 200) {
-                NSString *orderid = [responseObject objectForKey:@"data"];
-                //分享的操作
-                NSString *courceName = @"动动手，快来帮我砍一刀";
-                NSString *coursedes = @"慧鲸学堂 全民砍价 乐享好课！在有效时限内砍价到最低价，即可享受最大购课优惠！";
-                id shareImg = coursepic;
-                if(coursepic.length <= 0) {
-                    shareImg = V_IMAGE(@"shareImg");
-                }
-              
-                NSString *shareUrl = [NSString stringWithFormat:@"%@bargain?orderid=%@",API_SHAREURL,orderid];
-                if([APPUserDataIofo UserID].length > 0) {
-                    shareUrl = [NSString stringWithFormat:@"%@&userid=%@",shareUrl,[APPUserDataIofo UserID]];
-                }
-                [HJShareTool shareWithTitle:courceName content:coursedes images:@[shareImg] url:shareUrl];
-            }else{
-                ShowMessage([responseObject valueForKey:@"msg"]);
-            }
-        } failure:^(NSString *error) {
-            hideHud();
-            ShowMessage(error);
-        }];
-    } else {
-        //生成普通的订单
-        ShowHint(@"");
-        NSString *courseId = self.params[@"courseId"];
-        NSString *base64String = [self UIImageToBase64Str:signatureImg];
-        [YJAPPNetwork WillPayWithAccesstoken:[APPUserDataIofo AccessToken] cids:courseId picData:base64String  success:^(NSDictionary *responseObject) {
-            hideHud();
-            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-            if (code == 200) {
-                NSString *orderid = [responseObject objectForKey:@"data"];
-                //确认订单页面
-                NSDictionary *para = @{@"orderId" : orderid};
-                [DCURLRouter pushURLString:@"route://confirmOrderVC" query:para animated:YES];
-            } else {
-                ShowMessage([responseObject valueForKey:@"msg"]);
-            }
-        } failure:^(NSString *error) {
-            hideHud();
-            ShowMessage(error);
-        }];
-    }
+    ShowHint(@"");
+    NSString *orderId = self.params[@"orderId"];
+    NSString *picData = [self UIImageToBase64Str:signatureImg];
+    [YJAPPNetwork CreateEleSignatureWithOrderId:orderId picData:picData success:^(NSDictionary *responseObject) {
+        hideHud();
+        NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+        if (code == 200) {
+            [DCURLRouter popViewControllerAnimated:NO];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                RACSubject *backSubject = self.params[@"subject"];
+                [backSubject sendNext:nil];
+            });
+        } else {
+            ShowMessage([responseObject valueForKey:@"msg"]);
+        }
+    } failure:^(NSString *error) {
+        hideHud();
+        ShowMessage(error);
+    }];
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {

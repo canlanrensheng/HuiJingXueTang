@@ -11,10 +11,27 @@
 
 @implementation YJAPPNetwork
 
+//生成电子签名操作
++(void)CreateEleSignatureWithOrderId:(NSString *)orderId picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/elesignature",API_BASEURL];
+    NSDictionary *para = @{
+                           @"accesstoken" : DealNil([APPUserDataIofo AccessToken]),
+                           @"orderid" : DealNil(orderId),
+                           @"picdata" : DealNil(picData)
+                           };
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        DLog(@"生成电子签名的数据是:%@",dic);
+        success(dic);
+    } fail:^(id error) {
+        failure(error);
+    }];
+}
+
 //上线马甲包控制
 +(void)SetOnlineMaJiaBaoWithCheckVersion:(NSString *)checkVersion success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/auditiosflag",API_BASEURL];
-    NSDictionary *para = @{@"auditver" : checkVersion};
+    NSDictionary *para = @{@"auditver" : checkVersion.length > 0 ? checkVersion : @""};
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         DLog(@"获取版本更新的马甲包的数据是:%@",dic);
@@ -41,8 +58,8 @@
 +(void)SaveOpenIdToServiceWithOpenId:(NSString *)openId success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/saveopenid",API_BASEURL];
     NSDictionary *para = @{
-                                 @"accesstoken":[APPUserDataIofo AccessToken],
-                                 @"openid":openId
+                           @"accesstoken" : [APPUserDataIofo AccessToken].length > 0 ? [APPUserDataIofo AccessToken] : @"",
+                                 @"openid" : openId.length > 0 ? openId : @""
                                  };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -59,10 +76,10 @@
 +(void)Cityid:(NSString *)cityid venuename:(NSString *)venuename page:(NSString *)page venueIds:(NSString *)venueIds success:(void (^)(NSDictionary *))success failure:(void (^)(NSString *))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/venues!search",API_BASEURL];
     NSDictionary *parameters = @{
-                          @"query.name":venuename,
-                          @"query.cityId":cityid,
-                          @"query.venuesIds":venueIds,
-                          @"query.begin":page,
+                                 @"query.name" : venuename.length > 0 ? venuename : @"",
+                                 @"query.cityId" : cityid.length > 0 ? cityid : @"",
+                                 @"query.venuesIds" : venueIds.length > 0 ? venueIds : @"",
+                                 @"query.begin" : page.length > 0 ? page : @"",
                           };
 
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
@@ -108,7 +125,7 @@
 +(void)HomeViewFreeAndType:(NSString *)type success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/indexcourselist",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"type":type
+                                 @"type" : type.length > 0 ? type : @""
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -149,13 +166,14 @@
     }];
 }
 
+
 /**
  注册获取验证码
  **/
 +(void)GetCodeWithPhonenum:(NSString *)phonenum success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/getregcode",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"telephone":phonenum,
+                                 @"telephone" : phonenum.length > 0 ? phonenum : @"",
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -816,8 +834,8 @@
 +(void)TeapastLiveCourseListProgramWithID:(NSString*)ID page:(NSString *)page success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/teapastlivecourselist",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"teacherid":ID,
-                                 @"page":page
+                                 @"teacherid":ID.length > 0 ? ID : @"",
+                                 @"page" : page.length > 0 ? page : @""
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -834,8 +852,8 @@
 +(void)LiveCourseListProgramWithType:(NSString*)Type page:(NSString *)page success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/pastlivecourselist",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"type":Type,
-                                 @"page":page
+                                 @"type" : Type.length > 0 ? Type : @"",
+                                 @"page" : page.length > 0 ? page : @""
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -852,9 +870,9 @@
 +(void)WillPayWithAccesstoken:(NSString*)accesstoken cids:(NSString *)cids picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/createcourseorder",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"accesstoken" : accesstoken,
-                                 @"cids" : cids,
-                                 @"picdata" : picData
+                                 @"accesstoken" : accesstoken.length > 0 ? accesstoken : @"",
+                                 @"cids" : cids.length > 0 ? cids : @""
+//                                 ,@"picdata" : picData.length > 0 ? picData : @""
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -869,9 +887,9 @@
 +(void)CreateKillPriceOrderWithAccesstoken:(NSString*)accesstoken courseId:(NSString *)courseId picData:(NSString *)picData success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/createbargaincourseorder",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"accesstoken" : accesstoken,
-                                 @"courseid" : courseId,
-                                 @"picdata" : picData
+                                 @"accesstoken" : DealNil(accesstoken),
+                                 @"courseid" : DealNil(courseId)
+//                                 ,@"picdata" : DealNil(picData)
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -888,8 +906,8 @@
 +(void)OrderInfoWithAccesstoken:(NSString*)accesstoken Id:(NSString *)Id success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/courseorderdetail",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"accesstoken":accesstoken,
-                                 @"orderid":Id
+                                 @"accesstoken":accesstoken.length > 0 ? accesstoken : @"",
+                                 @"orderid":Id.length > 0 ? Id : @""
                                  };
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];

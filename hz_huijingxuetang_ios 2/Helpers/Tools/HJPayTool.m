@@ -30,36 +30,6 @@
             payTypeString = @"alipay";
         } else if(payType == PayTypeWX){
             payTypeString = @"wxpay";
-//            if([APPUserDataIofo OpenId].integerValue == 0) {
-//                [ShareSDK authorize:SSDKPlatformTypeWechat settings:nil onStateChanged:^(SSDKResponseState state, SSDKUser *user, NSError *error) {
-//                    if (state == SSDKResponseStateSuccess)
-//                    {
-//                        NSDictionary *dict = user.rawData;
-//                        NSString *openId = [dict objectForKey:@"openid"];
-//                        [YJAPPNetwork SaveOpenIdToServiceWithOpenId:openId success:^(NSDictionary *responseObject) {
-//                            NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-//                            if (code == 200) {
-//                                [APPUserDataIofo writeOpenId:@"1"];
-//                            } else {
-//                                ShowMessage(responseObject[@"msg"]);
-//                            }
-//                        } failure:^(NSString *error) {
-//                            ShowMessage(netError);
-//                        }];
-//                        
-//                        //写入oppenId到服务器
-//                    }
-//                    else if (state == SSDKResponseStateCancel)
-//                    {
-//                        DLog(@"取消");
-//                    }
-//                    else if (state == SSDKResponseStateFail)
-//                    {
-//                        DLog(@"%@",error);
-//                    }
-//                }];
-//                return;
-//            }
         }
         [YJAPPNetwork OrderPayAccesstoken:[APPUserDataIofo AccessToken] orderid:orderId couponid:couponid paytype:payTypeString mch:@"app" success:^(NSDictionary *responseObject) {
             NSInteger code = [[responseObject objectForKey:@"code"]integerValue];

@@ -12,14 +12,14 @@
 @implementation UIViewController (TXDealloc)
 
 + (void)load{
-    Method txDealloc = class_getInstanceMethod(self, @selector(txDealloc));
-    Method dealloc = class_getInstanceMethod(self,NSSelectorFromString(@"dealloc"));
-    method_exchangeImplementations(txDealloc, dealloc);
+//    Method txDealloc = class_getInstanceMethod(self, @selector(txDealloc));
+//    Method dealloc = class_getInstanceMethod(self,NSSelectorFromString(@"dealloc"));
+//    method_exchangeImplementations(txDealloc, dealloc);
 }
 
 - (void)txDealloc{
     DLog(@"%@---Dealloc",self);
-    [self txDealloc];
+//    [self txDealloc];
 }
 
 @end
@@ -27,14 +27,14 @@
 @implementation UIView (TXDealloc)
 #if 0
 + (void)load{
-    Method txDealloc = class_getInstanceMethod(self, @selector(txDealloc));
-    Method dealloc = class_getInstanceMethod(self,NSSelectorFromString(@"dealloc"));
-    method_exchangeImplementations(txDealloc, dealloc);
+//    Method txDealloc = class_getInstanceMethod(self, @selector(txDealloc));
+//    Method dealloc = class_getInstanceMethod(self,NSSelectorFromString(@"dealloc"));
+//    method_exchangeImplementations(txDealloc, dealloc);
 }
 
 - (void)txDealloc{
-    DLog(@"%@---Dealloc",[self class]);
-    [self txDealloc];
+//    DLog(@"%@---Dealloc",[self class]);
+//    [self txDealloc];
 }
 #endif
 @end

@@ -13,8 +13,8 @@
 - (void)getConfirmOrderListDataWithOrderId:(NSString *)orderId Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/courseorderdetailforpay",API_BASEURL];
     NSDictionary *parameters = @{
-                                 @"accesstoken" : [APPUserDataIofo AccessToken],
-                                 @"orderid" : orderId.length > 0 ? orderId : @""
+                                 @"accesstoken" : DealNil([APPUserDataIofo AccessToken]),
+                                 @"orderid" : DealNil(orderId)
                                  };
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {

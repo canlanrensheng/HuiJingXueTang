@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) NSInteger page;
 //推荐老师列表
 - (void)getTeachercCourseListWithTeacherid:(NSString *)teacherid  Success:(void (^)(void))success;
-
+//老师课程的数据源
 @property (nonatomic,strong) NSMutableArray *teachercCourseArray;
 
 //获取老师资讯列表

@@ -149,8 +149,19 @@
     self.fd_interactivePopDisabled = NO;
 }
 
+//- (void)viewDidDisappear:(BOOL)animated {
+//    [super viewDidDisappear:animated];
+//    [self doDestroyPlayer];
+//    [[NIMSDK sharedSDK].chatManager removeDelegate:self];
+//}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [self.controlView.playBtn setSelected:NO];
+    [self.player pause];
+}
+
+- (void)dealloc {
     [self doDestroyPlayer];
     [[NIMSDK sharedSDK].chatManager removeDelegate:self];
 }
@@ -160,25 +171,27 @@
     //老师的id获取
     self.viewModel.teacherId = self.params[@"teacherId"];
     self.viewModel.liveId = liveId;
-    self.reviewPastVC.viewModel = self.viewModel;
+    
     [self.viewModel getLiveDetailDataWithLiveId:liveId Success:^(BOOL successFlag) {
         if(successFlag) {
             self.chartVC.viewModel = self.viewModel;
             self.teacherInfoView.viewModel = self.viewModel;
             //是否是免费的课程
-            if(self.viewModel.model.course.courseid.integerValue == -1) {
+            if(self.viewModel.model.course.coursekind == 1) {
                 self.viewModel.isFree = YES;
             }
-            self.controlView.fileTitleLabel.text = self.viewModel.model.course.coursename.length > 0 ? self.viewModel.model.course.coursename : @"暂无直播名称";
+            //获取老师的ID用于获取往期回顾的数据
+            self.viewModel.teacherId = self.viewModel.model.course.userid;
+            self.reviewPastVC.viewModel = self.viewModel;
             
-//            self.viewModel.model.room.hlsPullUrl = @"http:\/\/vodcvzretw1.vod.126.net\/vodcvzretw1\/837d5303359049f7926f67c3e5cd0453_1537497020568_1537498827412_975287098-00000.mp4";
+            self.controlView.fileTitleLabel.text = self.viewModel.model.course.coursename.length > 0 ? self.viewModel.model.course.coursename : @"暂无直播名称";
 
             if(self.viewModel.model.room.hlsPullUrl) {
                 //初始化播放控制器
                 [self.controlView.loadingView startAnimating];
                 self.controlView.loadingView.speedTextLabel.hidden = NO;
                 [self doInitPlayer];
-                
+            
             } else {
                 if(self.viewModel.model.course.liveflag == 2) {
                     //往期回顾
@@ -227,7 +240,7 @@
     }];
 }
 
-
+//设置导航条的属性
 - (void)hj_setNavagation {
     if (isFringeScreen) {
         UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kTopStatusHeight)];
@@ -286,14 +299,16 @@
             if(self.viewModel.model.course.coursepic.length <= 0) {
                 shareImg = V_IMAGE(@"shareImg");
             }
+            
             NSString *shareUrl = [NSString stringWithFormat:@"%@liveshow?courseid=%@",API_SHAREURL,self.params[@"liveId"]];
             if([APPUserDataIofo UserID].length > 0) {
                 shareUrl = [NSString stringWithFormat:@"%@&userid=%@",shareUrl,[APPUserDataIofo UserID]];
             }
+            
+            DLog(@"获取到的分享的链接是:%@",shareUrl);
             [HJShareTool shareWithTitle:courceName content:coursedes images:@[shareImg] url:shareUrl];
         }
     }];
-
 
     [_controlView.sendChatSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
@@ -309,21 +324,6 @@
     [self.view addSubview:teacherInfoView];
 
     self.teacherInfoView = teacherInfoView;
-
-    //工具条的按钮的操作
-//    HJSchoolDetailAliveToolView *toolView = [[HJSchoolDetailAliveToolView alloc] init];
-//    toolView.frame = CGRectMake(0, kHeight(210 + 65) + kTopStatusHeight, Screen_Width, kHeight(40));
-//    [self.view addSubview:toolView];
-//
-//    self.toolView = toolView;
-//
-//    [toolView.clickSubject subscribeNext:^(id  _Nullable x) {
-//        @strongify(self);
-//        self.selectIndex = [x integerValue];
-//        [UIView animateWithDuration:0.25 animations:^{
-//            [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
-//        }];
-//    }];
     
     __weak typeof(self)weakSelf = self;
     HJTopSementView *toolView = [[HJTopSementView alloc] initWithFrame:CGRectMake(0, kHeight(210 + 65) + kTopStatusHeight, Screen_Width, kHeight(40)) titleColor:HEXColor(@"#333333") selectTitleColor:HEXColor(@"#22476B") lineColor:HEXColor(@"#22476B")  buttons:@[@"聊天",@"往期回顾"] block:^(NSInteger index) {
@@ -364,6 +364,12 @@
             [self addChildViewController:listVC];
             [self.scrollView insertSubview:listVC.view atIndex:200];
             self.reviewPastVC = listVC;
+            
+            @weakify(self);
+            [listVC.careSubject subscribeNext:^(id  _Nullable x) {
+                @strongify(self);
+                self.teacherInfoView.careSelected = [x boolValue];
+            }];
         }
     }
 
@@ -380,6 +386,7 @@
     [NELivePlayerController setLogLevel:NELP_LOG_VERBOSE];
     NSLog(@"%@", [NELivePlayerController getSDKVersion]);
     NSError *error = nil;
+    
     self.player = [[NELivePlayerController alloc] initWithContentURL:URL(self.viewModel.model.room.hlsPullUrl) error:&error];
     if (self.player == nil) {
         NSLog(@"player initilize failed, please tay again.error = [%@]!", error);
@@ -547,7 +554,16 @@ dispatch_source_t CreateSyncUITimerN(double interval, dispatch_queue_t queue, di
         {
             self.controlView.loadingView.speedTextLabel.hidden = YES;
             [self.controlView.loadingView stopAnimating];
-            [TXAlertView showAlertWithTitle:@"提示" message:@"直播结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if(self.isFullScreen) {
+                //全屏的时候播放结束回到竖屏
+                [self backVerticalScreen];
+                [TXAlertView showAlertWithTitle:nil message:@"直播结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                    }
+                } otherButtonTitles:@"确定", nil];
+                return;
+            }
+            [TXAlertView showAlertWithTitle:nil message:@"直播结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
                 }
             } otherButtonTitles:@"确定", nil];

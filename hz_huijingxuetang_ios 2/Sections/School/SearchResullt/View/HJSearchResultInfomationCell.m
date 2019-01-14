@@ -25,7 +25,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -75,7 +74,6 @@
     //阅读的图标
     UIImageView *readImaV = [[UIImageView alloc] init];
     readImaV.image = V_IMAGE(@"阅读ICON");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     readImaV.backgroundColor = Background_Color;
     [self addSubview:readImaV];
     [readImaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -124,22 +122,10 @@
    
 }
 
-//- (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
-//    HJSearchResultViewModel *listViewModel = (HJSearchResultViewModel *)viewModel;
-//    InformationResponses *model = listViewModel.model.informationResponses[indexPath.row];
-//    if(model){
-//        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
-//        self.contentTitleLabel.text = model.infomationtitle;
-//        self.readCountLabel.text = [NSString stringWithFormat:@"%@",model.readcounts];
-//        NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
-//        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%ld/%ld",date.year,date.month,date.day];
-//    }
-//}
-
 - (void)setModel:(InformationResponses *)model {
     _model = model;
     if(model){
-        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.contentTitleLabel.text = model.infomationtitle;
         self.readCountLabel.text = [NSString stringWithFormat:@"%@",model.readcounts];
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];

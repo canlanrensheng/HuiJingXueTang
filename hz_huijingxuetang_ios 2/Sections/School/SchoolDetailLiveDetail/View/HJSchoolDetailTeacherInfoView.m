@@ -97,7 +97,6 @@
 
 - (void)carBtnClick:(UIButton *)btn {
     if([APPUserDataIofo AccessToken].length <= 0) {
-//        ShowMessage(@"您还未登录");
         [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
         return;
     }
@@ -108,6 +107,10 @@
             [btn setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
             [btn setTitle:@"已关注" forState:UIControlStateNormal];
             [btn setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+            
+            if(self.careSubject){
+                [self.careSubject sendNext:@(btn.selected)];
+            }
         }];
     } else {
         //取消关注
@@ -115,6 +118,10 @@
             [btn setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
             [btn setTitle:@"关注" forState:UIControlStateNormal];
             [btn setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+            
+            if(self.careSubject){
+                [self.careSubject sendNext:@(btn.selected)];
+            }
         }];
     }
 }
@@ -122,24 +129,39 @@
 - (void)setViewModel:(HJSchoolLiveDetailViewModel *)viewModel {
     _viewModel = viewModel;
     if (viewModel.model) {
-        [self.iconImageV sd_setImageWithURL:URL(viewModel.model.course.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.iconImageV sd_setImageWithURL:URL(viewModel.model.course.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.nameLabel.text = viewModel.model.course.realname;
         self.desLabel.text = viewModel.model.course.slogen.length > 0 ? viewModel.model.course.slogen : @"暂无个性标签";
         if (viewModel.model.course.isinterest == 1) {
             self.careButton.selected = YES;
-            
-            [self.careButton setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
-            [self.careButton setTitle:@"已关注" forState:UIControlStateNormal];
-            [self.careButton setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+            self.careSelected = YES;
         } else {
             self.careButton.selected = NO;
-            
-            [self.careButton setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
-            [self.careButton setTitle:@"关注" forState:UIControlStateNormal];
-            [self.careButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+            self.careSelected = NO;
         }
     }
 }
 
+- (RACSubject *)careSubject {
+    if(!_careSubject) {
+        _careSubject = [[RACSubject alloc] init];
+    }
+    return _careSubject;
+}
+
+- (void)setCareSelected:(BOOL)careSelected {
+    _careSelected = careSelected;
+    if(_careSelected) {
+        self.careButton.selected = YES;
+        [self.careButton setImage:V_IMAGE(@"未关注") forState:UIControlStateNormal];
+        [self.careButton setTitle:@"已关注" forState:UIControlStateNormal];
+        [self.careButton setTitleColor:HEXColor(@"#999999") forState:UIControlStateNormal];
+    } else {
+        self.careButton.selected = NO;
+        [self.careButton setImage:V_IMAGE(@"已关注") forState:UIControlStateNormal];
+        [self.careButton setTitle:@"关注" forState:UIControlStateNormal];
+        [self.careButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
+    }
+}
 
 @end

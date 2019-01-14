@@ -93,8 +93,10 @@
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             NSString *type = self.params[@"type"];
             [self.viewModel getFurtherMessageWithType:type Success:^(BOOL success) {
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

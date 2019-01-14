@@ -145,23 +145,43 @@
 
 //确认订单的操作
 - (void)sureOrderOperation {
-//    BOOL isLargeMoney = false;
-//    for(CourselistModel *model in self.viewModel.model.courselist) {
-//        //不能推广是大额度
-//        if(model.canpromote == 0) {
-//            isLargeMoney = YES;
-//        }
-//    }
-//    //判断是大额支付还是小额支付
-//    if(isLargeMoney) {
-//        //大额联系客户
-//
-//    } else {
+    BOOL isLargeMoney = false;
+    for(CourselistModel *model in self.viewModel.model.courselist) {
+        //不能推广是大额度
+        if(model.ispromote == 0) {
+            isLargeMoney = YES;
+        }
+    }
+    RACSubject *backSubject = [[RACSubject alloc] init];
+    @weakify(self);
+    [backSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self dealSureOrderBtnWithIsLargeMoney:isLargeMoney];
+    }];
+    NSString *orderId = self.params[@"orderId"];
+    NSDictionary *para = @{@"isLargeMoney" : @(isLargeMoney),
+                           @"subject" : backSubject,
+                           @"orderId" : DealNil(orderId)
+                           };
+    [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+}
+
+//判断是小额还是大额
+- (void)dealSureOrderBtnWithIsLargeMoney:(BOOL)isLargeMoney {
+    //判断是大额支付还是小额支付
+    if(isLargeMoney) {
+        //大额联系客户
+        [TXAlertView showAlertWithTitle:@"温馨提示" message:@"您现在购买的慧鲸学堂专属课程金额较大，请联系慧鲸客服(0571-57571670)完成支付，谢谢合作。" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if (buttonIndex == 1) {
+
+            }
+        } otherButtonTitles:@"我知道了", nil];
+    } else {
         //小额支付
         NSString *orderId = self.params[@"orderId"];
         NSString *couponid = self.viewModel.model.cashcouponid.length > 0 ? self.viewModel.model.cashcouponid : @"";
         [[HJPayTool shareInstance] payWithOrderId:orderId couponid:couponid];
-//    }
+    }
 }
 
 - (void)hj_loadData {
@@ -169,7 +189,9 @@
     [self.viewModel getConfirmOrderListDataWithOrderId:orderId Success:^{
         NSString *price = [NSString stringWithFormat:@"实付金额：￥%.2f",self.viewModel.model.money - self.viewModel.model.price.floatValue];
         self.totalMonneyLabel.attributedText = [price attributeWithStr:[NSString stringWithFormat:@"￥%.2f",self.viewModel.model.money - self.viewModel.model.price.floatValue] color:HEXColor(@"#FF4400") font:MediumFont(font(15))];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 

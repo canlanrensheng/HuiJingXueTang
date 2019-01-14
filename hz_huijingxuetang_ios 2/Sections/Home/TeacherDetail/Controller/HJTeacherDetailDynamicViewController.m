@@ -101,19 +101,53 @@
     self.viewModel.tableView = self.tableView;
     self.viewModel.page = 1;
     [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
 - (void)hj_bindViewModel {
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"FindRecommendVCClickOperation" object:nil] subscribeNext:^(NSNotification  *noty) {
+        @strongify(self);
+        NSDictionary *rowDict = noty.userInfo;
+        NSInteger row = [[rowDict objectForKey:@"row"] integerValue];
+        NSInteger select = [[rowDict objectForKey:@"select"] integerValue];
+        [self dealCareOrCancleCareDataWithSelect:select row:row];
+    }];
+}
 
+//处理选中的数据
+- (void)dealCareOrCancleCareDataWithSelect:(NSInteger)isSelect row:(NSInteger)row {
+    if (row < self.viewModel.findArray.count) {
+        HJFindRecommondModel *selectModel = self.viewModel.findArray[row];
+        if(isSelect == 1) {
+            //选中的时候
+            for (HJFindRecommondModel *model in self.viewModel.findArray) {
+                if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                    model.isinterest = isSelect;
+                }
+            }
+        } else {
+            //取消选中的时候
+            for (HJFindRecommondModel *model in self.viewModel.findArray) {
+                if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                    model.isinterest = isSelect;
+                }
+            }
+        }
+        [self.tableView reloadData];
+    }
 }
 
 - (void)hj_refreshData {
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
         self.viewModel.page = 1;
         [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
@@ -125,8 +159,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -228,28 +264,6 @@
     return self.viewModel.findArray.count;
 }
 
-- (void)dealCareOrCancleCareDataWithSelect:(BOOL)isSelect indexPath:(NSIndexPath *)indexPath {
-    HJFindRecommondModel *selectModel = self.viewModel.findArray[indexPath.row];
-    if(isSelect == 1) {
-        //选中的时候
-        for (HJFindRecommondModel *model in self.viewModel.findArray) {
-            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
-                model.isinterest = 1;
-            }
-        }
-    } else {
-        //取消选中的时候
-        for (HJFindRecommondModel *model in self.viewModel.findArray) {
-            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
-                model.isinterest = 0;
-            }
-        }
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row < self.viewModel.findArray.count) {
@@ -259,10 +273,9 @@
                 HJFindRecommondTextCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }
@@ -271,10 +284,9 @@
                 HJFindRecommondPictureCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondPictureCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }
@@ -283,10 +295,9 @@
                 HJFindRecommondLinkCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondLinkCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }
@@ -296,10 +307,9 @@
                 [cell setDelegate:self withIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }
@@ -308,10 +318,9 @@
                 HJFindRecommondTextPicLinkCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJFindRecommondTextPicLinkCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }
@@ -321,10 +330,9 @@
                 [cell setDelegate:self withIndexPath:indexPath];
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if (indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 cell.hidden = NO;
                 return cell;
             }

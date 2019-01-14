@@ -41,7 +41,7 @@
 - (void)reloadScrollViewWithImageArr:(NSArray *)assets{
     [[self.scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     NSUInteger assetCount = assets.count;
-    CGFloat width = kWidth(225);
+    CGFloat width = kWidth(220);
     CGFloat height = kHeight(275);
     CGFloat padding = kWidth(10.0);
     for (NSInteger i = 0; i < assetCount; i++) {
@@ -63,23 +63,22 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
         [backView addGestureRecognizer:tap];
         
-        //头像图片
+        //回答者的头像的信息
         UIImageView *iconImageV = [[UIImageView alloc] init];
-//        iconImageV.image = V_IMAGE(@"");
         iconImageV.opaque = YES;
-        [iconImageV sd_setImageWithURL:URL(model.createiconurl) placeholderImage:V_IMAGE(@"占位图")];
-        [iconImageV clipWithCornerRadius:kWidth(10.0) borderColor:nil borderWidth:0];
+        [iconImageV sd_setImageWithURL:URL(model.updateiconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
+        [iconImageV clipWithCornerRadius:kWidth(12.0) borderColor:nil borderWidth:0];
         iconImageV.backgroundColor = Background_Color;
         [backView addSubview:iconImageV];
         [iconImageV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(backView).offset(kWidth(10));
-            make.width.height.mas_equalTo(kWidth(20));
-            make.top.equalTo(backView).offset(kHeight(15.0));
+            make.width.height.mas_equalTo(kWidth(24.0));
+            make.top.equalTo(backView).offset(kHeight(20.0));
         }];
         
-        //标题
+        //老师的名称
         UILabel *nameLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.createname,MediumFont(font(11)),HEXColor(@"#666666"));
+            label.ljTitle_font_textColor(model.updatename,MediumFont(font(11)),HEXColor(@"#666666"));
             label.textAlignment = NSTextAlignmentLeft;
             label.opaque = YES;
             [label sizeToFit];
@@ -87,110 +86,107 @@
         [backView addSubview:nameLabel];
         [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(iconImageV);
-            make.left.equalTo(iconImageV.mas_right).offset(kWidth(5.0));
+            make.left.equalTo(iconImageV.mas_right).offset(kWidth(8.0));
             make.height.mas_equalTo(kHeight(11.0));
         }];
         
-        UIButton *wenBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"问",MediumFont(font(10)),white_color,0);
-            button.opaque = YES;
-            [button setBackgroundImage:V_IMAGE(@"问标签") forState:UIControlStateNormal
-                 ];
-        }];
-        [backView addSubview:wenBtn];
-        [wenBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(backView);
-            make.top.equalTo(backView).offset(kHeight(21.0));
+        //左边分割线
+        UIView *leftLineView = [[UIView alloc] init];
+        leftLineView.backgroundColor = HEXColor(@"#E8AC4D");
+        [backView addSubview:leftLineView];
+        [leftLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(iconImageV.mas_bottom).offset(kHeight(11.0));
+            make.left.equalTo(backView);
+            make.size.mas_equalTo(CGSizeMake(kWidth(3.0), kHeight(40.0)));
         }];
         
-        //问题描述
-        UILabel *questionDesLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.questiondes,BoldFont(font(14)),HEXColor(@"#333333"));
-            label.opaque = YES;
+        //股票的代码或者名称
+        UILabel *stockNameLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor([NSString stringWithFormat:@"%@%@",model.questiontitle,model.questiondes],BoldFont(font(14)),HEXColor(@"#333333"));
             label.textAlignment = NSTextAlignmentLeft;
             label.numberOfLines = 2;
             [label sizeToFit];
         }];
-        NSString *question = [NSString stringWithFormat:@"%@ %@",model.questiontitle,model.questiondes];
-        questionDesLabel.attributedText = [question fuWenBenWithStr:model.questiontitle withColor:HEXColor(@"#22476B") withFont:BoldFont(font(14))];
-        [backView addSubview:questionDesLabel];
-        [questionDesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(iconImageV);
-            make.right.equalTo(backView).offset(-kWidth(12));
-            make.top.equalTo(iconImageV.mas_bottom).offset(kHeight(15.0));
+        [backView addSubview:stockNameLabel];
+        [stockNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(leftLineView.mas_right).offset(kWidth(8.0));
+            make.right.equalTo(backView).offset(-kWidth(10.0));
+//            make.top.equalTo(leftLineView).offset(kHeight(3.0));
+            make.centerY.equalTo(leftLineView);
+            make.height.mas_equalTo(kHeight(44.0));
         }];
         
-        //分割线
-        UIView *lineView = [[UIView alloc] init];
-        lineView.backgroundColor = [UIColor colorWithRed:234/255.0 green:234/255.0 blue:234/255.0 alpha:1];
-        lineView.opaque = YES;
-        [backView addSubview:lineView];
-        [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(backView);
-            make.height.mas_equalTo(kHeight(0.5));
-//            make.top.equalTo(questionDesLabel.mas_bottom).offset(kHeight(42.0));
-            make.centerY.equalTo(backView);
-        }];
+//        //问题
+//        UILabel *questionLabel = [UILabel creatLabel:^(UILabel *label) {
+//            label.ljTitle_font_textColor(model.questiondes,BoldFont(font(14)),HEXColor(@"#333333"));
+//            label.textAlignment = NSTextAlignmentLeft;
+//            label.numberOfLines = 0;
+//            [label sizeToFit];
+//        }];
+//        [backView addSubview:questionLabel];
+//        [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(stockNameLabel);
+//            make.right.equalTo(backView).offset(-kWidth(10.0));
+//            make.top.equalTo(stockNameLabel.mas_bottom).offset(kHeight(10.0));
+//            make.height.mas_equalTo(kHeight(14.0));
+//        }];
         
-        //答的人
-        //头像图片
-        UIImageView *answerIconImageV = [[UIImageView alloc] init];
-        answerIconImageV.opaque = YES;
-        [answerIconImageV sd_setImageWithURL:URL(model.updateiconurl) placeholderImage:V_IMAGE(@"占位图")];
-        [answerIconImageV clipWithCornerRadius:kWidth(10.0) borderColor:nil borderWidth:0];
-        answerIconImageV.backgroundColor = Background_Color;
-        [backView addSubview:answerIconImageV];
-        [answerIconImageV mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(backView).offset(kWidth(10));
-            make.width.height.mas_equalTo(kWidth(20));
-            make.top.equalTo(lineView.mas_bottom).offset(kHeight(16.0));
-        }];
-        
-        //标题
-        UILabel *answerNameLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.updatename,MediumFont(font(11)),HEXColor(@"#666666"));
-            label.textAlignment = NSTextAlignmentLeft;
-            label.opaque = YES;
+        //推荐的标签
+        UILabel *recommendedLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor(@"推荐",MediumFont(font(10.0)),HEXColor(@"#999999"));
+            label.backgroundColor = HEXColor(@"#F7F6FB");
+            label.textAlignment = NSTextAlignmentCenter;
+            label.numberOfLines = 0;
             [label sizeToFit];
         }];
-        [backView addSubview:answerNameLabel];
-        [answerNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(answerIconImageV);
-            make.left.equalTo(answerIconImageV.mas_right).offset(kWidth(5.0));
-            make.height.mas_equalTo(kHeight(11.0));
+        [recommendedLabel clipWithCornerRadius:kHeight(10.0) borderColor:HEXColor(@"#F7F6FB") borderWidth:0];
+        [backView addSubview:recommendedLabel];
+        [recommendedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(stockNameLabel.mas_bottom).offset(kHeight(14));
+            make.left.equalTo(stockNameLabel);
+            make.size.mas_equalTo(CGSizeMake(kWidth(40), kHeight(20)));
         }];
         
-        UIButton *answerBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"答",MediumFont(font(10)),white_color,0);
-            button.opaque = YES;
-            [button setBackgroundImage:V_IMAGE(@"答标签") forState:UIControlStateNormal
-             ];
-        }];
-        [backView addSubview:answerBtn];
-        [answerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(backView);
-//            make.top.equalTo(backView).offset(kHeight(21.0));
-            make.centerY.equalTo(answerNameLabel);
-        }];
-        
-        //问题描述
-        UILabel *answerDesLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.answer,BoldFont(font(14)),HEXColor(@"#333333"));
-            label.textAlignment = NSTextAlignmentLeft;
-            label.opaque = YES;
-            label.numberOfLines = 2;
+        //名师推荐的标签
+        UILabel *teacherRecommendedLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor(@"名师回复",MediumFont(font(10.0)),HEXColor(@"#999999"));
+            label.backgroundColor = HEXColor(@"#F7F6FB");
+            label.textAlignment = NSTextAlignmentCenter;
+            label.numberOfLines = 0;
             [label sizeToFit];
         }];
-        [backView addSubview:answerDesLabel];
-        [answerDesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(answerIconImageV);
-            make.right.equalTo(backView).offset(-kWidth(12));
-            make.top.equalTo(answerIconImageV.mas_bottom).offset(kHeight(15.0));
+        [teacherRecommendedLabel clipWithCornerRadius:kHeight(10.0) borderColor:HEXColor(@"#F7F6FB") borderWidth:0];
+        [backView addSubview:teacherRecommendedLabel];
+        [teacherRecommendedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(recommendedLabel);
+            make.left.equalTo(recommendedLabel.mas_right).offset(kWidth(10.0));
+            make.size.mas_equalTo(CGSizeMake(kWidth(60), kHeight(20)));
+        }];
+        
+        //老师回答的内容
+        NSString *answer = model.answer;
+        UILabel *answerLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor(answer,MediumFont(font(12)),HEXColor(@"#999999"));
+            label.textAlignment = NSTextAlignmentLeft;
+            label.numberOfLines = 0;
+            [label sizeToFit];
+        }];
+        CGFloat answerHeight = [answer calculateSize:CGSizeMake(kWidth(220.0) - kWidth(21.0), MAXFLOAT)  font:MediumFont(font(12.0))].height;
+        if(answerHeight > kHeight(84.0)) {
+            answerHeight = kHeight(84.0);
+        }
+        [backView addSubview:answerLabel];
+        [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(backView).offset(kWidth(10.0));
+            make.right.equalTo(backView).offset(-kWidth(11.0));
+            make.top.equalTo(recommendedLabel.mas_bottom).offset(kHeight(14.0));
+            make.height.mas_equalTo(answerHeight);
         }];
         
         //时间
+        NSDate *date = [NSDate dateWithString:model.answertime formatString:@"yyyy-MM-dd HH:mm:ss"];
         UILabel *timeLabel = [UILabel creatLabel:^(UILabel *label) {
-           label.ljTitle_font_textColor(model.answertime,MediumFont(font(10)),HEXColor(@"#999999"));
+           label.ljTitle_font_textColor([NSString stringWithFormat:@"%@/%@/%@",[NSString convertDateSingleData:date.year],[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]],MediumFont(font(10)),HEXColor(@"#999999"));
             label.textAlignment = NSTextAlignmentLeft;
             label.opaque = YES;
             [label sizeToFit];
@@ -221,7 +217,6 @@
             [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
                 @strongify(self);
                 if([APPUserDataIofo AccessToken].length <= 0) {
-//                    ShowMessage(@"您还未登录");
                     [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                     return;
                 }
@@ -236,9 +231,7 @@
             make.centerY.equalTo(timeLabel);
             make.right.equalTo(arrowImageV.mas_left).offset(-kWidth(5.0));
         }];
-        
     }
-    //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
     
 }
@@ -253,11 +246,9 @@
 
 - (void)backTap:(UITapGestureRecognizer *)tap {
     if([APPUserDataIofo AccessToken].length <= 0) {
-//        ShowMessage(@"您还未登录");
         [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
         return;
     }
-
     HJHomeStuntJudgeStockModel *model = self.listViewModel.stuntJudgeStockArray[tap.view.tag];
     NSDictionary *para = @{@"stuntId" : model.stuntId};
     [DCURLRouter pushURLString:@"route://stuntJudgeDetailVC" query:para animated:YES];

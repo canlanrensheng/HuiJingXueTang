@@ -237,10 +237,9 @@
     self.currentTime.frame = CGRectMake(CGRectGetMaxX(self.playBtn.frame) + kWidth(10), (_bottomControlView.size.height - kHeight(10))/ 2, kWidth(30), kHeight(10.0));
     self.totalDuration.frame = CGRectMake(self.bounds.size.width + scaleModeCon - kWidth(30) - kWidth(10) - kWidth(30), (_bottomControlView.size.height - kHeight(10))/ 2, kWidth(30), kHeight(10));
     CGFloat width = self.bounds.size.width + scaleModeCon - kWidth(30) - kWidth(10) - kWidth(30) - kWidth(10) - playCon - kWidth(30 + 10 + 30 + 10);
-    self.videoProgress.frame = CGRectMake(playCon + kWidth(30 + 10 + 30 + 10), (_bottomControlView.size.height - kHeight(3.0))/ 2, width, kHeight(3.0));
+    self.videoProgress.frame = CGRectMake(playCon + kWidth(30 + 10 + 30 + 10), (_bottomControlView.size.height - kHeight(5.0))/ 2, width, kHeight(5.0));
     
     self.loadingView.frame = self.bounds;
-    
 }
 
 - (ZFSpeedLoadingView *)loadingView {
@@ -281,10 +280,11 @@
     _overlayControl.hidden = NO;
 //    _bottomControlView.hidden = NO;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(controlOverlayHide) object:nil];
-    [self performSelector:@selector(controlOverlayHide) withObject:nil afterDelay:8];
+//    [self performSelector:@selector(controlOverlayHide) withObject:nil afterDelay:8];
 }
 
 - (void)onClickOverlayControlAction:(UIControl *)control {
+//    self.killPriceImageV.hidden = YES;
     _overlayControl.hidden = YES;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(controlOverlayHide) object:nil];
 }

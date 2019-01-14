@@ -12,23 +12,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJCourseSelectJiModel : BaseModel
 
+//课程id
 @property (nonatomic,copy) NSString *courseid;
+//选集id
 @property (nonatomic,copy) NSString *videoid;
+//选集的名称
 @property (nonatomic,copy) NSString *videoname;
+//播放量
 @property (nonatomic,copy) NSString *hits;
+//选集的展示图片
 @property (nonatomic,copy) NSString *videoppicurl;
+//选集的播放链接
 @property (nonatomic,copy) NSString *videourl;
-
 //视频总时间
 @property (nonatomic,assign) NSTimeInterval totalTime; 
 //讲师名称
 @property (nonatomic,copy) NSString *realName;
-//视频播放时间
+//视频当前的播放时间
 @property (nonatomic,strong) NSDate *date;
-
-//是否是点播的操作
+//是否正在播放的标示
 @property (nonatomic,assign) BOOL isOnPlay;
-
 //已经播放过了
 @property (nonatomic,assign) BOOL isPlayed;
 

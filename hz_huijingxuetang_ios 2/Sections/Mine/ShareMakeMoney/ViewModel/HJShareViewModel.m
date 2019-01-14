@@ -32,21 +32,26 @@
 }
 
 //获取推广课程列表
-- (void)getShareCourceListSuccess:(void (^)(void))success {
+- (void)getShareCourceListSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/getpromcourlist",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
-                    @"page" : [NSString stringWithFormat:@"%ld",self.page]
+                    @"page" : [NSString stringWithFormat:@"%ld",self.page],
+                    @"accesstoken" : [APPUserDataIofo AccessToken]
                    };
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
+            DLog(@"获取到的推广课程列表的数据是:%@",[NSString convertToJsonData:dic]);
             if (code == 200) {
                 NSDictionary *dataDict = dic[@"data"];
                 NSArray *commentArr = dataDict[@"courseList"];
                 self.totalpage = [dataDict[@"totalpage"] intValue];
                 self.currentpage = [dataDict[@"currentpage"] intValue];
+                if([dataDict objectForKey:@"overdueInvitationStatus"]) {
+                    self.overdueInvitationStatus = [dataDict[@"overdueInvitationStatus"] intValue];
+                }
                 NSMutableArray *marr = [NSMutableArray array];
                 for (NSDictionary *dic in commentArr) {
                     HJShareCourseModel *model = [HJShareCourseModel mj_objectWithKeyValues:dic];
@@ -61,11 +66,13 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.courseListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
+            success(NO);
             hideHud();
             ShowError(error);
         }];

@@ -87,7 +87,7 @@
 
 //删除订单的操作
 - (void)deleteOrderWithOrderId:(NSString *)orderId success:(void (^)(void))success {
-    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delCourseOrder",API_BASEURL];
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delcourseorder",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
                    @"accesstoken" : [APPUserDataIofo AccessToken],
@@ -96,7 +96,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-            NSInteger code = [[dic objectForKey:@"code"]integerValue];
+            NSInteger code = [[dic objectForKey:@"code"] integerValue];
             if (code == 200) {
                 success();
             } else {

@@ -50,8 +50,17 @@
     self.viewModel.tableView = self.tableView;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.page = 1;
-    [self.viewModel getMoreCourseWithSuccess:^{
-        [self.tableView reloadData];
+    if(!self.viewModel.isFirstLoadCourseListData) {
+        [self.viewModel.loadingView startAnimating];
+    }
+    [self.viewModel getMoreCourseWithSuccess:^(BOOL successFlag) {
+        if(!self.viewModel.isFirstLoadCourseListData) {
+            [self.viewModel.loadingView stopLoadingView];
+            self.viewModel.isFirstLoadCourseListData = YES;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -70,9 +79,11 @@
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
-            [self.viewModel getMoreCourseWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+            [self.viewModel getMoreCourseWithSuccess:^(BOOL successFlag) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

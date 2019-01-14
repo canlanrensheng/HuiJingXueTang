@@ -73,6 +73,7 @@
 
     AnimationTabbarItem *myTabBar = [[AnimationTabbarItem alloc] init];
     [self setValue:myTabBar forKey:@"tabBar"];
+    
     self.delegate = self;
     self.fd_prefersNavigationBarHidden = YES;
     self.tabBar.tintColor = HEXColor(@"#22476B");

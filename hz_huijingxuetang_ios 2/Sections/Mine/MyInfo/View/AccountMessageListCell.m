@@ -49,7 +49,7 @@
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath{
     AccountMessageViewModel *accountViewModel = (AccountMessageViewModel *)viewModel;
     self.textLabel.text = accountViewModel.dataArray[indexPath.section][indexPath.row];
-    [self.iconImageView  sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像")];
+    [self.iconImageView  sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
 }
 
 @end

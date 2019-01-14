@@ -49,7 +49,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -133,7 +132,7 @@
     HJShopCarListModel *model = listViewModel.shopCarListArray[indexPath.row];
     self.model = model;
     if (model) {
-        [self.picImageView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.picImageView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.nameLabel.text = model.coursename;
         _serviceTimeLabel.text = [NSString stringWithFormat:@"服务周期：%ld天",model.periods];
         NSString *price = [NSString stringWithFormat:@"￥%.2f",model.coursemoney.floatValue];

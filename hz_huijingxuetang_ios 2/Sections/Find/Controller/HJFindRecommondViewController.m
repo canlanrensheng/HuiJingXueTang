@@ -45,7 +45,6 @@
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:100];
     self.player.controlView = self.controlView;
-//    self.player.assetURLs = [NSMutableArray arrayWithObject:[NSURL URLWithString:@"http://tb-video.bdstatic.com/tieba-smallvideo-transcode/3612804_e50cb68f52adb3c4c3f6135c0edcc7b0_3.mp4"]];
     self.player.shouldAutoPlay = NO;
     // 1.0是完全消失的时候
     self.player.playerDisapperaPercent = 1.0;
@@ -98,7 +97,6 @@
     self.viewModel.findSegmentType = 0;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.tableView = self.tableView;
-//    self.viewModel = [[HJFindViewModel alloc] init];
     self.viewModel.page = 1;
     [self.viewModel teacherDynamicRecommondListWithTeacherid:@"" Success:^(BOOL successFlag) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -109,9 +107,40 @@
 
 
 - (void)hj_bindViewModel {
-//    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreFindCommondData" object:nil] subscribeNext:^(NSNotification *noty) {
-//        [self hj_loadData];
-//    }];
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreFindCommondData" object:nil] subscribeNext:^(NSNotification *noty) {
+        @strongify(self);
+        [self hj_loadData];
+    }];
+    
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"FindRecommendVCClickOperation" object:nil] subscribeNext:^(NSNotification  *noty) {
+        @strongify(self);
+        NSDictionary *rowDict = noty.userInfo;
+        NSInteger row = [[rowDict objectForKey:@"row"] integerValue];
+        NSInteger select = [[rowDict objectForKey:@"select"] integerValue];
+        [self dealCareOrCancleCareDataWithSelect:select row:row];
+    }];
+}
+
+//处理选中的数据
+- (void)dealCareOrCancleCareDataWithSelect:(NSInteger)isSelect row:(NSInteger)row {
+    HJFindRecommondModel *selectModel = self.viewModel.findArray[row];
+    if(isSelect == 1) {
+        //选中的时候
+        for (HJFindRecommondModel *model in self.viewModel.findArray) {
+            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                model.isinterest = isSelect;
+            }
+        }
+    } else {
+        //取消选中的时候
+        for (HJFindRecommondModel *model in self.viewModel.findArray) {
+            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
+                model.isinterest = isSelect;
+            }
+        }
+    }
+    [self.tableView reloadData];
 }
 
 
@@ -232,27 +261,6 @@
     return self.viewModel.findArray.count;
 }
 
-//处理选中的数据
-- (void)dealCareOrCancleCareDataWithSelect:(BOOL)isSelect indexPath:(NSIndexPath *)indexPath {
-    HJFindRecommondModel *selectModel = self.viewModel.findArray[indexPath.row];
-    if(isSelect == 1) {
-        //选中的时候
-        for (HJFindRecommondModel *model in self.viewModel.findArray) {
-            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
-                model.isinterest = 1;
-            }
-        }
-    } else {
-        //取消选中的时候
-        for (HJFindRecommondModel *model in self.viewModel.findArray) {
-            if ([model.teacherid isEqualToString:selectModel.teacherid]) {
-                model.isinterest = 0;
-            }
-        }
-    }
-    [self.tableView reloadData];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.viewModel.findArray.count) {
         HJFindRecommondModel *model = self.viewModel.findArray[indexPath.row];
@@ -262,10 +270,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
                 break;
@@ -274,10 +281,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
               break;
@@ -286,10 +292,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
                 break;
@@ -299,10 +304,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
                 break;
@@ -311,10 +315,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
                 break;
@@ -324,10 +327,9 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 self.viewModel.findSegmentType = 0;
-                [cell setViewModel:self.viewModel indexPath:indexPath];
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+                if(indexPath.row < self.viewModel.findArray.count) {
+                    [cell setViewModel:self.viewModel indexPath:indexPath];
+                }
                 return cell;
             }
                 break;
@@ -336,9 +338,7 @@
                 self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
                 self.viewModel.findSegmentType = 0;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                [cell.backRefreshSubject subscribeNext:^(NSNumber *select) {
-                    [self dealCareOrCancleCareDataWithSelect:select.integerValue indexPath:indexPath];
-                }];
+               
                 cell.hidden = YES;
                 return cell;
             }

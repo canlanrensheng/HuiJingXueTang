@@ -49,8 +49,17 @@
     self.viewModel.tableView = self.tableView;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.page = 1;
-    [self.viewModel getMoreInfoWithSuccess:^{
-        [self.tableView reloadData];
+    if(!self.viewModel.isFirstLoadInfoListData) {
+        [self.viewModel.loadingView startAnimating];
+    }
+    [self.viewModel getMoreInfoWithSuccess:^(BOOL successFlag) {
+        if(!self.viewModel.isFirstLoadInfoListData) {
+            [self.viewModel.loadingView stopLoadingView];
+            self.viewModel.isFirstLoadInfoListData = YES;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -69,9 +78,11 @@
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
-            [self.viewModel getMoreInfoWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+            [self.viewModel getMoreInfoWithSuccess:^(BOOL successFlag) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];

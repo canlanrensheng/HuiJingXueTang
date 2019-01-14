@@ -45,7 +45,7 @@
 
 //删除订单的操作
 - (void)deleteOrderWithOrderId:(NSString *)orderId success:(void (^)(void))success {
-    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delCourseOrder",API_BASEURL];
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/delcourseorder",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
                    @"accesstoken" : [APPUserDataIofo AccessToken],

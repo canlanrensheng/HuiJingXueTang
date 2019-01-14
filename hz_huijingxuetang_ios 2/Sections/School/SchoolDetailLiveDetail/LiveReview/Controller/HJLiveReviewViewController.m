@@ -67,6 +67,7 @@
 
 @property (nonatomic,copy) NSString *coursedes;
 
+
 @end
 
 
@@ -94,28 +95,6 @@
             button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
             [button setBackgroundImage:V_IMAGE(@"送礼ICON") forState:UIControlStateNormal];
             [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-//                [YJAPPNetwork GiftTasksuccess:^(NSDictionary *responseObject) {
-//                    NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
-//                    if (code == 200) {
-//                        HJGiftRewardAlertView *alertView = [[HJGiftRewardAlertView alloc] initWithDataArray:[responseObject valueForKey:@"data"]  Block:^(NSDictionary * _Nonnull dict) {
-//                            //支付的信息
-//                            if (dict) {
-//                                self.goodsid = dict[@"goodsid"];
-//                                HJGiftPayAlertView *payAlertView = [[HJGiftPayAlertView alloc] initWithPrice:[dict valueForKey:@"price"] Block:^(PayType payType) {
-//                                    self.payType = payType;
-//                                    //支付的操作
-//                                    [self AffrimPayAction];
-//                                }];
-//                                [payAlertView show];
-//                            }
-//                        }];
-//                        [alertView show];
-//                    }else{
-//                        ShowMessage(responseObject[@"msg"]);
-//                    }
-//                } failure:^(NSString *error) {
-//                    ShowMessage(error);
-//                }];
                 //返回直播页面大赏
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"BackToLiveDetailVC" object:nil userInfo:nil];
                 [DCURLRouter popViewControllerAnimated:YES];
@@ -132,7 +111,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
     //存储上一次播放的时间
     if(self.player.currentPlaybackTime  > 0) {
         NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
@@ -145,8 +123,18 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [self.controlView.playBtn setSelected:NO];
+    [self.player pause];
+}
+
+- (void)dealloc {
     [self doDestroyPlayer];
 }
+
+//- (void)viewDidDisappear:(BOOL)animated {
+//    [super viewDidDisappear:animated];
+//    [self doDestroyPlayer];
+//}
 
 - (void)hj_loadData {
     NSString *liveId = self.params[@"liveId"];
@@ -204,8 +192,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getPastCourseListDataWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -216,59 +206,6 @@
 
 
 - (void)hj_setNavagation {
-    
-//    if(isFringeScreen) {
-//        UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kTopStatusHeight)];
-//        topView.backgroundColor = black_color;
-//        [self.view addSubview:topView];
-////        self.topView = topView;
-//    }
-//    _playerContainerView = [[UIImageView alloc] initWithFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
-//    _playerContainerView.image = V_IMAGE(@"占位图-1");
-//    [self.view addSubview:_playerContainerView];
-//
-//    _controlView = [[NEVideoPlayerControlView alloc] initWithFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
-//    _controlView.fileTitle = @"慧鲸学堂";
-//    _controlView.delegate = self;
-//    [self.view addSubview:_controlView];
-//
-//    _controlView.killPriceImageV.hidden = YES;
-//    _controlView.fileName.hidden = YES;
-//
-//
-//    [_controlView.backSubject subscribeNext:^(id  _Nullable x) {
-//        //点击返回的时候进行的操作
-//        if(self.isFullScreen) {
-//            [self backVerticalScreen];
-//        } else {
-//            [DCURLRouter popViewControllerAnimated:YES];
-//        }
-//    }];
-//
-//    @weakify(self);
-//    //流量监控弹窗的处理
-//    [_controlView.keepPlaySubject subscribeNext:^(id  _Nullable x) {
-//        @strongify(self);
-//        self.controlView.fileTitleLabel.text = self.coursename.length > 0 ? self.coursename : @"暂无课程名称";
-//        self.controlView.loadingView.speedTextLabel.hidden = NO;
-//        [self.controlView.loadingView startAnimating];
-//        [self.player setPlayUrl:URL(self.videoUrl)];
-//        //准备播放
-//        [self.player prepareToPlay];
-//    }];
-//
-//    [_controlView.shareSubject subscribeNext:^(id  _Nullable x) {
-//        //分享进行的操作
-//        if(self.isFullScreen) {
-//            [self backVerticalScreen];
-//            [self shareOperation];
-//        } else {
-//            [self shareOperation];
-//        }
-//    }];
-//
-//    [self doInitPlayer];
-    
     if(isFringeScreen) {
         UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kTopStatusHeight)];
         topView.backgroundColor = black_color;
@@ -329,7 +266,7 @@
         }
     }];
     
-    
+    //初始化播放控制器
     [self doInitPlayer];
     
     //老师简介的试图创建
@@ -339,6 +276,13 @@
         make.left.right.equalTo(self.view);
         make.height.mas_equalTo(kHeight(65));
         make.top.mas_equalTo(kHeight(210) + kTopStatusHeight);
+    }];
+    [teacherInfoView.careSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        RACSubject *backSubject = self.params[@"subject"];
+        if(backSubject) {
+            [backSubject sendNext:x];
+        }
     }];
     self.teacherInfoView = teacherInfoView;
     
@@ -383,7 +327,6 @@
 
 //点击播放播放按钮进行的操作
 - (void)playClick:(UIButton *)sender {
-//    self.videoUrl = @"http:\/\/vodcvzretw1.vod.126.net\/vodcvzretw1\/837d5303359049f7926f67c3e5cd0453_1537497020568_1537498827412_975287098-00000.mp4";
     if(self.videoUrl.length <= 0){
         self.controlView.playBtn.selected = !self.controlView.playBtn.selected;
         ShowMessage(@"暂无视频播放");
@@ -420,6 +363,9 @@
 
 //初始化播放控制器
 - (void)doInitPlayer {
+    if(self.player) {
+        [self doDestroyPlayer];
+    }
     [NELivePlayerController setLogLevel:NELP_LOG_VERBOSE];
     NSLog(@"%@", [NELivePlayerController getSDKVersion]);
     NSError *error = nil;
@@ -491,6 +437,7 @@
     [self.player shutdown]; // 退出播放并释放相关资源
     [self.player.view removeFromSuperview];
     self.player = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - 播放器通知事件
@@ -524,6 +471,30 @@
     [_player setRealTimeListenerWithIntervalMS:500 callback:nil];
 
 }
+
+////记录播放存为历史的播放
+//- (void)memoryHistoryVideo {
+//    HJCourseSelectJiModel *model = [[HJCourseSelectJiModel alloc] init];
+//    model.totalTime = self.player.duration;
+//    model.date = [NSDate date];
+//    model.courseid = self.viewModel.courseid;
+//    model.videoname = self.coursename;
+//    model.videoppicurl = self.videoUrl;
+//    //老师的名称
+//    model.realName = self.viewModel.model.course.realname;
+//
+//    NSMutableArray *modelArr = [[TXDataManage shareManage] unarchiveObjectWithFileName:[NSString stringWithFormat:@"WatchedVideo%@",[APPUserDataIofo UserID]]];
+//    NSMutableArray *marr = [NSMutableArray arrayWithArray:modelArr];
+//    [marr addObject:model];
+//    
+//    NSMutableDictionary *marrDict  = [NSMutableDictionary dictionary];
+//    //排重
+//    for (HJCourseSelectJiModel *model in marr) {
+//        [marrDict setValue:model forKey:model.courseid];
+//    }
+//    [[TXDataManage shareManage] archiveObject:marrDict.allValues withFileName:[NSString stringWithFormat:@"WatchedVideo%@",[APPUserDataIofo UserID]]];
+//
+//}
 
 - (void)syncUIStatus {
     _controlView.isPlaying = NO;
@@ -593,7 +564,17 @@ dispatch_source_t CreateLiveReviewSyncUITimerN(double interval, dispatch_queue_t
     {
         case NELPMovieFinishReasonPlaybackEnded:
         {
-            [TXAlertView showAlertWithTitle:@"温馨提示" message:@"视频播放结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if(self.isFullScreen) {
+                //全屏的时候播放结束回到竖屏
+                [self backVerticalScreen];
+                [TXAlertView showAlertWithTitle:nil message:@"视频播放结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                        
+                    }
+                } otherButtonTitles:@"确定", nil];
+                return;
+            }
+            [TXAlertView showAlertWithTitle:nil message:@"视频播放结束" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
                     
                 }
@@ -688,48 +669,6 @@ dispatch_source_t CreateLiveReviewSyncUITimerN(double interval, dispatch_queue_t
 }
 
 //点击全屏和竖屏的操作
-//- (void)controlViewOnClickScale:(NEVideoPlayerControlView *)controlView isFill:(BOOL)isFill {
-//    NSLog(@"[NELivePlayer Demo] 点击屏幕缩放，当前状态: [%@]", (isFill ? @"全屏" : @"适应"));
-//    if (isFill) {
-//        self.isFullScreen = YES;
-//        [UIApplication sharedApplication].statusBarHidden = YES;
-//        self.toolView.hidden = YES;
-//        self.playShangButton.hidden = YES;
-//        self.teacherInfoView.hidden = YES;
-//        _controlView.fileName.hidden = NO;
-//        [self.player setScalingMode:NELPMovieScalingModeAspectFill];
-//        [UIView animateWithDuration:0.3 animations:^{
-//            [_playerContainerView setFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
-//            self.player.view.transform = CGAffineTransformMakeRotation(M_PI/2);
-//            _controlView.transform = CGAffineTransformMakeRotation(M_PI/2);
-//            CGRect f = self.player.view.frame;
-//            f = CGRectMake(0, 0, kW, kH);
-//            _controlView.frame = f;
-//            self.player.view.frame = f;
-//
-//            _controlView.isFull = YES;
-//        }];
-//    } else {
-//        self.isFullScreen = NO;
-//        self.playShangButton.hidden = NO;
-//        self.toolView.hidden = NO;
-//        self.teacherInfoView.hidden = NO;
-//        _controlView.fileName.hidden = YES;
-//        [UIApplication sharedApplication].statusBarHidden = NO;
-//        [self.player setScalingMode:NELPMovieScalingModeAspectFit];
-//        [UIView animateWithDuration:0.3 animations:^{
-//            [_playerContainerView setFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
-//            self.player.view.transform = CGAffineTransformIdentity;
-//            _controlView.transform = CGAffineTransformIdentity;
-//            CGRect f = self.player.view.frame;
-//            f = CGRectMake(0, kTopStatusHeight, kW, kHeight(210));
-//            _controlView.frame = f;
-//            self.player.view.frame = f;;
-//            _controlView.isFull = NO;
-//        }];
-//    }
-//}
-
 - (void)controlViewOnClickScale:(NEVideoPlayerControlView *)controlView isFill:(BOOL)isFill {
     DLog(@"[NELivePlayer Demo] 点击屏幕缩放，当前状态: [%@]", (isFill ? @"全屏" : @"适应"));
     if (isFill) {
@@ -875,7 +814,7 @@ dispatch_source_t CreateLiveReviewSyncUITimerN(double interval, dispatch_queue_t
         kRepeatClickTime(1.0);
         HJPastListModel *model = self.viewModel.pastListArray[indexPath.row];
         [self.tableView reloadData];
-
+        [self doInitPlayer];
         self.coursename = model.coursename;
         self.videoUrl = model.videourl;
         self.viewModel.courseid = model.courseid;

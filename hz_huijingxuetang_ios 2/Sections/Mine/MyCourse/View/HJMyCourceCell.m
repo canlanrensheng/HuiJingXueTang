@@ -25,7 +25,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-//    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
     imaV.backgroundColor = Background_Color;
     imaV.userInteractionEnabled = YES;
     [self addSubview:imaV];
@@ -88,7 +87,7 @@
     HJBuyedCourceViewModel *listViewModel = (HJBuyedCourceViewModel *)viewModel;
     HJMyCourseModel *model = listViewModel.courseListArray[indexPath.row];
     if (model){
-        [self.imageV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imageV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.nameLabel.text = model.coursename;
         self.teacherLabel.text = [NSString stringWithFormat:@"讲师：%@",model.realname];
         self.dayLabel.text = @"继续学习";

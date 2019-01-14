@@ -13,18 +13,7 @@
 - (void)hj_configSubViews {
     self.backgroundColor = white_color;
     //购物车按钮
-//    HJPicAndTextButton *shopCarButton = [HJPicAndTextButton buttonWithType:UIButtonTypeCustom withSpace:kHeight(10.0)];
-//    shopCarButton.buttonStyle = ButtonImageTop;
-//    [shopCarButton setImage:V_IMAGE(@"加入购物车") forState:UIControlStateNormal];
-//    [shopCarButton setImage:V_IMAGE(@"已添加购物车") forState:UIControlStateSelected];
-//    [shopCarButton setTitle:@"购物车" forState:UIControlStateNormal];
-//    [shopCarButton setTitle:@"已添加" forState:UIControlStateSelected];
-//    [shopCarButton setTitleColor:HEXColor(@"#22476B") forState:UIControlStateNormal];
-//    [shopCarButton setTitleColor:HEXColor(@"#999999") forState:UIControlStateSelected];
-//    shopCarButton.titleLabel.font = MediumFont(font(10));
-//    [shopCarButton addTarget:self action:@selector(carBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    HJTextAndPicButoton *shopCarButton = [[HJTextAndPicButoton alloc] initWithFrame:CGRectMake(0, 0, kWidth(60.0), kHeight(35.0)) type:HJTextAndPicButotonTypePicTop picSize:CGSizeMake(kWidth(22.0), kHeight(20.0)) textSize:CGSizeMake(60, 10) space:kHeight(5.0) picName:@"加入购物车" selctPicName:@"已添加购物车" text:@"购物车" selectText:@"已添加"  textColor:HEXColor(@"#22476B") selectTextColor:HEXColor(@"#999999") font:MediumFont(font(10)) selectFont:MediumFont(font(10))];
+    HJTextAndPicButoton *shopCarButton = [[HJTextAndPicButoton alloc] initWithFrame:CGRectMake(0, 0, kWidth(60.0), kHeight(35.0)) type:HJTextAndPicButotonTypePicTop picSize:CGSizeMake(kWidth(22.0), kHeight(20.0)) textSize:CGSizeMake(60, 10) space:kHeight(5.0) picName:@"加入购物车" selctPicName:@"已添加购物车" text:@"加入购物车" selectText:@"已添加"  textColor:HEXColor(@"#22476B") selectTextColor:HEXColor(@"#999999") font:MediumFont(font(10)) selectFont:MediumFont(font(10))];
     [shopCarButton addTarget:self action:@selector(carBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:shopCarButton];
     [shopCarButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -116,7 +105,7 @@
     
     //现价的按钮
     UILabel *priceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥8000",MediumFont(font(13)),white_color);
+        label.ljTitle_font_textColor(@"￥0.00",MediumFont(font(13)),white_color);
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -164,7 +153,7 @@
     
     //砍价的价格
     UILabel *killPriceLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"￥0",MediumFont(font(13)),RGBA(255, 255, 255, 0.6));
+        label.ljTitle_font_textColor(@"￥0.00",MediumFont(font(13)),white_color);
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [label sizeToFit];

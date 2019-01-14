@@ -64,6 +64,12 @@
 @property (nonatomic,strong) UIView *topView;
 @property (nonatomic,strong) NSTimer *timer;
 
+//进入购物车的按钮
+@property (nonatomic,strong) UIButton *goInShopCarBtn;
+//购物车的数量
+@property (nonatomic,strong) UILabel *redBotLabel;
+
+
 @end
 
 
@@ -79,24 +85,33 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.viewModel.loadingView startAnimating];
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(CGFLOAT_MIN * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.navigationController setNavigationBarHidden:YES animated:NO];
     });
     self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
     self.fd_interactivePopDisabled = YES;
+    
+    if(!MaJia){
+        //加载消息红点的数量
+        [self loadShopCarMessageCountData];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.fd_prefersNavigationBarHidden = YES;
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [self.controlView.playBtn setSelected:NO];
+    [self.player pause];
+    [self.timer setFireDate:[NSDate distantFuture]];
+}
+
+- (void)dealloc {
     [self doDestroyPlayer];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.timer setFireDate:[NSDate distantFuture]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -111,6 +126,42 @@
     self.fd_interactivePopDisabled = NO;
 }
 
+//加载购物车消息的红点的数量
+- (void)loadShopCarMessageCountData {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/myshopcat",API_BASEURL];
+    NSDictionary *parameters = nil;
+    parameters = @{
+                   @"accesstoken" : [APPUserDataIofo AccessToken],
+                   @"page" : @"1"
+                   };
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __weak typeof(self)weakSelf = self;
+        [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
+            NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+            DLog(@"获取到的购物车的数据是:%@",[NSString convertToJsonData:dic]);
+            NSInteger code = [[dic objectForKey:@"code"]integerValue];
+            if (code == 200) {
+                NSDictionary *dataDict = dic[@"data"];
+                NSArray *courseListArr = dataDict[@"cartlist"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(courseListArr.count > 0) {
+                        weakSelf.redBotLabel.hidden = NO;
+                        weakSelf.redBotLabel.text = [NSString stringWithFormat:@"%ld",(long)courseListArr.count];
+                    } else {
+                        weakSelf.redBotLabel.hidden = YES;
+                    }
+                });
+            } else {
+                ShowError([dic objectForKey:@"msg"]);
+            }
+        } fail:^(id error) {
+            hideHud();
+            ShowError(error);
+        }];
+    });
+}
+
+//加载课程详情的数据
 - (void)hj_loadData {
     if(MaJia) {
         //领取免费课程
@@ -124,7 +175,7 @@
                 [self.viewModel getCourceDetailWithCourseid:courseId Success:^(BOOL successFlag) {
                     weakSelf.viewModel.model.buy = @"y";
                     [weakSelf.viewModel.loadingView stopLoadingView];
-                    [weakSelf.controlView sd_setImageWithURL:URL(weakSelf.viewModel.model.coursepic) placeholderImage:V_IMAGE(@"占位图-1")];
+                    [weakSelf.controlView sd_setImageWithURL:URL(weakSelf.viewModel.model.coursepic) placeholderImage:V_IMAGE(@"占位图-1") options:SDWebImageRefreshCached];
                     weakSelf.baseClassDetailVC.viewModel = weakSelf.viewModel;
                     weakSelf.selectJiVC.viewModel = weakSelf.viewModel;
                     weakSelf.evaluationVC.viewModel = weakSelf.viewModel;
@@ -140,10 +191,9 @@
         NSString *courseId = self.params[@"courseId"];
         self.viewModel.courseId = courseId;
         __weak typeof(self)weakSelf = self;
-//        [weakSelf.viewModel.loadingView startAnimating];
         [self.viewModel getCourceDetailWithCourseid:courseId Success:^(BOOL successFlag) {
             [weakSelf.viewModel.loadingView stopLoadingView];
-            [weakSelf.controlView sd_setImageWithURL:URL(weakSelf.viewModel.model.coursepic) placeholderImage:V_IMAGE(@"占位图-1")];
+            [weakSelf.controlView sd_setImageWithURL:URL(weakSelf.viewModel.model.coursepic) placeholderImage:V_IMAGE(@"占位图-1") options:SDWebImageRefreshCached];
             weakSelf.baseClassDetailVC.viewModel = weakSelf.viewModel;
             weakSelf.selectJiVC.viewModel = weakSelf.viewModel;
             weakSelf.evaluationVC.viewModel = weakSelf.viewModel;
@@ -151,39 +201,37 @@
             [weakSelf dealViewShowOrHidden];
         }];
     }
-   
 }
 
 - (void)hj_setNavagation {
     if(isFringeScreen) {
+        //适配全面屏 自定义状态栏的视图
         UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kTopStatusHeight)];
         topView.backgroundColor = black_color;
         [self.view addSubview:topView];
         self.topView = topView;
     }
    
-    //背景视图
+    //播放器背景视图
     _playerContainerView = [[UIImageView alloc] initWithFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
     _playerContainerView.image = V_IMAGE(@"占位图-1");
     _playerContainerView.backgroundColor = black_color;
     [self.view addSubview:_playerContainerView];
 
-    //控制视图
+    //播放器控制视图
     _controlView = [[NEVideoPlayerControlView alloc] initWithFrame:CGRectMake(0, kTopStatusHeight, Screen_Width, kHeight(210))];
     _controlView.fileTitle = @"慧鲸学堂";
     _controlView.delegate = self;
     [self.view addSubview:_controlView];
     _controlView.fileName.hidden = YES;
-//    _controlView.bottomControlView.hidden = YES;
-    
 
-    //播放的按钮
+    //添加播放按钮
     [_controlView addSubview:self.playBtn];
     [self.playBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(_controlView);
     }];
     
-    //点击试看
+    //添加付费课程点击试看视图
     _tryToWatchLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"点击试看",MediumFont(font(15)),white_color);
         label.textAlignment = NSTextAlignmentCenter;
@@ -198,6 +246,7 @@
     }];
     _tryToWatchLabel.hidden = YES;
 
+    //点击返回的操作
     @weakify(self);
     [_controlView.backSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
@@ -209,7 +258,7 @@
         }
     }];
 
-    //流量监控弹窗的处理
+    //点击流量弹窗的操作
     [_controlView.keepPlaySubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         [self.controlView.loadingView startAnimating];
@@ -217,9 +266,10 @@
         [self.player setPlayUrl:URL(self.videoUrl)];
         //准备播放
         [self.player prepareToPlay];
-        self.controlView.killPriceImageV.hidden = YES;
+//        self.controlView.killPriceImageV.hidden = YES;
     }];
 
+    //点击分享的处理
     [_controlView.shareSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         //分享进行的操作
@@ -231,10 +281,10 @@
         }
     }];
 
-
+    //初始化播放控制器参数
     [self doInitPlayer];
-    
-    //标题试图
+
+    //课程名称和限时秒杀的倒计时视图
     HJClassDetailTitleView *titleView = [[HJClassDetailTitleView alloc] init];
     [self.view addSubview:titleView];
     [titleView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -244,29 +294,14 @@
     }];
     self.titleView = titleView;
 
-    //工具条的按钮的操作
-//    HJClassDetailToolView *toolView = [[HJClassDetailToolView alloc] init];
-//    [self.view addSubview:toolView];
-//    [toolView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.equalTo(self.view);
-//        make.height.mas_equalTo(kHeight(40));
-//        make.top.mas_equalTo(kHeight(210 + 55) + kTopStatusHeight);
-//    }];
-//    self.toolView = toolView;
-//    [toolView.clickSubject subscribeNext:^(id  _Nullable x) {
-//        @strongify(self);
-//        self.selectIndex = [x integerValue];
-//        [UIView animateWithDuration:0.25 animations:^{
-//            [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
-//        }];
-//    }];
+    //详情 选集 评价的插板视图
     __weak typeof(self)weakSelf = self;
     HJTopSementView *toolView = [[HJTopSementView alloc] initWithFrame:CGRectMake(0, kHeight(210 + 65) + kTopStatusHeight, Screen_Width, kHeight(40)) titleColor:HEXColor(@"#333333") selectTitleColor:HEXColor(@"#22476B") lineColor:HEXColor(@"#22476B")  buttons:@[@"详情",@"选集",@"评价"] block:^(NSInteger index) {
         weakSelf.selectIndex = index;
         [UIView animateWithDuration:0.25 animations:^{
             [weakSelf.scrollView setContentOffset:CGPointMake(weakSelf.selectIndex * Screen_Width, 0)];
         }];
-        
+
     }];
     [self.view addSubview:toolView];
     [toolView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -276,6 +311,7 @@
     }];
     self.toolView = toolView;
 
+    //子控制器的配置
     self.controllersClass = @[@"HJBaseClassDetailViewController",@"HJBaseSelectJiViewController",@"HJBaseEvaluationViewController"];
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, kHeight(305) + kTopStatusHeight , Screen_Width, Screen_Height - kHeight(305) - kTopStatusHeight)];
     [self.view addSubview:scrollView];
@@ -288,26 +324,29 @@
 
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
-    
+
     for(int i = 0; i < self.controllersClass.count;i++){
         if( i == 0) {
+            //课程详情
             HJBaseClassDetailViewController *baseClassDetailVC = [[HJBaseClassDetailViewController alloc] init];
             baseClassDetailVC.view.frame = CGRectMake(i * Screen_Width, 0, Screen_Width, Screen_Height - kHeight(305) - kTopStatusHeight);
             [self addChildViewController:baseClassDetailVC];
             [self.scrollView addSubview:baseClassDetailVC.view];
             self.baseClassDetailVC = baseClassDetailVC;
 
+            //免费领取的之后刷新页面的操作 调整视图 去掉免费领取的按钮
             @weakify(self);
             RACSubject *backSub = [[RACSubject alloc] init];
             [backSub subscribeNext:^(id x) {
                 @strongify(self);
-                [_timer invalidate];
-                _timer = nil;
+                [self.timer invalidate];
+                self.timer = nil;
                 [self hj_loadData];
             }];
             baseClassDetailVC.courseMessageSubject = backSub;
         }
-        else if (i == 1){
+        else if (i == 1) {
+            //课程选集
             HJBaseSelectJiViewController *listVC = [[HJBaseSelectJiViewController alloc] init];
             listVC.view.frame = CGRectMake(i * Screen_Width, 0, Screen_Width, Screen_Height - kHeight(305) - kTopStatusHeight);
             [self addChildViewController:listVC];
@@ -317,9 +356,12 @@
             @weakify(self);
             [backSub subscribeNext:^(HJCourseSelectJiModel * model) {
                 @strongify(self);
+                [self.player pause];
                 [self.timer setFireDate:[NSDate distantFuture]];
                 [self.timer invalidate];
                 self.timer = nil;
+
+                [self doInitPlayer];
                 
                 self.model = model;
                 self.videoUrl = model.videourl;
@@ -328,6 +370,7 @@
                 self.titleView.titleTextLabel.text = videoName;
                 self.controlView.fileTitleLabel.text = model.videoname.length > 0 ? model.videoname : @"暂无课程名称";
                 [self playClick:self.playBtn];
+                
             }];
 
             RACSubject *selectJiSub = [[RACSubject alloc] init];
@@ -341,6 +384,7 @@
             self.selectJiVC = listVC;
 
         } else {
+            //课程评价
             HJBaseEvaluationViewController *listVC = [[HJBaseEvaluationViewController alloc] init];
             listVC.view.frame = CGRectMake(i * Screen_Width, 0, Screen_Width, Screen_Height - kHeight(305) -kTopStatusHeight );
             [self addChildViewController:listVC];
@@ -356,8 +400,20 @@
             listVC.evaluationSubject = evaluationSub;
         }
     }
+
+    //添加进入购物车
+    if(!MaJia) {
+        [self.view addSubview:self.goInShopCarBtn];
+        [self.goInShopCarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.view).offset(-kWidth(14.0));
+            make.size.mas_equalTo(CGSizeMake(kWidth(46.0), kHeight(46.0)));
+            make.bottom.equalTo(self.view).offset(-kHeight(122 + 49.0));
+        }];
+    }
+    
 }
 
+//点击分享进行的操作
 - (void)shareOperation {
     NSString *courceName = self.model.videoname.length > 0 ? self.model.videoname : @"慧鲸学堂";
     NSString *coursedes = self.viewModel.model.coursedes.length > 0 ? self.viewModel.model.coursedes : @"慧鲸学堂";
@@ -365,7 +421,7 @@
     if(self.viewModel.model.coursepic.length <= 0) {
         shareImg = V_IMAGE(@"shareImg");
     }
-    
+    //免费的课程
     if (self.viewModel.model.courselimit == 1) {
         //修改分享的链接 课程详情
         NSString *shareUrl = [NSString stringWithFormat:@"%@courseDetails?selected=2&courseid=%@&userid=%@&type=1",API_SHAREURL,self.viewModel.model.courseid,[APPUserDataIofo UserID]];
@@ -407,8 +463,6 @@
                         [self.player setPlayUrl:URL(self.videoUrl)];
                         //准备播放
                         [self.player prepareToPlay];
-                        self.controlView.killPriceImageV.hidden = YES;
-                        
                         sender.hidden = YES;
                         self.tryToWatchLabel.hidden = YES;
                     }
@@ -423,10 +477,10 @@
         [self.player setPlayUrl:URL(self.videoUrl)];
         //准备播放
         [self.player prepareToPlay];
-        self.controlView.killPriceImageV.hidden = YES;
-        
         sender.hidden = YES;
         self.tryToWatchLabel.hidden = YES;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModifySlectJiFistDataStatus" object:nil userInfo:nil];
     } else {
         if(self.videoUrl.length <= 0){
             self.controlView.playBtn.selected = NO;
@@ -442,13 +496,12 @@
                 return;
             }
         }
-        
         [self.controlView.loadingView startAnimating];
         self.controlView.loadingView.speedTextLabel.hidden = NO;
         [self.player setPlayUrl:URL(self.videoUrl)];
         //准备播放
         [self.player prepareToPlay];
-        self.controlView.killPriceImageV.hidden = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModifySlectJiFistDataStatus" object:nil userInfo:nil];
     }
 }
 
@@ -466,16 +519,20 @@
         self.titleView.titleTextLabel.text = videoName;
         self.controlView.fileTitleLabel.text = model.videoname.length > 0 ? model.videoname : @"暂无课程名称";
     }];
+    
+    //点击加入购物车的时候处理消息红点的操作
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"ModifyShopCarMessageCountNotifacation" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        [self loadShopCarMessageCountData];
+    }];
 }
 
 - (void)dealViewShowOrHidden {
     //没有购买隐藏下边的工具条
     if([self.viewModel.model.buy isEqualToString:@"n"]) {
-//        self.controlView.bottomControlView.hidden = YES;
         //点击试看
         self.tryToWatchLabel.hidden = NO;
     } else {
-//        self.controlView.bottomControlView.hidden = NO;
         //点击试看
         self.tryToWatchLabel.hidden = YES;
     }
@@ -499,6 +556,7 @@
             //可以推广
             //显示分享好友的弹窗
             self.controlView.killPriceImageV.hidden = NO;
+          
         }
         
         //是否可以限时特惠
@@ -526,6 +584,9 @@
 
 //初始化播放控制器
 - (void)doInitPlayer {
+    if(self.player){
+        [self doDestroyPlayer];
+    }
     [NELivePlayerController setLogLevel:NELP_LOG_VERBOSE];
     NSError *error = nil;
     self.player = [[NELivePlayerController alloc] init];
@@ -596,6 +657,7 @@
     [self.player shutdown]; // 退出播放并释放相关资源
     [self.player.view removeFromSuperview];
     self.player = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - 播放器通知事件
@@ -658,13 +720,24 @@
 
 - (void)syncUIStatus {
     _controlView.isPlaying = NO;
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timeChange) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timeChange) userInfo:nil repeats:YES];
     //把定时器添加到当前runloop中，并设置该runloop的运行模式，避免它受runloop的影响
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
 //定时器改变
 - (void)timeChange {
+//    DLog(@"获取到的播放的状态是:%ld",self.player.playbackState);
+    if(self.isFullScreen) {
+        self.controlView.killPriceImageV.hidden = YES;
+    } else {
+        if(self.player.playbackState == NELPMoviePlaybackStatePlaying) {
+            self.controlView.killPriceImageV.hidden = YES;
+        } else {
+            self.controlView.killPriceImageV.hidden = NO;
+        }
+    }
+    
     NSTimeInterval mDuration = 0;
     bool getDurFlag = false;
     if (!getDurFlag) {
@@ -699,9 +772,7 @@
 
 - (void)NeLivePlayerloadStateChanged:(NSNotification*)notification {
     DLog(@"[NELivePlayer Demo] 收到 NELivePlayerLoadStateChangedNotification 通知");
-    
     NELPMovieLoadState nelpLoadState = _player.loadState;
-    
     if (nelpLoadState == NELPMovieLoadStatePlaythroughOK)
     {
         NSLog(@"finish buffering");
@@ -719,15 +790,23 @@
     DLog(@"[NELivePlayer Demo] 收到 NELivePlayerPlaybackFinishedNotification 通知");
     switch ([[[notification userInfo] valueForKey:NELivePlayerPlaybackDidFinishReasonUserInfoKey] intValue])
     {
-        case NELPMovieFinishReasonPlaybackEnded:
-        {
-            NSString *warnString = @"直播结束";
+        case NELPMovieFinishReasonPlaybackEnded:{
+            NSString *warnString = @"视频播放结束";
             if([self.viewModel.model.buy isEqualToString:@"n"]) {
                 warnString = @"试看已结束,点击购买观看更多精彩内容！";
             }
             self.controlView.loadingView.speedTextLabel.hidden = YES;
             [self.controlView.loadingView stopAnimating];
-            [TXAlertView showAlertWithTitle:@"提示" message:warnString cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if(self.isFullScreen) {
+                //全屏的时候播放结束回到竖屏
+                [self backVerticalScreen];
+                [TXAlertView showAlertWithTitle:nil message:warnString cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                    }
+                } otherButtonTitles:@"确定", nil];
+                return;
+            }
+            [TXAlertView showAlertWithTitle:nil message:warnString cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
                 }
             } otherButtonTitles:@"确定", nil];
@@ -792,6 +871,7 @@
             self.controlView.currentPos = 2 * 60;
             self.controlView.loadingView.speedTextLabel.hidden = YES;
             [self.controlView.loadingView stopAnimating];
+            [self.controlView.playBtn setSelected:NO];
             [self.player pause];
             [_timer setFireDate:[NSDate distantFuture]];
             [TXAlertView showAlertWithTitle:@"" message:@"试看已结束,点击购买观看更多精彩内容！" cancelButtonTitle:@"取消" style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
@@ -805,8 +885,22 @@
     if (isPlay) {
         if(self.playBtn.hidden == NO) {
             [self playClick:self.playBtn];
+            //播放成功之后延时两秒之后隐藏是视图
+            double delayInSeconds = 2.0;
+            __weak typeof(self)weakSelf = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [weakSelf.controlView controlOverlayHide];
+            });
         } else{
             [self.player play];
+            //播放成功之后延时两秒之后隐藏是视图
+            double delayInSeconds = 2.0;
+            __weak typeof(self)weakSelf = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [weakSelf.controlView controlOverlayHide];
+            });
         }
     } else {
         self.controlView.loadingView.speedTextLabel.hidden = YES;
@@ -825,6 +919,7 @@
     if([self.viewModel.model.buy isEqualToString:@"n"]) {
         if(self.player.currentPlaybackTime >= 2 * 60) {
             self.controlView.currentPos = 2 * 60;
+            [self.controlView.playBtn setSelected:NO];
             [self.player pause];
             self.controlView.loadingView.speedTextLabel.hidden = YES;
             [self.controlView.loadingView stopAnimating];
@@ -863,6 +958,7 @@
         
         self.toolView.hidden = YES;
         self.scrollView.hidden = YES;
+        self.goInShopCarBtn.hidden = YES;
         _controlView.fileName.hidden = NO;
 
         [self.player setScalingMode:NELPMovieScalingModeAspectFill];
@@ -883,6 +979,7 @@
         self.titleView.hidden = NO;
         self.toolView.hidden = NO;
         self.scrollView.hidden = NO;
+        self.goInShopCarBtn.hidden = NO;
         _controlView.fileName.hidden = YES;
         [UIApplication sharedApplication].statusBarHidden = NO;
         [self.player setScalingMode:NELPMovieScalingModeAspectFit];
@@ -899,6 +996,7 @@
     }
 }
 
+//滚动切换控制器的操作
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat width = self.view.frame.size.width;
     CGFloat offsetX = scrollView.contentOffset.x;
@@ -906,6 +1004,41 @@
     NSInteger scrollIndex = offsetX / width;
     self.selectIndex = scrollIndex;
     self.toolView.selectIndex = scrollIndex;
+}
+
+//进入购物车的的按钮
+- (UIButton *)goInShopCarBtn {
+    if(!_goInShopCarBtn) {
+        _goInShopCarBtn = [UIButton creatButton:^(UIButton *button) {
+            button.backgroundColor = clear_color;
+            [button setBackgroundImage:V_IMAGE(@"购物车 入口") forState:UIControlStateNormal];
+            [button clipWithCornerRadius:kHeight(23.0) borderColor:white_color borderWidth:0];
+            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+                if([APPUserDataIofo AccessToken].length <= 0) {
+                    [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                    return;
+                }
+                [DCURLRouter pushURLString:@"route://shopCarVC" animated:YES];
+            }];
+            //购物车的课程的数量
+            UILabel *courseCountLabel = [UILabel creatLabel:^(UILabel *label) {
+                label.ljTitle_font_textColor(@" ",MediumFont(font(10.0)),white_color);
+                label.textAlignment = NSTextAlignmentCenter;
+                label.numberOfLines = 0;
+                [label sizeToFit];
+            }];
+            courseCountLabel.backgroundColor = HEXColor(@"#F02D2D");
+            [courseCountLabel clipWithCornerRadius:kHeight(6.5) borderColor:HEXColor(@"#F02D2D") borderWidth:0];
+            [button addSubview:courseCountLabel];
+            [courseCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(button).offset(kHeight(7.0));
+                make.right.equalTo(button).offset(-kWidth(9.0));
+                make.size.mas_equalTo(CGSizeMake(kWidth(13.0), kHeight(13.0)));
+            }];
+            self.redBotLabel = courseCountLabel;
+        }];
+    }
+    return _goInShopCarBtn;
 }
 
 @end

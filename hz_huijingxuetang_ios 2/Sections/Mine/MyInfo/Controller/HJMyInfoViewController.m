@@ -36,7 +36,9 @@
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:UpdateUserInfoNotification object:nil] subscribeNext:^(id x) {
         @strongify(self);
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -116,7 +118,9 @@
                                 ShowMessage(@"修改成功");
                             });
                             [APPUserDataIofo getSex:province];
-                            [self.tableView reloadData];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self.tableView reloadData];
+                            });
                         });
                     }];
                 });
@@ -140,7 +144,9 @@
                             });
                             
                             [APPUserDataIofo getCityname:[NSString stringWithFormat:@"%@ %@",province,city]];
-                            [self.tableView reloadData];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self.tableView reloadData];
+                            });
                         });
                     }];
                 });

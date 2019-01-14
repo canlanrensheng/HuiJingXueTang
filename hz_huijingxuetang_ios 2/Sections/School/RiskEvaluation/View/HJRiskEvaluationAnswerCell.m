@@ -29,7 +29,7 @@
     }];
     self.backView = backView;
     _titleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"A. 70%以上",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];

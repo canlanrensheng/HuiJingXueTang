@@ -63,7 +63,7 @@
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (indexPath.row < self.dataArr.count) {
         HJCourseSelectJiModel *model = self.dataArr[indexPath.row];
-        [cell.imaV sd_setImageWithURL:URL(model.videoppicurl) placeholderImage:V_IMAGE(@"占位图")];
+        [cell.imaV sd_setImageWithURL:URL(model.videoppicurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         cell.nameLabel.text = model.videoname;
         
         NSString *totalTime = [ZFUtilities convertTimeSecond:model.totalTime];

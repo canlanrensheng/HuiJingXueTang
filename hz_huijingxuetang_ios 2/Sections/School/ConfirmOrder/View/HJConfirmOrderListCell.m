@@ -28,7 +28,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -102,7 +101,7 @@
     HJConfirmOrderViewModel *listViewModel = (HJConfirmOrderViewModel *)viewModel;
     CourselistModel *courseModel = listViewModel.model.courselist[indexPath.row];
     if (courseModel) {
-        [self.picImageView sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.picImageView sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.nameLabel.text = courseModel.coursename;
         NSString *serviceTimeString = [NSString stringWithFormat:@"服务周期：%ld天",courseModel.periods];
         self.serviceTimeLabel.attributedText = [serviceTimeString attributeWithStr:@"服务周期：" color:HEXColor(@"#999999") font:MediumFont(font(11.0))];

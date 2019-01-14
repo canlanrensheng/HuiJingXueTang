@@ -107,7 +107,7 @@
         }];
         
         UIImageView *imaV = [[UIImageView alloc] init];
-        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         imaV.backgroundColor = Background_Color;
         [courseMessageView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {

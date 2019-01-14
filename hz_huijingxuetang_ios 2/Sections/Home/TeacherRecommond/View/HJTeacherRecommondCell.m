@@ -114,7 +114,7 @@
     HJTeacherRecommondViewModel *listViewModel = (HJTeacherRecommondViewModel *)viewModel;
     HJTeacherRecommentModel *model = listViewModel.recommendTeacherArray[indexPath.row];
     if(model) {
-        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.titleTextLabel.text = model.realname;
         self.desTextLabel.text = model.teacprofessional;
         self.detailTLabel.text = [NSString stringWithFormat:@"%ld门课程 | %ld名学员",(long)model.course_count,(long)model.member_count];

@@ -45,31 +45,33 @@
 #import "LoginViewController.h"
 #import "NotificationConst.h"
 
-
-////正式环境
+/*接口域名*/
+//正式环境
 //#define API_BASEURL @"https://api.huijingschool.com/"
 //测试环境
 #define API_BASEURL @"http://192.168.10.18:8084/"
 
-//分享的域名
-//#define API_SHAREURL @"http://192.168.10.144:8081/"
-#define API_SHAREURL @"http://mp.huijingschool.com/"
+/*分享链接的URL的域名*/
+//正式环境
+//#define API_SHAREURL @"http://mp.huijingschool.com/"
+//测试环境
+#define API_SHAREURL @"http://192.168.10.144:8081/"
 
-
-//是否展示马甲
+/*是否展示马甲*/
+//正式环境
 //#define MaJia (([UserInfoSingleObject  shareInstance].isShowMaJia) || ([[APPUserDataIofo phone] isEqualToString:@"15123456789"]))
-
+//测试环境
 #define MaJia 0
 
 //图片Url
-#define _IMGURL @"http://api.huijingschool.com"
+//#define _IMGURL @"http://api.huijingschool.com"
 
 //适配iphone6
 #define kDevice_Is_iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 //适配iphone5
 #define kDevice_Is_iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
-#define Knavheight 64
+#define Knavheight 64.0
 
 #define kH [UIScreen mainScreen].bounds.size.height
 #define kW [UIScreen mainScreen].bounds.size.width
@@ -78,15 +80,15 @@
 #define SafeAreaBottomHeight (kH == 812.0 ? 34 : 0)
 
 //适配宽
-#define SW ((float)[UIScreen mainScreen].bounds.size.width/414)
+#define SW ((float)[UIScreen mainScreen].bounds.size.width / 414)
 //适配高
-#define SH ((float)[UIScreen mainScreen].bounds.size.height/736)
+#define SH ((float)[UIScreen mainScreen].bounds.size.height / 736)
 
 //rgb宏
-#define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+#define RGBA(r,g,b,a) [UIColor colorWithRed:r / 255.0f green:g/255.0f blue:b/255.0f alpha:a]
 #define RGB(r,g,b) RGBA(r,g,b,1.0f)
 
-//导航栏及常用按钮浅蓝色
+//导航条的颜色
 #define NavAndBtnColor NavigationBar_Color
 
 #define WColor [UIColor whiteColor]
@@ -112,19 +114,15 @@
 
 #define LnColor RGB(236, 225, 232)
 
-#define BtnTextColor RGB(0, 183, 255)
 
 //字体大小
 #define TextFont [UIFont systemFontOfSize:15*SW]
-#define TextsmlFont [UIFont systemFontOfSize:13*SW]
 
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+//处理空的数据
+#define DealNil(Str) (Str ? (Str.length > 0 ? Str : @"") : @"")
 
-#define WYLineColor UIColorFromRGB(0xE8E8E8)
-
-#define WYColorMain UIColorFromRGB(0x5596e6)
 
 //网络状况
 #define netError @"网络错误"
@@ -138,28 +136,6 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((_seconds_) * NSEC_PER
 shouldPrevent = NO; \
 }); \
 
-//提示框
-#define SVShow \
-[SVProgressHUD show];
-
-#define SVShowSuccess(str) \
-[SVProgressHUD showSuccessWithStatus:(str)]
-
-#define SVShowError(str) \
-[SVProgressHUD showErrorWithStatus:(str)]
-
-#define SVShowMessage(str) \
-[SVProgressHUD showImage:nil status:(str)]
-
-#define SVDismiss \
-[SVProgressHUD dismiss]
-
-#define SVshowInfo(str) \
-[SVProgressHUD showInfoWithStatus:(str)]
-
-//统一获取UIFont
-#define BOLDFONT(fontSize) [UIFont boldSystemFontOfSize:fontSize*SW]
-#define FONT(fontSize) [UIFont systemFontOfSize:fontSize*SW]
 
 
 #endif /* PrefixHeader_pch */

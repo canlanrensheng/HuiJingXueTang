@@ -59,10 +59,14 @@
                 }else {
                     self.isVip = YES;
                 }
-                [self.tableView reloadData];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                });
             }];
         } else {
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }
     }];
 }
@@ -73,7 +77,9 @@
         @strongify(self);
         self.viewModel.page = 1;
         [self.viewModel getListWithSuccess:^(BOOL successFlag) {
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
@@ -86,8 +92,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getListWithSuccess:^(BOOL successFlag) {
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -113,7 +121,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJBaseTeachBestListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJBaseTeachBestListCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setViewModel:self.viewModel indexPath:indexPath];
     return cell;
 }
@@ -130,15 +137,6 @@
         }
         return;
     }
-//    HJInfoCheckPwdAlertView *alertView = [[HJInfoCheckPwdAlertView alloc] initWithBindBlock:^(BOOL success) {
-//        HJTeachBestListModel *model = self.viewModel.infoListArray[indexPath.row];
-//        if(model.articalid) {
-//            NSDictionary *para = @{@"infoId" : model.articalid
-//                                   };
-//            [DCURLRouter pushURLString:@"route://teachBestDetailVC" query:para animated:YES];
-//        }
-//    }];
-//    [alertView show];
     
     HJTeachBestListModel *model = self.viewModel.infoListArray[indexPath.row];
     if(model.articalid) {
@@ -178,7 +176,8 @@
         if(self.isVip) {
             text = @"暂无相关文章";
         } else {
-            text = @"您还尚未购买课程";
+//            text = @"您还尚未购买课程";
+            text = @"您没有购买课程，暂无相关文章可查看";
         }
     }
     
@@ -203,8 +202,8 @@
     if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
         [self hj_loadData];
     } else {
-        [self.navigationController popToRootViewControllerAnimated:YES];
         self.tabBarController.selectedIndex = 1;
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

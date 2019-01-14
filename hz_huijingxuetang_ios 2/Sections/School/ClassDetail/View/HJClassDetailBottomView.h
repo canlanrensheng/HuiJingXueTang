@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 //邀请好友砍价的价格
 @property (nonatomic,strong) UILabel *killPriceLabel;
-//没有砍价的价格
+//没有限时特惠的时候立即购买的价格
 @property (nonatomic,strong) UILabel *noKillPriceLabel;
-//原价
+//有限时特惠的原价的价格
 @property (nonatomic,strong) UILabel *originPriceLabel;
 //原价的分割线
 @property (nonatomic,strong) UIView *originLineView;
-//砍价后的价格
+//有限时秒杀的秒杀之后的价格
 @property (nonatomic,strong) UILabel *afterSecondKillPriceLabel;
 
 @end

@@ -157,13 +157,16 @@
         } else {
             cell.messageTf.placeholder = @"请填写微信账户名";
         }
+        cell.messageTf.keyboardType = UIKeyboardTypeDefault;
         
     } else if (indexPath.row == 1) {
         cell.messageTextLabel.text = @"手机号";
         cell.messageTf.placeholder = @"请输入手机号";
+        cell.messageTf.keyboardType = UIKeyboardTypeNumberPad;
     } else {
         cell.messageTextLabel.text = @"姓名";
         cell.messageTf.placeholder = @"请输入您的真实姓名";
+        cell.messageTf.keyboardType = UIKeyboardTypeDefault;
     }
     [cell setViewModel:self.viewModel indexPath:indexPath];
     return cell;

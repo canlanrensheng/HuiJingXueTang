@@ -11,6 +11,8 @@
 #import "HJCourseDetailCommentModel.h"
 @implementation HJClassDetailViewModel
 
+
+//获取课程详情的数据
 - (void)getCourceDetailWithCourseid:(NSString *)courseid Success:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/coursedetail",API_BASEURL];
     NSDictionary *para = @{@"accesstoken": [APPUserDataIofo AccessToken],
@@ -37,7 +39,6 @@
             if(!MaJia) {
                 ShowError([dic objectForKey:@"msg"]);
             }
-            
         }
     } fail:^(id error) {
         success(NO);
@@ -47,7 +48,7 @@
     }];
 }
 
-//选集
+//获取选集列表的数据
 - (void)getCourceSelectJiWithCourseid:(NSString *)courseid Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/coursedirectory",API_BASEURL];
     NSDictionary *para = @{
@@ -63,6 +64,7 @@
                 HJCourseSelectJiModel *model = [HJCourseSelectJiModel mj_objectWithKeyValues:dic];
                 [marr addObject:model];
             }
+           
             self.selectJiArray = marr;
             success();
         } else {
@@ -73,7 +75,7 @@
     }];
 }
 
-//获取评论数据
+//获取评论列表的数据
 - (void)getCourceCommentWithCourseid:(NSString *)courseid Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/coursecomment",API_BASEURL];
     NSDictionary *parameters = nil;
@@ -121,7 +123,7 @@
     });
 }
 
-//播放量加1的按钮
+//播放量加1的数据请求
 - (void)addCourseCommentCountWithVideoId:(NSString *)videoId Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/videohitsinc",API_BASEURL];
     NSDictionary *parameters = nil;
@@ -133,7 +135,6 @@
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
-               
                 success();
             } else {
                 ShowError([dic objectForKey:@"msg"]);
@@ -185,7 +186,7 @@
     }];
 }
 
-
+//选集的数据源的操作
 - (NSMutableArray *)selectJiArray {
     if(!_selectJiArray){
         _selectJiArray = [NSMutableArray array];
@@ -193,6 +194,7 @@
     return  _selectJiArray;
 }
 
+//评论的数据源的数量
 - (NSMutableArray *)commentArray {
     if(!_commentArray){
         _commentArray = [NSMutableArray array];

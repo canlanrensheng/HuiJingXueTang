@@ -29,13 +29,25 @@
         make.height.mas_equalTo(kHeight(166));
     }];
     
+    UIButton *notyBackgroundViewBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
+        @weakify(self);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            @strongify(self);
+             [DCURLRouter pushURLString:@"route://messageVC" animated:YES];
+        }];
+    }];
+    [self addSubview:notyBackgroundViewBtn];
+    [notyBackgroundViewBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self);
+        make.top.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(kWidth(60), kHeight(60)));
+    }];
     //通知按钮的操作
     UIButton *notyBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
         [button setBackgroundImage:V_IMAGE(@"通知") forState:UIControlStateNormal];
-        @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-            @strongify(self);
             [DCURLRouter pushURLString:@"route://messageVC" animated:YES];
         }];
     }];
@@ -55,6 +67,7 @@
         label.numberOfLines = 0;
         [label sizeToFit];
     }];
+    redBotLabel.hidden = YES;
     [notyBtn addSubview:redBotLabel];
     [redBotLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(kWidth(15), kHeight(15)));
@@ -68,9 +81,28 @@
     }
     
     self.redBotLabel = redBotLabel;
-
-
     
+    //联系客服的按钮的背景，扩大其点击区域
+    UIButton *csBackgroundViewBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            if([APPUserDataIofo Contact].length <= 0) {
+                ShowMessage(@"暂无客服联系方式");
+                return;
+            }
+            NSURL *url = URL(string(@"telprompt://", [APPUserDataIofo Contact]));
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                [[UIApplication sharedApplication] openURL:url];
+            }
+        }];
+    }];
+    [self addSubview:csBackgroundViewBtn];
+    [csBackgroundViewBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self);
+        make.top.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(kWidth(60), kHeight(60)));
+    }];
+
     //客服按钮
     UIButton *csBtn = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"",H15,white_color,0);

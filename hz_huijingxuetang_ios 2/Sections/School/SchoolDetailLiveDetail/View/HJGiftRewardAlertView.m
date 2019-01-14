@@ -133,7 +133,7 @@ typedef void (^backBlock)(NSDictionary *dict);
                 //设置图片
                 UIImageView *liveImageV = [[UIImageView alloc] init];
                 liveImageV.backgroundColor = Background_Color;
-                [liveImageV sd_setImageWithURL:URL([dic valueForKey:@"icon"]) placeholderImage:V_IMAGE(@"占位图")];
+                [liveImageV sd_setImageWithURL:URL([dic valueForKey:@"icon"]) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
                 [backView addSubview:liveImageV];
                 [liveImageV mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.top.equalTo(backView).offset(kHeight(5.0));

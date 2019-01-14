@@ -21,11 +21,15 @@
     self.backgroundColor = white_color;
     UIImageView *topHeaderImageV = [[UIImageView alloc] init];
     topHeaderImageV.image = V_IMAGE(@"banner");
+    topHeaderImageV.userInteractionEnabled = YES;
     [self addSubview:topHeaderImageV];
     [topHeaderImageV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self);
         make.height.mas_equalTo(kHeight(188));
     }];
+    
+    UITapGestureRecognizer *topHeaderImageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(topHeaderImageTap)];
+    [topHeaderImageV addGestureRecognizer:topHeaderImageTap];
     
     UIView *bottomView = [[UIView alloc] init];
     bottomView.backgroundColor = white_color;
@@ -44,11 +48,14 @@
     }];
     [bottomView addSubview:goodCourseLabel];
     [goodCourseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(topHeaderImageV.mas_bottom).offset(kHeight(25));
         make.left.equalTo(self).offset(kWidth(10.0));
         make.height.mas_equalTo(kHeight(15));
         make.centerY.equalTo(bottomView);
     }];
+}
+
+- (void)topHeaderImageTap {
+    [DCURLRouter pushURLString:@"route://shareMoneyHelpVC" animated:YES];
 }
 
 - (void)setViewModel:(BaseViewModel *)viewModel {

@@ -167,8 +167,97 @@
 
 - (void)setModel:(CourseLiveModel *)model {
     _model = model;
+//    if (model) {
+//        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
+//
+//        if (model.courseid.integerValue == -1) {
+//            //免费直播
+//            self.courceLabel.text = [NSString stringWithFormat:@"%@老师的免费直播",model.realname];
+//            self.freeLiveImageV.hidden = NO;
+//            self.liveTypeLabel.text = @"免费直播";
+//            self.liveTypeLabel.textColor = HEXColor(@"#FF4400");
+//            [self.liveTypeLabel clipWithCornerRadius:kHeight(2.5) borderColor:HEXColor(@"#FF4400") borderWidth:kHeight(1.0)];
+//        } else {
+//            //付费直播
+//            self.courceLabel.text = [NSString stringWithFormat:@"%@",model.coursename];
+//            self.freeLiveImageV.hidden = YES;
+//            self.liveTypeLabel.text = @"付费直播";
+//            self.liveTypeLabel.textColor = HEXColor(@"#22476B");
+//            [self.liveTypeLabel clipWithCornerRadius:kHeight(2.5) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(1.0)];
+//        }
+//
+//        if(model.l_courseid.length > 0) {
+//            //正在直播
+//            NSString *liveCourseName = model.l_livecoursename;
+//            if(liveCourseName.length  > 6) {
+//                liveCourseName = [NSString stringWithFormat:@"%@...",[model.l_livecoursename substringToIndex:6]];
+//            }
+//            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
+//            self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
+//
+//            self.liveImageV.hidden = NO;
+//            self.liveWarnLabel.text = @"正在直播";
+//            self.liveWarnLabel.textColor = HEXColor(@"#0ABC64");
+//            for (int i = 0;i < 5 ;i++){
+//                UIImageView *imaV = self.fireArray[i];
+//                if(i < model.l_buzz.intValue) {
+//                    imaV.image = V_IMAGE(@"热度ICON");
+//                } else {
+//                    imaV.image = V_IMAGE(@"火苗暗");
+//                }
+//            }
+//        } else if (model.a_courseid.length > 0) {
+//            //直播预告
+//            NSString *liveCourseName = model.a_livecoursename;
+//            if(liveCourseName.length  > 6) {
+//                liveCourseName = [NSString stringWithFormat:@"%@...",[model.a_livecoursename substringToIndex:6]];
+//            }
+//            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
+//            self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
+//
+//            self.liveImageV.hidden = YES;
+//            if(model.l_starttime.length > 0) {
+//                self.liveWarnLabel.text = [NSString stringWithFormat:@"下次直播 : %@",model.l_starttime];
+//            } else {
+//                self.liveWarnLabel.text = @"下次直播 : 暂无通告";
+//            }
+//
+//            self.liveWarnLabel.textColor = HEXColor(@"#666666");
+//            for (int i = 0;i < 5 ;i++){
+//                UIImageView *imaV = self.fireArray[i];
+//                if(i < model.a_buzz.intValue) {
+//                    imaV.image = V_IMAGE(@"热度ICON");
+//                } else {
+//                    imaV.image = V_IMAGE(@"火苗暗");
+//                }
+//            }
+//        } else if (model.p_courseid.length > 0) {
+//            //直播回放
+//            self.liveWarnLabel.text = @"下次直播 : 暂无通告";
+//            self.liveWarnLabel.textColor = HEXColor(@"#666666");
+//            for (int i = 0;i < 5 ;i++){
+//                UIImageView *imaV = self.fireArray[i];
+//                if(i < model.p_buzz.intValue) {
+//                    imaV.image = V_IMAGE(@"热度ICON");
+//                } else {
+//                    imaV.image = V_IMAGE(@"火苗暗");
+//                }
+//            }
+//        } else {
+//            NSString *livecoursename = [NSString stringWithFormat:@"讲师：%@",model.realname];
+//            self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
+//
+//            self.liveImageV.hidden = YES;
+//            self.liveWarnLabel.text = @"下次直播 : 暂无通告";
+//            self.liveWarnLabel.textColor = HEXColor(@"#666666");
+//            for (int i = 0;i < 5 ;i++){
+//                UIImageView *imaV = self.fireArray[i];
+//                imaV.image = V_IMAGE(@"火苗暗");
+//            }
+//        }
+//    }
     if (model) {
-        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         
         if (model.courseid.integerValue == -1) {
             //免费直播
@@ -186,9 +275,18 @@
             [self.liveTypeLabel clipWithCornerRadius:kHeight(2.5) borderColor:HEXColor(@"#22476B") borderWidth:kHeight(1.0)];
         }
         
+        if(MaJia) {
+            self.freeLiveImageV.hidden = YES;
+            self.liveTypeLabel.hidden = YES;
+        }
+        
         if(model.l_courseid.length > 0) {
             //正在直播
-            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",model.l_livecoursename,model.realname];
+            NSString *liveCourseName = model.l_livecoursename;
+            if(liveCourseName.length  > 6) {
+                liveCourseName = [NSString stringWithFormat:@"%@...",[model.l_livecoursename substringToIndex:6]];
+            }
+            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
             self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
             
             self.liveImageV.hidden = NO;
@@ -204,12 +302,18 @@
             }
         } else if (model.a_courseid.length > 0) {
             //直播预告
-            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",model.a_livecoursename,model.realname];
+            NSString *liveCourseName = model.a_livecoursename;
+            if(liveCourseName.length  > 6) {
+                liveCourseName = [NSString stringWithFormat:@"%@...",[model.a_livecoursename substringToIndex:6]];
+            }
+            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
             self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
             
             self.liveImageV.hidden = YES;
-            if(model.l_starttime.length > 0) {
-                self.liveWarnLabel.text = [NSString stringWithFormat:@"下次直播 : %@",model.l_starttime];
+            if(model.a_starttime.length > 0) {
+                NSDate *startDate = [NSDate dateWithString:model.a_starttime formatString:@"yyyy-MM-dd HH:mm:ss"];
+                NSDate *endDate = [NSDate dateWithString:model.a_endtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+                self.liveWarnLabel.text = [NSString stringWithFormat:@"下次直播 : %@月%@日 %@:%@-%@:%@",[NSString convertDateSingleData:startDate.month],[NSString convertDateSingleData:startDate.day],[NSString convertDateSingleData:startDate.hour],[NSString convertDateSingleData:startDate.minute],[NSString convertDateSingleData:endDate.hour],[NSString convertDateSingleData:endDate.minute]];
             } else {
                 self.liveWarnLabel.text = @"下次直播 : 暂无通告";
             }
@@ -225,14 +329,10 @@
             }
         } else if (model.p_courseid.length > 0) {
             //直播回放
-//            NSString *livecoursename = [NSString stringWithFormat:@"讲师：%@",model.realname];
-//            self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
-//            self.liveImageV.hidden = YES;
-//            if(model.a_starttime.length > 0) {
-//                self.liveWarnLabel.text = [NSString stringWithFormat:@"下次直播 : %@",model.a_starttime];
-//            } else {
-                self.liveWarnLabel.text = @"下次直播 : 暂无通告";
-//            }
+            NSString *livecoursename = [NSString stringWithFormat:@"讲师：%@",model.realname];
+            self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
+            self.liveImageV.hidden = YES;
+            self.liveWarnLabel.text = @"下次直播 : 暂无通告";
             self.liveWarnLabel.textColor = HEXColor(@"#666666");
             for (int i = 0;i < 5 ;i++){
                 UIImageView *imaV = self.fireArray[i];

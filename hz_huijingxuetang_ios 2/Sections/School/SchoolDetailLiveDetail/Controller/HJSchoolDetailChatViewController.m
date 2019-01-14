@@ -47,12 +47,12 @@
 
 - (void)setViewModel:(HJSchoolLiveDetailViewModel *)viewModel {
     _viewModel = viewModel;
+    //首先登陆自己的网易云信的账户
     [[[NIMSDK sharedSDK] loginManager] login:_viewModel.model.chat.accid
                                        token:_viewModel.model.chat.tokenid
                                   completion:^(NSError *error) {
-//                                      NSDictionary *para = error.userInfo;
-//                                      DLog(@"获取到的数据是:%@ %@",error.userInfo,para[@"NSLocalizedDescription"]);
                                       if (!error) {
+                                          //进入聊天室j操作
                                           NIMChatroomEnterRequest *request = [[NIMChatroomEnterRequest alloc]init];
                                           request.roomId = _viewModel.model.chat.roomid;
                                           request.roomAvatar = [APPUserDataIofo UserIcon];
@@ -150,7 +150,7 @@
         NSString *giftName = extDict[@"giftName"];
         NIMMessageChatroomExtension *ext =  message.messageExt;
         if(systemNotyMessage.length > 0) {
-            //系统的通知
+            //打赏的系统的通知cell的高度
             NSString *roomText = [NSString stringWithFormat:@"主讲人的的的的的：“%@”打赏了一辆“%@”！",ext.roomNickname,giftName];
             CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT)  font:MediumFont(font(13))].height;
             if(height + kHeight(5) > kHeight(20)) {
@@ -159,7 +159,7 @@
             kHeight(20);
         } else {
             if([message.from isEqualToString:self.viewModel.model.room.accid]) {
-                //学员发的消息
+                //学员发的消息cell的高度
                 NSString *roomText = [NSString stringWithFormat:@"%@：%@",ext.roomNickname,message.text];
                 CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT) font:MediumFont(font(13))].height;
                 if(height + kHeight(5) > kHeight(20)) {
@@ -167,7 +167,7 @@
                 }
                 kHeight(20);
             } else {
-                //学生发的消息
+                //老师发的消息的cell的高度
                 NSString *roomText = [NSString stringWithFormat:@"主讲人的的的的%@：%@",ext.roomNickname,message.text];
                 CGFloat height = [roomText calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT)  font:MediumFont(font(13))].height;
                 if(height + kHeight(5) > kHeight(20)) {
@@ -185,6 +185,7 @@
     return 1;
 }
 
+//消息的数量
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.viewModel.chatListArray.count;
 }
@@ -197,7 +198,7 @@
         NSString *giftName = extDict[@"giftName"];
         NIMMessageChatroomExtension *ext =  message.messageExt;
         if(systemNotyMessage.length > 0) {
-           //系统的通知
+           //打赏的系统消息的通知
             HJSystemNotyChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSystemNotyChatCell class]) forIndexPath:indexPath];
             cell.backgroundColor = clear_color;
             self.tableView.separatorColor = clear_color;
@@ -208,7 +209,7 @@
             return cell;
         } else {
             if(![message.from isEqualToString:self.viewModel.model.room.accid]) {
-                //学生发的
+                //学生发的信息cell
                 HJSchoolDetailChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSchoolDetailChatCell class]) forIndexPath:indexPath];
                 self.tableView.separatorColor = clear_color;
                 cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
@@ -219,6 +220,7 @@
                 cell.nameLabel.attributedText = [roomText attributeWithStr:nickName color:HEXColor(@"#999999") font:MediumFont(font(13))];
                 return cell;
             } else {
+                //老师回复的信息的cell
                 HJTeacherChatCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeacherChatCell class]) forIndexPath:indexPath];
                 cell.backgroundColor = clear_color;
                 self.tableView.separatorColor = clear_color;
@@ -247,6 +249,7 @@
 
 #pragma mark -- NIMChatManagerDelegate
 
+//发送聊天室消息
 - (void)commentButtonAction{
     if(self.viewModel.liveDetailErrorCode == 29) {
         ShowMessage(@"暂无购买课程或者课程已过期");
@@ -308,6 +311,7 @@
     [self.tableView reloadData];
 }
 
+#pragma mark 空数据的展示
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
     NSString *text = @" ";
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
@@ -338,7 +342,6 @@
 //键盘即将出现的时候
 - (void)keyboardWillShow:(NSNotification *)sender{
     self.bottomView.hidden = NO;
-    //    获取键盘的高度
     NSDictionary *userInfo = [sender userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
@@ -350,6 +353,8 @@
 - (void)keyboardWillHidden:(NSNotification *)sender{
     self.bottomView.transform = CGAffineTransformIdentity;
 }
+
+
 
 @end
 

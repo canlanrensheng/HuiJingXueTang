@@ -75,8 +75,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getOrderListWithType:MyOrderTypeWaitPay success:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -111,8 +113,13 @@
             [cell.backSub subscribeNext:^(id  _Nullable x) {
                 @strongify(self);
                 //删除进行的操作
-                [self.viewModel.orderListArray removeObjectAtIndex:indexPath.row];
-                [self.tableView reloadData];
+                if(indexPath.row < self.viewModel.orderListArray.count) {
+//                    NSMutableArray *marr = [NSMutableArray arrayWithArray:self.viewModel.orderListArray];
+//                    [marr removeObjectAtIndex:indexPath.row];
+//                    self.viewModel.orderListArray = marr;
+//                    [self.tableView reloadData];
+                    [self hj_loadData];
+                }
             }];
             return cell;
         }
@@ -125,8 +132,13 @@
         [cell.backSub subscribeNext:^(id  _Nullable x) {
             @strongify(self);
             //删除进行的操作
-            [self.viewModel.orderListArray removeObjectAtIndex:indexPath.row];
-            [self.tableView reloadData];
+            if(indexPath.row < self.viewModel.orderListArray.count) {
+//                NSMutableArray *marr = [NSMutableArray arrayWithArray:self.viewModel.orderListArray];
+//                [marr removeObjectAtIndex:indexPath.row];
+//                self.viewModel.orderListArray = marr;
+//                [self.tableView reloadData];
+                [self hj_loadData];
+            }
         }];
         return cell;
     }

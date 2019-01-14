@@ -33,7 +33,7 @@
     self.textTitleLabel = textTitleLabel;
     
     UILabel *detailTitleLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"周一至周五9:00-18:00",MediumFont(font(11)),HEXColor(@"#999999"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(11)),HEXColor(@"#999999"));
         label.textAlignment = NSTextAlignmentRight;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -60,6 +60,11 @@
             self.detailTitleLabel.hidden = NO;
             self.detailTextLabel.text = [APPUserDataIofo Problembacktime];
         }
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-kWidth(32));
+            make.centerY.equalTo(self);
+        }];
     } else {
         if(indexPath.section == 0) {
             if(indexPath.row == 0){
@@ -68,6 +73,11 @@
                 self.textTitleLabel.text = @"历史观看";
             }
             self.detailTitleLabel.hidden = YES;
+            self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kWidth(32));
+                make.centerY.equalTo(self);
+            }];
         } else if (indexPath.section == 1) {
             if(indexPath.row == 0){
                 self.textTitleLabel.text = @"我的订单";
@@ -75,14 +85,46 @@
                 self.textTitleLabel.text = @"我的卡券";
             }
             self.detailTitleLabel.hidden = YES;
-        } else{
-            self.textTitleLabel.text = @"问题反馈";
-            self.detailTitleLabel.hidden = NO;
-            self.detailTextLabel.text = [APPUserDataIofo Problembacktime];
+            self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kWidth(32));
+                make.centerY.equalTo(self);
+            }];
+        } else {
+            if (indexPath.row == 0 ){
+                //问题反馈
+                self.textTitleLabel.text = @"问题反馈";
+                self.detailTitleLabel.hidden = NO;
+                self.detailTitleLabel.text = [APPUserDataIofo Problembacktime];
+                self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.right.equalTo(self).offset(-kWidth(32));
+                    make.centerY.equalTo(self);
+                }];
+            } else {
+                 if([APPUserDataIofo Eval].integerValue == 0) {
+                    //没有风险评估
+                     self.textTitleLabel.text = @"风险评估";
+                     self.detailTitleLabel.hidden = YES;
+                     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                     [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                         make.right.equalTo(self).offset(-kWidth(32));
+                         make.centerY.equalTo(self);
+                     }];
+                 } else {
+                    //已经做过风险评估
+                     self.textTitleLabel.text = @"风险评估";
+                     self.detailTitleLabel.text = @"已评估";
+                     self.detailTitleLabel.hidden = NO;
+                     self.accessoryType = UITableViewCellAccessoryNone;
+                     [self.detailTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                         make.right.equalTo(self).offset(-kWidth(20));
+                         make.centerY.equalTo(self);
+                     }];
+                 }
+            }
         }
     }
-    
-    
 }
 
 @end

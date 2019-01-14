@@ -30,7 +30,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -44,7 +43,6 @@
     
     UIImageView *youhuuiImaV = [[UIImageView alloc] init];
     youhuuiImaV.image = V_IMAGE(@"优惠标签");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     youhuuiImaV.backgroundColor = clear_color;
     [self addSubview:youhuuiImaV];
     [youhuuiImaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -170,7 +168,7 @@
     HJLimitKillMoreViewModel *listViewModel = (HJLimitKillMoreViewModel *)viewModel;
     HJHomeLimitKillModel *model = listViewModel.limitKillMoreArray[indexPath.row];
     if(model){
-        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.courceLabel.text = model.coursename;
         self.youhuuiImaV.hidden = NO;
         self.originPriceLabel.hidden = NO;

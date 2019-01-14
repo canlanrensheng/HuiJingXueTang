@@ -24,8 +24,7 @@
 }
 
 - (void)setLayer {
-    //    self.backgroundImage = [UIImage new];
-    //    self.backgroundColor = Background_Color;
+    
 }
 
 - (void)layoutSubviews{

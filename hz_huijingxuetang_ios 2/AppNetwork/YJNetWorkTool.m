@@ -101,7 +101,7 @@
         }];
     }
     
-    
+    //Post请求的底层的封装
     if ([method isEqualToString:@"POST"]) {
         [self POST:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             hideHud();

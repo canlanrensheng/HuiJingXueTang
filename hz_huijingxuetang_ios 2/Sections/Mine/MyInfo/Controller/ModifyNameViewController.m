@@ -19,7 +19,6 @@
 
 - (void)hj_configSubViews{
     WS(weakSelf);
-    
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:@"完成" font:[UIFont boldSystemFontOfSize:16] action:^(id sender) {
         [weakSelf saveOperation];
     }];
@@ -49,7 +48,6 @@
             });
         }];
     });
-    
 }
 
 - (void)createTextField{

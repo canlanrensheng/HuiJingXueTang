@@ -25,10 +25,9 @@
         
         //新浪
         [platformsRegister setupSinaWeiboWithAppkey:@"3896694739" appSecret:@"a83f38e4fd0b64639a2b1faf84590727" redirectUrl:@"http://www.sharesdk.cn"];
-        
+
     }];
     
-  
 }
 
 @end

@@ -38,7 +38,6 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(CGFLOAT_MIN * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.navigationController setNavigationBarHidden:YES animated:NO];
     });
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -52,7 +51,7 @@
     self.fd_prefersNavigationBarHidden = YES;
 }
 
-
+//设置导航条的属性
 - (void)hj_setNavagation {
     UIView *navView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kNavigationBarHeight)];
     navView.backgroundColor = NavAndBtnColor;
@@ -103,6 +102,7 @@
     
 }
 
+//监听通知的处理
 - (void)hj_bindViewModel {
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"SetToLiveVC" object:nil] subscribeNext:^(id x) {
@@ -121,6 +121,7 @@
     }];
 }
 
+//加载页面视图的方法
 - (void)hj_configSubViews {
     __weak typeof(self)weakSelf = self;
     HJSchoolSementView *toolView = [[HJSchoolSementView alloc] initWithFrame:CGRectMake(0, kNavigationBarHeight, Screen_Width, kHeight(45)) titleColor:white_color selectTitleColor:white_color lineColor:HEXColor(@"#FAD466")  buttons:@[@"课程",@"直播"] block:^(NSInteger index) {
@@ -174,6 +175,7 @@
     
 }
 
+//设置页面滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat width = self.view.frame.size.width;
     CGFloat offsetX = scrollView.contentOffset.x;

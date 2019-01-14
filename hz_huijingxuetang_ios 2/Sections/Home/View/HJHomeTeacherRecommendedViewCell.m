@@ -69,7 +69,7 @@
         
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
-        [imaV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [imaV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         imaV.backgroundColor = Background_Color;
         imaV.opaque = YES;
         [backView addSubview:imaV];

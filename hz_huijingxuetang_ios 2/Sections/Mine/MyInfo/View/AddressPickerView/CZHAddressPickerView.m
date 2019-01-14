@@ -229,10 +229,6 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
     if (!self.selectArea.length) {
         self.selectArea = [self.areaArray firstObject];
     }
-    
-    
-    
-    
 
     NSInteger provinceIndex = 0;
     NSInteger cityIndex = 0;

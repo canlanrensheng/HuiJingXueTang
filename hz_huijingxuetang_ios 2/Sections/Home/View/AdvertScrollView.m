@@ -277,7 +277,7 @@ static NSString *const advertScrollViewMoreCell = @"advertScrollViewMoreCell";
          AdvertScrollViewMoreCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:advertScrollViewMoreCell forIndexPath:indexPath];
         NSString *topImagePath = self.imageArr[indexPath.item];
         if ([topImagePath hasPrefix:@"http"]) {
-            [cell.topSignImageView sd_setImageWithURL:[NSURL URLWithString:topImagePath]];
+            [cell.topSignImageView sd_setImageWithURL:[NSURL URLWithString:topImagePath] ];
             
         } else {
             cell.topSignImageView.image = [UIImage imageNamed:topImagePath];

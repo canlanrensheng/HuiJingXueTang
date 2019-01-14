@@ -108,7 +108,7 @@
 - (void)setModel:(TeacherResponses *)model {
     _model = model;
     if(model) {
-        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.titleTextLabel.text = model.realname;
         self.desTextLabel.text = model.teacprofessional;
         self.detailTLabel.text = [NSString stringWithFormat:@"%ld门课程 | %ld名学员",(long)model.courCount,(long)model.stuCount];

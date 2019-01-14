@@ -55,7 +55,7 @@
     [self.view addSubview:topView];
     //社区人数统计与规则
     UILabel *ruleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"每月月初统一打款至绑定账户（除保证金外）",MediumFont(font(11)),white_color);
+        label.ljTitle_font_textColor(@"每期统一打款至绑定账户（除冻结金外）",MediumFont(font(11)),white_color);
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -78,7 +78,7 @@
     [topView addSubview:questionBtn];
     [questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(topView);
-        make.left.equalTo(ruleTextLabel.mas_right).offset(kWidth(10.0));
+        make.left.equalTo(ruleTextLabel.mas_right).offset(kWidth(5.0));
     }];
 }
 

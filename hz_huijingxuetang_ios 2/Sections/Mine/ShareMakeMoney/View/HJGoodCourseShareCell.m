@@ -27,7 +27,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"占位图");
-    //    [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:nil];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -122,7 +121,7 @@
     HJShareViewModel *listViewModel = (HJShareViewModel *)viewModel;
     HJShareCourseModel *model = listViewModel.courseListArray[indexPath.row];
     
-    [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+    [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
     self.courceLabel.text = model.coursename;
     self.teacherNameLabel.text = [NSString stringWithFormat:@"讲师：%@",model.realname];
     self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",model.coursemoney];

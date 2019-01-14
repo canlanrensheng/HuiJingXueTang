@@ -101,6 +101,16 @@
             [scrollView addSubview:listVC.view];
         }
     }
+    
+    //是否定位到砍价中的页面的操作
+    NSString *isJumpTopKillPriceOrder = self.params[@"isJumpTopKillPriceOrder"];
+    if(isJumpTopKillPriceOrder) {
+        self.toolView.selectIndex = 1;
+        self.selectIndex = 1;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.scrollView setContentOffset:CGPointMake(self.selectIndex * Screen_Width, 0)];
+        }];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -153,7 +153,7 @@
     
     //直播的名称
     UILabel *liveNameLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"《K线走势图》讲师：余春",MediumFont(font(13)),HEXColor(@"#333333"));
+        label.ljTitle_font_textColor(@" ",MediumFont(font(13)),HEXColor(@"#333333"));
         label.textAlignment = NSTextAlignmentLeft;
         [label sizeToFit];
     }];
@@ -170,7 +170,7 @@
     HJSchoolLiveListViewModel *listViewModel = (HJSchoolLiveListViewModel *)viewModel;
     HJTeacherLiveModel *model = listViewModel.liveListArray[indexPath.row];
     if (model) {
-        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imgView sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         
         if (model.courseid.integerValue == -1) {
             //免费直播
@@ -195,7 +195,11 @@
         
         if(model.l_courseid.length > 0) {
             //正在直播
-            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",model.l_livecoursename,model.realname];
+            NSString *liveCourseName = model.l_livecoursename;
+            if(liveCourseName.length  > 6) {
+                liveCourseName = [NSString stringWithFormat:@"%@...",[model.l_livecoursename substringToIndex:6]];
+            }
+            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
             self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
             
             self.liveImageV.hidden = NO;
@@ -211,7 +215,11 @@
             }
         } else if (model.a_courseid.length > 0) {
             //直播预告
-            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",model.a_livecoursename,model.realname];
+            NSString *liveCourseName = model.a_livecoursename;
+            if(liveCourseName.length  > 6) {
+                liveCourseName = [NSString stringWithFormat:@"%@...",[model.a_livecoursename substringToIndex:6]];
+            }
+            NSString *livecoursename = [NSString stringWithFormat:@"《%@》 讲师：%@",liveCourseName,model.realname];
             self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
             
             self.liveImageV.hidden = YES;
@@ -237,13 +245,7 @@
             NSString *livecoursename = [NSString stringWithFormat:@"讲师：%@",model.realname];
             self.liveNameLabel.attributedText = [livecoursename attributeWithStr:[NSString stringWithFormat:@"讲师：%@",model.realname] color:HEXColor(@"#999999") font:MediumFont(font(11))];
             self.liveImageV.hidden = YES;
-//            if(model.p_starttime.length > 0) {
-//                NSDate *startDate = [NSDate dateWithString:model.p_starttime formatString:@"yyyy-MM-dd HH:mm:ss"];
-//                NSDate *endDate = [NSDate dateWithString:model.p_starttime formatString:@"yyyy-MM-dd HH:mm:ss"];
-//                self.liveWarnLabel.text = [NSString stringWithFormat:@"下次直播 : %@月%@日 %@:%@-%@:%@",[NSString convertDateSingleData:startDate.month],[NSString convertDateSingleData:startDate.day],[NSString convertDateSingleData:startDate.hour],[NSString convertDateSingleData:startDate.minute],[NSString convertDateSingleData:endDate.hour],[NSString convertDateSingleData:endDate.minute]];
-//            } else {
-                self.liveWarnLabel.text = @"下次直播 : 暂无通告";
-//            }
+            self.liveWarnLabel.text = @"下次直播 : 暂无通告";
             self.liveWarnLabel.textColor = HEXColor(@"#666666");
             for (int i = 0;i < 5 ;i++){
                 UIImageView *imaV = self.fireArray[i];

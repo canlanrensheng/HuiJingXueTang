@@ -55,7 +55,7 @@
 }
 
 //获取更多课程
-- (void)getMoreCourseWithSuccess:(void (^)(void))success {
+- (void)getMoreCourseWithSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/searchMoreCourse",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
@@ -85,18 +85,21 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.courseListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
             hideHud();
+            success(NO);
             ShowError(error);
         }];
     });
 }
 
-- (void)getMoreTeacherWithSuccess:(void (^)(void))success {
+//加载更多老师的数据
+- (void)getMoreTeacherWithSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/searchMoreTeacher",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
@@ -126,19 +129,21 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.teacherListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
             hideHud();
+            success(NO);
             ShowError(error);
         }];
     });
 }
 
 //获取更多资讯
-- (void)getMoreInfoWithSuccess:(void (^)(void))success {
+- (void)getMoreInfoWithSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/searchMoreInfor",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
@@ -168,19 +173,21 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.infoListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
             hideHud();
+            success(NO);
             ShowError(error);
         }];
     });
 }
 
 //更多直播的列表
-- (void)getMoreLiveWithSuccess:(void (^)(void))success {
+- (void)getMoreLiveWithSuccess:(void (^)(BOOL successFlag))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/searchmorecourselive",API_BASEURL];
     NSDictionary *parameters = nil;
     parameters = @{
@@ -210,12 +217,14 @@
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
                 self.tableView.mj_footer.hidden = self.liveListArray.count < 10 ? YES : NO;
-                success();
+                success(YES);
             } else {
+                success(NO);
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
             hideHud();
+            success(NO);
             ShowError(error);
         }];
     });

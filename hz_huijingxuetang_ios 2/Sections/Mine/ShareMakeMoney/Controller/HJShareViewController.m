@@ -16,6 +16,8 @@
 @property (nonatomic,strong) HJShareHeaderView *headerView;
 @property (nonatomic,strong) HJShareViewModel *viewModel;
 
+@property (nonatomic,strong) UIView *topView;
+
 @end
 
 @implementation HJShareViewController
@@ -37,71 +39,82 @@
     [self.tableView registerClass:[HJGoodCourseShareCell class] forCellReuseIdentifier:NSStringFromClass([HJGoodCourseShareCell class])];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(238), 0, 0, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+    }];
+    //头图
+    self.tableView.tableHeaderView = self.headerView;
+    
+    UIView *topView = [[UIView alloc] init];
+    topView.backgroundColor = HEXColor(@"#FC3838");
+    [self.view addSubview:topView];
+    [topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.equalTo(self.view);
+        make.height.mas_equalTo(kHeight(28));
+    }];
+    [self.view addSubview:topView];
+    
+    topView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *topTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(topTap)];
+    [topView addGestureRecognizer:topTap];
+    //社区人数统计与规则
+    UILabel *ruleTextLabel = [UILabel creatLabel:^(UILabel *label) {
+        label.ljTitle_font_textColor(@"您已超过15天未邀请好友加入社区，社区收入已冻结！",MediumFont(font(11)),white_color);
+        label.textAlignment = NSTextAlignmentLeft;
+        [label sizeToFit];
+    }];
+    [topView addSubview:ruleTextLabel];
+    [ruleTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(topView);
+        make.left.equalTo(topView).offset(kWidth(10.0));
     }];
     
-    [self.view addSubview:self.headerView];
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.view);
-        make.height.mas_equalTo(kHeight(238));
+    //问号按钮
+    UIButton *questionBtn = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
+        [button setBackgroundImage:V_IMAGE(@"推广问号") forState:UIControlStateNormal];
+    }];
+    [topView addSubview:questionBtn];
+    [questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(topView);
+        make.left.equalTo(ruleTextLabel.mas_right).offset(kWidth(5.0));
+        make.size.mas_equalTo(CGSizeMake(kWidth(12), kHeight(12)));
     }];
     
-//    UIView *topView = [[UIView alloc] init];
-//    topView.backgroundColor = RGBA(0, 0, 0, 0.1);
-//    [self.view addSubview:topView];
-//    [topView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.top.equalTo(self.view);
-//        make.height.mas_equalTo(kHeight(28));
-//    }];
-//    [self.view addSubview:topView];
-//    //社区人数统计与规则
-//    UILabel *ruleTextLabel = [UILabel creatLabel:^(UILabel *label) {
-//        label.ljTitle_font_textColor(@"社区人数统计与规则",MediumFont(font(11)),white_color);
-//        label.textAlignment = NSTextAlignmentLeft;
-//        [label sizeToFit];
-//    }];
-//    [topView addSubview:ruleTextLabel];
-//    [ruleTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(topView);
-//        make.left.equalTo(topView).offset(kWidth(10.0));
-//    }];
-//
-//    //问号按钮
-//    UIButton *questionBtn = [UIButton creatButton:^(UIButton *button) {
-//        button.ljTitle_font_titleColor_state(@"",H15,white_color,0);
-//        [button setBackgroundImage:V_IMAGE(@"问号") forState:UIControlStateNormal];
-//        @weakify(self);
-//        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-//            @strongify(self);
-//
-//        }];
-//    }];
-//    [topView addSubview:questionBtn];
-//    [questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(topView);
-//        make.left.equalTo(ruleTextLabel.mas_right).offset(kWidth(8.0));
-//    }];
+    self.topView = topView;
+}
+
+- (void)topTap {
+    NSDictionary *para = @{@"fromShare" : @(YES)};
+    [DCURLRouter pushURLString:@"route://shareMoneyHelpVC" query:para animated:YES];
 }
 
 - (HJShareHeaderView *)headerView {
     if (!_headerView) {
         _headerView = [[HJShareHeaderView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, kHeight(238))];
+        _headerView.userInteractionEnabled = YES;
     }
     return _headerView;
 }
 
 - (void)hj_loadData {
-    [self.viewModel getCurrentMonthMessageWithSuccess:^{
-        //获取到的信息是
-        [self.headerView setViewModel:self.viewModel];
-    }];
+//    [self.viewModel getCurrentMonthMessageWithSuccess:^{
+//        //获取到的信息是
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.headerView setViewModel:self.viewModel];
+//        });
+//    }];
     
     //获取分享的推荐课程的列表
     self.viewModel.tableView = self.tableView;
     self.tableView.mj_footer.hidden = YES;
     self.viewModel.page = 1;
-    [self.viewModel getShareCourceListSuccess:^{
-        [self.tableView reloadData];
+    [self.viewModel.loadingView startAnimating];
+    [self.viewModel getShareCourceListSuccess:^(BOOL successFlag) {
+        self.topView.hidden = (self.viewModel.overdueInvitationStatus == 1 ? NO : YES);
+        [self.viewModel.loadingView stopLoadingView];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -120,9 +133,11 @@
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
-            [self.viewModel getShareCourceListSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+            [self.viewModel getShareCourceListSuccess:^(BOOL successFlag) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -144,7 +159,7 @@
 }
 
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HJGoodCourseShareCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJGoodCourseShareCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = HEXColor(@"#EAEAEA");
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -176,9 +191,10 @@
 }
 
 #pragma mark 数据为空的占位视图
-//- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView{
-//    return - kHeight(40);
-//}
+
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView{
+    return - kHeight(238.0);
+}
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
     return [UIImage imageNamed:@"绝技诊股空白页"];

@@ -68,6 +68,7 @@
     }];
 }
 
+//获取老师的课程的列表
 - (void)getTeachercCourseListWithTeacherid:(NSString *)teacherid  Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/teachercourselist",API_BASEURL];
     NSDictionary *parameters = nil;
@@ -109,6 +110,7 @@
     });
 }
 
+//获取老师的文章的列表
 - (void)getTeachercInfoListWithTeacherid:(NSString *)teacherid  Success:(void (^)(void))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/teachernewslist",API_BASEURL];
     NSDictionary *parameters = nil;
@@ -193,6 +195,7 @@
     });
 }
 
+//老师课程的数据
 - (NSMutableArray *)teachercCourseArray {
     if (!_teachercCourseArray){
         _teachercCourseArray = [NSMutableArray array];
@@ -200,6 +203,7 @@
     return  _teachercCourseArray;
 }
 
+//老师文章的数据
 - (NSMutableArray *)teacherInfoArray {
     if (!_teacherInfoArray){
         _teacherInfoArray = [NSMutableArray array];
@@ -207,6 +211,7 @@
     return  _teacherInfoArray;
 }
 
+//老师直播列表的数据
 - (NSMutableArray *)liveListArray {
     if(!_liveListArray) {
         _liveListArray = [NSMutableArray array];

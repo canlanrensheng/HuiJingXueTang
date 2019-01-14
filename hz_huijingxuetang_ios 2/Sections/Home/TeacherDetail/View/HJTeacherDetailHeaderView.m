@@ -215,7 +215,7 @@
 - (void)setModel:(HJTeacherDetailModel *)model {
     _model = model;
     if(model) {
-        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.nameLabel.text = model.realname;
         
         //计算宽度

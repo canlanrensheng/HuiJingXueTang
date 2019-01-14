@@ -28,7 +28,6 @@
     //图片
     UIImageView *imaV = [[UIImageView alloc] init];
     imaV.image = V_IMAGE(@"默认头像");
-//    [imaV sd_setImageWithURL:nil placeholderImage:V_IMAGE(@"占位图")];
     imaV.backgroundColor = Background_Color;
     [self addSubview:imaV];
     [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -136,7 +135,7 @@
     HJClassDetailViewModel *listViewModel = (HJClassDetailViewModel *)viewModel;
     HJCourseDetailCommentModel *model = listViewModel.commentArray[indexPath.row];
     if(model){
-        [self.imaV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.imaV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.nameLabel.text = model.nickname;
         float fStaLevel = model.coursescore.floatValue;
         if(fStaLevel == model.coursescore.intValue) {

@@ -28,9 +28,11 @@
     if([APPUserDataIofo AccessToken].length > 0){
         [self.viewModel getUserInfoWithSuccess:^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像")];
+                [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
                 self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
                 self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+                
+                [self.tableView reloadData];
             });
         }];
     }
@@ -52,7 +54,7 @@
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:UpdateUserInfoNotification object:nil] subscribeNext:^(id x) {
         @strongify(self);
-        [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
         self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
     }];
@@ -101,8 +103,6 @@
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(266), 0, 0, 0));
         }];
     }
-    
-    
 }
 
 - (void)hj_loadData {
@@ -111,7 +111,7 @@
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:LoginGetUserInfoNotification object:nil] subscribeNext:^(id x) {
         @strongify(self);
         [self.viewModel getUserInfoWithSuccess:^{
-            [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像")];
+            [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
             self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
             self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
         }];
@@ -142,7 +142,7 @@
         if(section == 1) {
             return 2;
         }
-        return 1;
+        return 2;
     }
     
 }
@@ -201,6 +201,7 @@
         if(indexPath.section == 1) {
             if(indexPath.row == 0){
                 //我的订单
+//                NSDictionary *para = @{@"isJumpTopKillPriceOrder" : @(NO)};
                 [DCURLRouter pushURLString:@"route://myOrderVC" animated:YES];
             }else {
                 //我的卡券
@@ -210,7 +211,27 @@
         
         //问题反馈
         if(indexPath.section == 2) {
-            [DCURLRouter pushURLString:@"route://mySuggestionVC" animated:YES];
+            if([APPUserDataIofo Eval].integerValue == 0) {
+                if(indexPath.row == 0) {
+                    //问题反馈
+                    [DCURLRouter pushURLString:@"route://mySuggestionVC" animated:YES];
+                } else {
+                    //风险评估
+                    [DCURLRouter pushURLString:@"route://riskEvaluationVC" animated:YES];
+                }
+            } else {
+                //没有做过风险评估
+                if(indexPath.row == 0) {
+                    //问题反馈
+                    [DCURLRouter pushURLString:@"route://mySuggestionVC" animated:YES];
+                } else {
+                    //风险评估
+//                    HJMineListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                    [cell setHidden:NO];
+//                    [self setH];
+//                    [DCURLRouter pushURLString:@"route://riskEvaluationVC" animated:YES];
+                }
+            }
         }
     }
 }

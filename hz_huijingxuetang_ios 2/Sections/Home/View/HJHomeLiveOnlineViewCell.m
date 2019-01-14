@@ -84,7 +84,7 @@
         HJHomeLiveModel *model = assets[i];
         //图片
         UIImageView *imaV = [[UIImageView alloc] init];
-        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         imaV.backgroundColor = white_color;
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -125,7 +125,7 @@
         
         //头像图片
         UIImageView *iconImageV = [[UIImageView alloc] init];
-        [iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         [iconImageV clipWithCornerRadius:kWidth(20.0) borderColor:nil borderWidth:0];
         iconImageV.backgroundColor = Background_Color;
         [backView addSubview:iconImageV];
@@ -151,20 +151,24 @@
         }];
   
         
-        //职位
+        //直播间的名称
+        NSString *liveRoomText =  model.l_livecoursename;
+//        if(model.l_livecoursename.length > 6) {
+//            liveRoomText = [NSString stringWithFormat:@"%@...",[model.l_livecoursename substringToIndex:6]];
+//        }
         UILabel *jobLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(model.l_livecoursename,MediumFont(font(11)),HEXColor(@"#666666"));
+            label.ljTitle_font_textColor(liveRoomText,MediumFont(font(11)),HEXColor(@"#666666"));
             [label sizeToFit];
         }];
         [backView addSubview:jobLabel];
         [jobLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(nameLabel.mas_bottom).offset(kHeight(7.0));
             make.left.equalTo(nameLabel);
+            make.right.equalTo(backView).offset(-kWidth(5.0));
             make.height.mas_equalTo(kHeight(11.0));
         }];
 
     }
-    //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
     
 }

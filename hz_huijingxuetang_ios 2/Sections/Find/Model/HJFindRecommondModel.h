@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger,FindType){
-    FindTypeText = 0,
+    FindTypeText = 0, //纯文字类型
     FindTypePic = 1,
     FindTypeLink = 2,
     FindTypeVideo= 3,

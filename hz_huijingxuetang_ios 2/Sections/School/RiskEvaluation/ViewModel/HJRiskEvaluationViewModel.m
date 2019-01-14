@@ -25,13 +25,14 @@
                         questionModel.classname = [dataDic valueForKey:@"classname"];
                         for (Answer *answerModel in questionModel.answer) {
                             NSString *anwerDes = [NSString stringWithFormat:@"%@",answerModel.answername];
-                            CGFloat cellHeight = [anwerDes calculateSize:CGSizeMake(Screen_Width - kWidth(40), MAXFLOAT)  font:MediumFont(font(13))].height;
+                            CGFloat cellHeight = [anwerDes calculateSize:CGSizeMake(Screen_Width - kWidth(40), MAXFLOAT)  font:MediumFont(font(11))].height;
                             answerModel.answerCellHeight = kHeight(28.0) + cellHeight;
                         }
                         //计算问题的cell的高度
                         NSString *questionDes = [NSString stringWithFormat:@"%@：%@",questionModel.classname,questionModel.questionname];
-                        CGFloat cellHeight = [questionDes calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT) font:BoldFont(font(15))].height;
-                        questionModel.questionCellHeight = kHeight(34.0) + cellHeight;
+                        CGFloat cellHeight = [questionDes calculateSize:CGSizeMake(Screen_Width - kWidth(20), MAXFLOAT) font:BoldFont(font(14))].height;
+                        DLog(@"获取到的高度是:%lf",cellHeight);
+                        questionModel.questionCellHeight = cellHeight + kHeight(15.0);
                         [marr addObject:questionModel];
                     }
                 }

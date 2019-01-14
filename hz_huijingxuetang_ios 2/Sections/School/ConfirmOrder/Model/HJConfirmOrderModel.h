@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) NSInteger              periods;
 
 //是否能推广的课 1代表能推广联系客户之父 小额 0代表大额，不能直接支付
-@property (nonatomic , assign) NSInteger              canpromote;
+@property (nonatomic , assign) NSInteger              ispromote;
 
 @end
 

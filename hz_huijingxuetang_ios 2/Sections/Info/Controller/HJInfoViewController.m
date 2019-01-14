@@ -11,6 +11,11 @@
 #import "HJTopSementView.h"
 #import "HJInfoViewModel.h"
 #import "HJNoDataView.h"
+
+#import <Contacts/Contacts.h>
+#import <AddressBook/AddressBookDefines.h>
+#import <AddressBook/ABRecord.h>
+
 @interface HJInfoViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic,strong) HJTopSementView *sementView;

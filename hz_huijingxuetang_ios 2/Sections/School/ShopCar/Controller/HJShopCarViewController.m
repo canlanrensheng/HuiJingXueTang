@@ -12,7 +12,7 @@
 #import "HJShopCarViewModel.h"
 #import "HJShopCarListModel.h"
 
-#define MaxCourseCount 10
+#define MaxCourseCount 9
 @interface HJShopCarViewController ()
 
 @property (nonatomic,strong) UIView *bottomView;
@@ -24,11 +24,20 @@
 @end
 
 @implementation HJShopCarViewController
-
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
+    self.fd_interactivePopDisabled = YES;
     [self loadData];
 }
+
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = YES;
+    self.fd_interactivePopDisabled = NO;
+}
+
 
 - (HJShopCarViewModel *)viewModel {
     if (!_viewModel) {
@@ -130,19 +139,36 @@
             [marr addObject:model.courseid];
         }
     }
-    
     NSString *cids = [marr componentsJoinedByString:@","];
-    if([APPUserDataIofo Eval].integerValue == 0) {
-        NSDictionary *para = @{@"index" : @(0), @"selectMarr" :@[],
-                               @"isKillPrice" : @(0),
-                               @"courseId" : cids
-                               };
-        [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
-    }else {
-        NSDictionary *para = @{@"courseId" : cids,
-                               @"isKillPrice" : @(0)};
-        [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
-    }
+    //创建购物车订单
+    ShowHint(@"");
+    [YJAPPNetwork WillPayWithAccesstoken:[APPUserDataIofo AccessToken] cids:DealNil(cids) picData:nil  success:^(NSDictionary *responseObject) {
+        hideHud();
+        NSInteger code = [[responseObject objectForKey:@"code"]integerValue];
+        if (code == 200) {
+            NSString *orderid = [responseObject objectForKey:@"data"];
+            //确认订单页面
+            NSDictionary *para = @{@"orderId" : orderid};
+            [DCURLRouter pushURLString:@"route://confirmOrderVC" query:para animated:YES];
+        } else {
+            ShowMessage([responseObject valueForKey:@"msg"]);
+        }
+    } failure:^(NSString *error) {
+        hideHud();
+        ShowMessage(error);
+    }];
+
+//    if([APPUserDataIofo Eval].integerValue == 0) {
+//        NSDictionary *para = @{@"index" : @(0), @"selectMarr" :@[],
+//                               @"isKillPrice" : @(0),
+//                               @"courseId" : cids
+//                               };
+//        [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
+//    }else {
+//        NSDictionary *para = @{@"courseId" : cids,
+//                               @"isKillPrice" : @(0)};
+//        [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+//    }
 }
 
 - (void)loadData {
@@ -178,8 +204,10 @@
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getShopCarListDataWithSuccess:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -269,8 +297,11 @@
             if (indexPath.row < self.viewModel.shopCarListArray.count) {
                 HJShopCarListModel *model = self.viewModel.shopCarListArray[indexPath.row];
                 [self.viewModel deleteShopListWithCourseid:model.courseid Success:^{
-                    [self.viewModel.shopCarListArray removeObjectAtIndex:indexPath.row];
-                    [self dealSelectData];
+                    if(indexPath.row < self.viewModel.shopCarListArray.count) {
+                        [self.viewModel.shopCarListArray removeObjectAtIndex:indexPath.row];
+                        [self dealSelectData];
+                    }
+                   
                 }];
             }
         }

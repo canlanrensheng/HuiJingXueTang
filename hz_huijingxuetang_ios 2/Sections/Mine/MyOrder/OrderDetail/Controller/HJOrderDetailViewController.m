@@ -113,7 +113,9 @@
         cell.model = self.viewModel.model;
         cell.viewModel = self.viewModel;
         [cell.backSub subscribeNext:^(id  _Nullable x) {
-            [self hj_loadData];
+//            [self hj_loadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"OrderPaySuccessNoty" object:nil userInfo:nil];
+            [DCURLRouter popViewControllerAnimated:YES];
         }];
     }
     return cell;

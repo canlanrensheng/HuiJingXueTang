@@ -98,7 +98,7 @@
     HJTeacherDetailViewModel *listViewModel = (HJTeacherDetailViewModel *)viewModel;
     HJTeacherInfoModel *model = listViewModel.teacherInfoArray[indexPath.row];
     if(model){
-        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.contentTitleLabel.text = model.infomationtitle;
         self.readCountLabel.text = [NSString stringWithFormat:@"%ld",model.readingquantity];
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];

@@ -138,7 +138,9 @@
             weakSelf.viewModel.page = 1;
             [weakSelf.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
+//                    [weakSelf.tableView reloadData];
+                    NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndex:1];
+                    [weakSelf.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 });
             }];
         }];
@@ -167,15 +169,24 @@
     //获取详情的数据
     [self.viewModel.loadingView startAnimating];
     [self.viewModel getInfoDetailWithInfoid:infoId Success:^{
-        self.infoTitleLabel.text = self.viewModel.model.infomationtitle;
-        NSDate *date = [NSDate dateWithString:self.viewModel.model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
-        NSString *dateString = [NSString stringWithFormat:@"%ld年%@月%@日",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
-        self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %tu",dateString,self.viewModel.model.singname,self.viewModel.model.readcounts];
-        [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图")];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        if(self.viewModel.model) {
+            self.infoTitleLabel.text = self.viewModel.model.infomationtitle;
+            NSDate *date = [NSDate dateWithString:self.viewModel.model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+            NSString *dateString = [NSString stringWithFormat:@"%ld年%@月%@日",(long)(date.year),[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+            self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %tu",dateString,self.viewModel.model.singname,self.viewModel.model.readcounts];
+            [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        } else {
+            [self.viewModel.loadingView stopLoadingView];
+            ShowMessage(@"空的或者无效的资讯");
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [DCURLRouter popViewControllerAnimated:YES];
+            });
+        }
     }];
+    
     //获取评论列表的数据
     self.viewModel.tableView = self.tableView;
     self.viewModel.page = 1;
@@ -186,28 +197,35 @@
     }];
 }
 
+//上拉加载和下拉刷新操作
 - (void)hj_refreshData {
+    //下拉刷新操作
     @weakify(self);
     NSString *infoId = self.params[@"infoId"];
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page = 1;
         [self.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-            [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer resetNoMoreData];
         });
     }];
-
+    
+    //上拉加载操作
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         @strongify(self);
         self.viewModel.page++;
         if(self.viewModel.currentpage < self.viewModel.totalpage){
             [self.viewModel getInfoDetailCommondWithInfoid:infoId Success:^{
-                [self.tableView reloadData];
-                [self.tableView.mj_footer endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.tableView.mj_footer endRefreshing];
+                });
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -216,10 +234,11 @@
     }];
 }
 
+#pragma UITableView delegate
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0) {
-//        DLog(@"获取到的高速时:%lf",self.webViewCellHeight);
-        return self.webViewCellHeight  + kHeight(10.0);
+        return self.webViewCellHeight + kHeight(10.0);
     }
     if(self.viewModel.infoCommondArray.count <= 0){
         return kHeight(218);
@@ -246,7 +265,6 @@
     if(indexPath.section == 0){
         HJTeachBestDetailWebViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailWebViewCell class]) forIndexPath:indexPath];
         self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-//        cell.webView.backgroundColor = red_color;
         cell.webView.navigationDelegate = self;
         cell.webView.UIDelegate = self;
         self.webView = cell.webView;
@@ -292,20 +310,20 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{//这里修改导航栏的标题，动态改变
     CGRect rect = webView.frame;
     rect.size.height = webView.scrollView.contentSize.height;
-//    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
     DLog(@"获取到的数据的高度时:%lf",self.webViewCellHeight);
     if (self.webViewCellHeight != webView.scrollView.contentSize.height || self.webViewCellHeight <= kHeight(44)) {
         [self.viewModel.loadingView stopLoadingView];
         self.webView.frame = CGRectMake(rect.origin.x, rect.origin.y, Screen_Width - kWidth(20.0), rect.size.height);
         self.webViewCellHeight = rect.size.height;
-//        [self.webView sizeToFit];
         [self.activityV stopAnimating];
         [self.tableView reloadData];
     }
 }
 
 // 页面加载失败时调用
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation {
+    [self.viewModel.loadingView stopLoadingView];
+    ShowMessage(@"网页加载失败");
     [self.tableView reloadData];
 }
 
@@ -324,7 +342,7 @@
 // 在发送请求之前，决定是否跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     WKNavigationActionPolicy actionPolicy = WKNavigationActionPolicyAllow;
-    if (navigationAction.navigationType==WKNavigationTypeBackForward) {//判断是返回类型
+    if (navigationAction.navigationType == WKNavigationTypeBackForward) {//判断是返回类型
         
     }
     //这句是必须加上的，不然会异常

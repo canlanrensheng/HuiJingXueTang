@@ -220,6 +220,7 @@
     [DCURLRouter pushURLString:@"route://reSetPwdVC" query:paraDict animated:YES];
 }
 
+//获取验证码操作
 - (void)getCode{
     if (!self.phoneTf.text.length) {
         return ShowError(@"请输入11位手机号");

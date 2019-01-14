@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HJSchoolDetailTeacherInfoView : BaseView
 
 @property (nonatomic,strong) HJSchoolLiveDetailViewModel *viewModel;
+//点击关注未关注按钮的回掉的操作
+@property (nonatomic,strong) RACSubject *careSubject;
+//关注按钮的状态的改变的操作
+@property (nonatomic,assign) BOOL careSelected;
 
 @end
 

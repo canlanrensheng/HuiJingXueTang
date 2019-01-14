@@ -107,29 +107,32 @@
     return _guider2View;
 }
 
+//导航条设置
 - (void)hj_setNavagation {
     self.title = @"推广赚钱";
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:@"帮助" font:MediumFont(font(15)) action:^(id sender) {
-        
-//        [DCURLRouter pushURLString:@"route://shareMoneyHelpVC" animated:YES];
-        
+        [DCURLRouter pushURLString:@"route://shareMoneyHelpVC" animated:YES];
     }];
 }
 
+//视图创建
 - (void)hj_configSubViews {
+    //子控制器设置
     self.controllersClass = @[@"HJShareViewController",@"HJProfitViewController"];
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height - kNavigationBarHeight - kHeight(49) - KHomeIndicatorHeight)];
     [self.view addSubview:scrollView];
+    
+    //添加滚动效果
     scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kNavigationBarHeight - kHeight(49) - KHomeIndicatorHeight);
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.delegate = self;
     scrollView.pagingEnabled = YES;
     scrollView.scrollEnabled = YES;
     scrollView.bounces = NO;
-
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
 
+    //将子控制器添加到父控制器
     for (int index = 0; index < self.controllersClass.count; index++) {
         if(index == 0) {
             HJShareViewController *listVC = [[HJShareViewController alloc] init];
@@ -197,6 +200,8 @@
     }];
 }
 
+
+
 //推广赚钱引导页二
 - (void)guide2Tap {
     self.guider2View.hidden = YES;
@@ -214,6 +219,7 @@
     NSInteger scrollIndex = offsetX / width;
     self.bottomView.selectIndex = scrollIndex;
 }
+
 
 @end
 

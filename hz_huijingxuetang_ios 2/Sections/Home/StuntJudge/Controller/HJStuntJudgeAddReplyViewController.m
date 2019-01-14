@@ -69,13 +69,13 @@
         _stuntCodeTF = [[UITextField alloc]init];
         _stuntCodeTF.backgroundColor = white_color;
         _stuntCodeTF.delegate = self;
-        _stuntCodeTF.placeholder = @"输入股票代码";
+        _stuntCodeTF.placeholder = @"输入股票代码或名称";
         _stuntCodeTF.font = MediumFont(font(13));
         UIView *leftPhoneView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kWidth(10), kHeight(45))];
         _stuntCodeTF.leftView = leftPhoneView;
         _stuntCodeTF.leftViewMode = UITextFieldViewModeAlways;
         _stuntCodeTF.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        _stuntCodeTF.keyboardType = UIKeyboardTypeNumberPad;
+//        _stuntCodeTF.keyboardType = UIKeyboardTypeNumberPad;
         [_stuntCodeTF addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _stuntCodeTF;

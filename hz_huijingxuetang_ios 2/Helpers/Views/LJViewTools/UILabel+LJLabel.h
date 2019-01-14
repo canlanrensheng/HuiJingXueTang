@@ -20,4 +20,5 @@ typedef UILabel *(^ljFrame)(NSString *title, UIFont *font, UIColor *textColor);
 - (UILabel* (^)(UIColor *color))ljBackgroundColor;
 - (UILabel* (^)(NSInteger lines))ljNumberOfLines;
 
+
 @end

@@ -68,17 +68,18 @@
 }
 
 -(NSArray *)createBackButton{
+    //空白按钮的点击的处理
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backButton.frame = CGRectMake(0, 0, kHeight(24), kHeight(24));
-//    backButton.backgroundColor = red_color;
+    backButton.frame = CGRectMake(0, 0, kWidth(40.0), kNavigationBarHeight);
     [backButton setImage:[UIImage imageNamed:@"导航返回按钮"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"导航返回按钮"] forState:UIControlStateHighlighted];
     [backButton addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];
     [backButton addTarget:self action:@selector(highlightClick:) forControlEvents:UIControlEventAllTouchEvents];
+    backButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     
-//    UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace                                                                     target:nil action:nil];
-//    negativeSpacer.width = -kWidth(10);
-    return @[[[UIBarButtonItem alloc] initWithCustomView:backButton]];
+    UIBarButtonItem *backButtomItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    return @[backButtomItem];
 }
 
 //去掉返回按钮的点击的高亮的效果
@@ -99,24 +100,10 @@
     }
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-//{
-//    if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-//        navigationController.interactivePopGestureRecognizer.enabled = YES;
-//    }
-//
-//    if (navigationController.viewControllers.count == 1) {
-//        navigationController.interactivePopGestureRecognizer.enabled = NO;
-//        navigationController.interactivePopGestureRecognizer.delegate = nil;
-//    }
-//}
-
 
 
 @end

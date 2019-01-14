@@ -40,7 +40,7 @@
     self.bottomView.layer.shadowOpacity = 1;
     self.bottomView.layer.shadowRadius = 5;
     
-    self.bottomView.hidden = YES;
+//    self.bottomView.hidden = YES;
     @weakify(self);
     [self.bottomView.backSubject subscribeNext:^(id  _Nullable x) {
         @strongify(self);
@@ -50,39 +50,78 @@
             [self.viewModel addShopListOperationWithCourseId:self.viewModel.model.courseid Success:^{
                 weakSelf.bottomView.carBtn.select = YES;
                 ShowMessage(@"加入购物车成功");
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"ModifyShopCarMessageCountNotifacation" object:nil userInfo:nil];
             }];
         } else if ([x intValue] == 2) {
-            //邀请好友砍价
-            if([APPUserDataIofo Eval].integerValue == 0) {
-                NSDictionary *para = @{@"index" : @(0),
-                                       @"selectMarr" :@[],
-                                       @"courseId" : self.viewModel.courseId.length > 0 ? self.viewModel.courseId : @"",
-                                       @"isKillPrice" : @(1),
-                                       @"coursepic" : self.viewModel.model.coursepic.length > 0 ? self.viewModel.model.coursepic :@""
-                                       };
-                [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
-            }else {
-                self.viewModel.courseId = self.viewModel.model.courseid;
-                NSDictionary *para = @{@"courseId" : self.viewModel.courseId,
-                                       @"isKillPrice" : @(1),
-                                       @"coursepic" : self.viewModel.model.coursepic.length > 0 ? self.viewModel.model.coursepic :@""};
-                [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+            //已经创建过砍价订单，直接跳转到我的订单砍价中
+            if(self.viewModel.model.createdBargainOrderStatus == 1) {
+                NSDictionary *para = @{@"isJumpTopKillPriceOrder" : @(YES)};
+                [DCURLRouter pushURLString:@"route://myOrderVC" query:para animated:YES];
+                return;
             }
+            //邀请好友砍价
+            NSString *coursepic = self.viewModel.model.coursepic.length > 0 ? self.viewModel.model.coursepic :@"";
+            //生成砍价的订单
+            NSString *courseId = self.viewModel.courseId.length > 0 ? self.viewModel.courseId : @"";
+            ShowHint(@"");
+            [YJAPPNetwork CreateKillPriceOrderWithAccesstoken:[APPUserDataIofo AccessToken] courseId:courseId picData:nil success:^(NSDictionary *responseObject) {
+                NSInteger code = [[responseObject objectForKey:@"code"] integerValue];
+                hideHud();
+                if (code == 200) {
+                    self.viewModel.model.createdBargainOrderStatus = 1;
+                    NSString *orderid = [responseObject objectForKey:@"data"];
+                    //分享的操作
+                    NSString *courceName = @"嗨！我超喜欢它，求求你帮我砍一刀吧！爱你哟！！";
+                    NSString *coursedes = @"慧鲸学堂 全民砍价 乐享好课！在有效时限内砍价到最低价，即可享受最大购课优惠！";
+                    id shareImg = coursepic;
+                    if(coursepic.length <= 0) {
+                        shareImg = V_IMAGE(@"shareImg");
+                    }
+                    NSString *shareUrl = [NSString stringWithFormat:@"%@bargain?orderid=%@",API_SHAREURL,orderid];
+                    if([APPUserDataIofo UserID].length > 0) {
+                        shareUrl = [NSString stringWithFormat:@"%@&userid=%@",shareUrl,[APPUserDataIofo UserID]];
+                    }
+                    [HJShareTool shareWithTitle:courceName content:coursedes images:@[shareImg] url:shareUrl];
+                }else{
+                    ShowMessage([responseObject valueForKey:@"msg"]);
+                }
+            } failure:^(NSString *error) {
+                hideHud();
+                ShowMessage(error);
+            }];
         } else if ([x intValue] == 3) {
             //立即购买
-            if([APPUserDataIofo Eval].integerValue == 0) {
-                NSDictionary *para = @{@"index" : @(0),
-                                       @"selectMarr" :@[],
-                                       @"courseId" : self.viewModel.courseId.length > 0 ? self.viewModel.courseId : @"",
-                                       @"isKillPrice" : @(0)
-                                       };
-                [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
-            }else {
-                self.viewModel.courseId = self.viewModel.model.courseid;
-                NSDictionary *para = @{@"courseId" : self.viewModel.courseId,
-                                       @"isKillPrice" : @(0)};
-                [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
-            }
+//            if([APPUserDataIofo Eval].integerValue == 0) {
+//                NSDictionary *para = @{@"index" : @(0),
+//                                       @"selectMarr" :@[],
+//                                       @"courseId" : self.viewModel.courseId.length > 0 ? self.viewModel.courseId : @"",
+//                                       @"isKillPrice" : @(0)
+//                                       };
+//                [DCURLRouter pushURLString:@"route://riskEvaluationVC" query:para animated:YES];
+//            }else {
+//                self.viewModel.courseId = self.viewModel.model.courseid;
+//                NSDictionary *para = @{@"courseId" : self.viewModel.courseId,
+//                                       @"isKillPrice" : @(0)};
+//                [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+//            }
+            //生成普通的订单
+            ShowHint(@"");
+            NSString *courseId = self.viewModel.courseId.length > 0 ? self.viewModel.courseId : @"";
+            [YJAPPNetwork WillPayWithAccesstoken:[APPUserDataIofo AccessToken] cids:courseId picData:nil  success:^(NSDictionary *responseObject) {
+                hideHud();
+                NSInteger code = [[responseObject objectForKey:@"code"] integerValue];
+                if (code == 200) {
+                    NSString *orderid = [responseObject objectForKey:@"data"];
+                    //确认订单页面
+                    NSDictionary *para = @{@"orderId" : orderid};
+                    [DCURLRouter pushURLString:@"route://confirmOrderVC" query:para animated:YES];
+                } else {
+                    ShowMessage([responseObject valueForKey:@"msg"]);
+                }
+            } failure:^(NSString *error) {
+                hideHud();
+                ShowMessage(error);
+            }];
         } else if ([x intValue] == 4) {
             //免费领取
             __weak typeof(self)weakSelf = self;
@@ -106,7 +145,8 @@
     [self.tableView registerClassCell:[HJSelectJiListCell class]];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight, 0));
+//        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
     }];
     
     if(isFringeScreen) {
@@ -134,7 +174,9 @@
         [_viewModel getCourceSelectJiWithCourseid:self.viewModel.courseId Success:^{
             if(weakSelf.viewModel.selectJiArray.count > 0){
                 HJCourseSelectJiModel *model = weakSelf.viewModel.selectJiArray.firstObject;
+                self.lastSelectModel = model;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"SetFirstPlayVideoMessage" object:nil userInfo:@{@"model" : model}];
+                
             }
             [weakSelf.tableView reloadData];
         }];
@@ -147,17 +189,17 @@
             //没有购买 不能点击播放
             self.bottomView.freeGetBtn.hidden = NO;
             self.bottomView.hidden = NO;
-            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
-            }];
+//            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
+//            }];
 
         } else {
             //购买完了
-            self.bottomView.hidden = YES;
+//            self.bottomView.hidden = YES;
             //改变frame
-            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
-            }];
+//            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+//            }];
         }
 
     } else {
@@ -199,16 +241,36 @@
                 NSString *bargaintoprice = [NSString stringWithFormat:@"¥%.2f",self.viewModel.model.secondprice.floatValue];
                 self.bottomView.afterSecondKillPriceLabel.attributedText = [bargaintoprice attributeWithStr:@"¥" color:white_color font:MediumFont(font(10))];
             }
-            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
-            }];
+//            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
+//            }];
         } else {
             //购买完了
-            self.bottomView.hidden = YES;
+//            self.bottomView.hidden = YES;
             //改变frame
-            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
-            }];
+//            [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+//            }];
+            if(self.viewModel.model.hassecond == 0){
+                //不能秒杀
+                self.bottomView.originLineView.hidden = YES;
+                self.bottomView.originPriceLabel.hidden = YES;
+                self.bottomView.afterSecondKillPriceLabel.hidden = YES;
+                
+                self.bottomView.noKillPriceLabel.hidden = NO;
+                NSString *bargaintoprice = [NSString stringWithFormat:@"¥%.2f",self.viewModel.model.coursemoney];
+                self.bottomView.noKillPriceLabel.attributedText = [bargaintoprice attributeWithStr:@"¥" color:white_color font:MediumFont(font(10))];
+            } else {
+                //可以秒杀
+                self.bottomView.originLineView.hidden = NO;
+                self.bottomView.originPriceLabel.hidden = NO;
+                self.bottomView.afterSecondKillPriceLabel.hidden = NO;
+                
+                self.bottomView.noKillPriceLabel.hidden = YES;
+                self.bottomView.originPriceLabel.text = [NSString stringWithFormat:@"¥%.2f",self.viewModel.model.coursemoney];
+                NSString *bargaintoprice = [NSString stringWithFormat:@"¥%.2f",self.viewModel.model.secondprice.floatValue];
+                self.bottomView.afterSecondKillPriceLabel.attributedText = [bargaintoprice attributeWithStr:@"¥" color:white_color font:MediumFont(font(10))];
+            }
         }
     }
 
@@ -224,7 +286,19 @@
 }
 
 - (void)hj_loadData {
-    
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"ModifySlectJiFistDataStatus" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        if(self.viewModel.selectJiArray.count > 0) {
+            HJCourseSelectJiModel *firstModel = self.viewModel.selectJiArray.firstObject;
+            firstModel.isOnPlay = YES;
+            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+            [defa setValue:@"1" forKey:firstModel.videourl];
+            [defa synchronize];
+            self.lastSelectModel = firstModel;
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 - (void)hj_refreshData {

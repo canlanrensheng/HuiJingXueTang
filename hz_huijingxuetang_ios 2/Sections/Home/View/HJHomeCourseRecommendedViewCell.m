@@ -211,7 +211,7 @@
     HJHomeViewModel *listViewModel = (HJHomeViewModel *)viewModel;
     HJHomeCourseRecommendedModel *model = listViewModel.recommongCourceDataArray[indexPath.row];
     if(model){
-        [self.imgV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imgV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.courceLabel.text = model.coursename;
         
         if(MaJia) {

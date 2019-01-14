@@ -27,6 +27,10 @@
                 success(YES);
             } else {
                 self.liveDetailErrorCode = code;
+                if(code == 29) {
+                    ShowError(@"您暂无购买课程或已购课程已过期");
+                    return ;
+                }
                 ShowError([dic objectForKey:@"msg"]);
                 success(NO);
             }

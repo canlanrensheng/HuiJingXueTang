@@ -90,7 +90,7 @@
 
 - (void)setModel:(HJTeacherDetailModel *)model {
     _model = model;
-    [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+    [self.liveImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
     self.nameLabel.text = model.realname;
     self.jobLabel.text = model.teacprofessional;
     self.messageLabel.text = [NSString stringWithFormat:@"      %@",model.introduction];

@@ -104,7 +104,7 @@
     HJTeachDetailViewModel *listViewModel = (HJTeachDetailViewModel *)viewModel;
     HJTeachBestDetailCommentModel *model = listViewModel.infoCommondArray[indexPath.row];
     if(model){
-        [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像")];
+        [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.nameLabel.text = model.nickname;
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
         self.dateLabel.text = [NSString stringWithFormat:@"%@月%@日",[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];

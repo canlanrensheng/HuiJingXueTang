@@ -66,7 +66,7 @@
 - (void)setModel:(HJInfoListModel *)model {
     _model = model;
     if(model){
-        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图")];
+        [self.imageV sd_setImageWithURL:URL(model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         self.contentTitleLabel.text = model.infomationtitle;
     }
 }

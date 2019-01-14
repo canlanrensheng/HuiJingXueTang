@@ -174,7 +174,7 @@
             @strongify(self);
             if(self.model.paystatus == 0) {
                 //去支付
-                [[HJPayTool shareInstance] payWithOrderId:self.model.orderno couponid:self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @""];
+                [self payOperation];
             } else if (self.model.paystatus == 1) {
                 //去学习
                 if(self.model.courseResponses.count > 1) {
@@ -191,7 +191,9 @@
                 [TXAlertView showAlertWithTitle:@"温馨提示" message:@"确认要删除该订单吗?" cancelButtonTitle:@"取消" style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
                     if (buttonIndex == 1) {
                         [self.listViewModel deleteOrderWithOrderId:self.model.orderno success:^{
-                            [self.backSub sendNext:@""];
+                            if(self.backSub) {
+                                [self.backSub sendNext:@""];
+                            }
                         }];
                     }
                 } otherButtonTitles:@"确定", nil];
@@ -209,7 +211,46 @@
     self.operationBtn = deleteBtn;
     
     //支付成功之后进行的操作
-    
+}
+
+- (void)payOperation {
+    BOOL isLargeMoney = false;
+    for(CourseResponsesModel *model in _model.courseResponses) {
+        //不能推广是大额度
+        if(model.ispromote == 0) {
+            isLargeMoney = YES;
+        }
+    }
+    RACSubject *backSubject = [[RACSubject alloc] init];
+    @weakify(self);
+    [backSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self dealSureOrderBtnWithIsLargeMoney:isLargeMoney];
+    }];
+    NSString *orderId = self.model.orderno;
+    NSDictionary *para = @{@"isLargeMoney" : @(isLargeMoney),
+                           @"subject" : backSubject,
+                           @"orderId" : DealNil(orderId)
+                           };
+    [DCURLRouter pushURLString:@"route://buyCourseProtocolVC" query:para animated:YES];
+}
+
+//判断是小额还是大额
+- (void)dealSureOrderBtnWithIsLargeMoney:(BOOL)isLargeMoney {
+    //判断是大额支付还是小额支付
+    if(isLargeMoney) {
+        //大额联系客户
+        [TXAlertView showAlertWithTitle:@"温馨提示" message:@"您现在购买的慧鲸学堂专属课程金额较大，请联系慧鲸客服(0571-57571670)完成支付，谢谢合作。" cancelButtonTitle:nil style:TXAlertViewStyleAlert buttonIndexBlock:^(NSInteger buttonIndex) {
+            if (buttonIndex == 1) {
+                
+            }
+        } otherButtonTitles:@"我知道了", nil];
+    } else {
+        //小额支付
+        NSString *orderId = self.model.orderno;
+        NSString *couponid = self.model.cashcouponid.length > 0 ? self.model.cashcouponid : @"";
+        [[HJPayTool shareInstance] payWithOrderId:orderId couponid:couponid];
+    }
 }
 
 - (RACSubject *)backSub {
@@ -238,7 +279,7 @@
         CourseResponsesModel *model = assets[i];
         
         UIImageView *imaV = [[UIImageView alloc] init];
-        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图")];
+        [imaV sd_setImageWithURL:URL(model.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
         imaV.backgroundColor = Background_Color;
         [backView addSubview:imaV];
         [imaV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -353,7 +394,7 @@
     self.model = model;
     
     NSDate *date = [NSDate dateWithString:model.ordercreatetime formatString:@"yyyy-MM-dd HH:mm:ss"];
-    self.dateLabel.text = [NSString stringWithFormat:@"订单日期:  %ld.%@.%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+    self.dateLabel.text = [NSString stringWithFormat:@"订单日期：  %ld.%@.%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
     if(model.paystatus == 0) {
         self.orderStateLabel.text = @"等待付款";
         self.orderStateLabel.textColor = HEXColor(@"#FF4400");
@@ -385,7 +426,7 @@
     NSString *totalMoney = [NSString stringWithFormat:@"¥%.2f",model.money];
     self.totalMoneyLabel.attributedText = [totalMoney attributeWithStr:@"¥" color:HEXColor(@"#FF4400") font:MediumFont(font(11))];
     //共计多少门课
-    self.totalMoneyTextLabel.text = [NSString stringWithFormat:@"共%ld门课程   合计:  ",(unsigned long)model.courseResponses.count];
+    self.totalMoneyTextLabel.text = [NSString stringWithFormat:@"共%ld门课程   合计：  ",(unsigned long)model.courseResponses.count];
 }
 
 - (void)backTap:(UITapGestureRecognizer *)tap {

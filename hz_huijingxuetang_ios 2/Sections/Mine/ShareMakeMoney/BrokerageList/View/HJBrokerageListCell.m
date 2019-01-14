@@ -69,7 +69,7 @@
     
     //冻结金额
     UILabel *freezeMoneyLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"保证金  ￥0",MediumFont(font(13)),HEXColor(@"#666666"));
+        label.ljTitle_font_textColor(@"冻结金  ￥0",MediumFont(font(13)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
         label.numberOfLines = 0;
         [label sizeToFit];
@@ -137,7 +137,7 @@
     self.incomeLabel.attributedText = [brokerage attributeWithStr:[NSString stringWithFormat:@"￥%.2f",model.commissionmoney] color:HEXColor(@"#FF4400") font:BoldFont(font(13))];
 
     //冻结金额
-    NSString *freezeMoneyfree = [NSString stringWithFormat:@"保证金  ￥%.2f",model.freezingamount];
+    NSString *freezeMoneyfree = [NSString stringWithFormat:@"冻结金  ￥%.2f",model.freezingamount];
     self.freezeMoneyLabel.attributedText = [freezeMoneyfree attributeWithStr:[NSString stringWithFormat:@"￥%.2f",model.freezingamount] color:HEXColor(@"#FF4400") font:BoldFont(font(13))];
 
     self.finishDateLabel.text = model.cycletime;
