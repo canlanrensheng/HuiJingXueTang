@@ -40,9 +40,9 @@
                     [self.tableView.mj_header beginRefreshing];
 //                    self.bottomView.hidden = YES;
 //                    self.writeCommotBtn.hidden = YES;
-                    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
-                    }];
+//                    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+//                    }];
                 }];
                 [DCURLRouter pushURLString:@"route://postEvaluationVC" query:@{@"subject" : backSubject,
                                                                                @"courseid" : self.viewModel.courseId
@@ -56,13 +56,12 @@
 - (void)hj_configSubViews{
     self.bottomView = [[HJClassDetailBottomView alloc] init];
     [self.view addSubview:self.bottomView];
+    self.bottomView.hidden = YES;
     self.bottomView.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1];
     self.bottomView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
     self.bottomView.layer.shadowOffset = CGSizeMake(0,1);
     self.bottomView.layer.shadowOpacity = 1;
     self.bottomView.layer.shadowRadius = 5;
-    
-//    self.bottomView.hidden = YES;
     
     @weakify(self);
     [self.bottomView.backSubject subscribeNext:^(id  _Nullable x) {

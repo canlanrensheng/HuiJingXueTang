@@ -143,7 +143,7 @@
     self.coursename = self.params[@"coursename"];
     self.controlView.fileTitleLabel.text = self.coursename.length > 0 ? self.coursename : @"暂无课程名称";
     self.reviewPastVC.viewModel = self.viewModel;
-    [self.viewModel getLiveDetailDataWithLiveId:liveId Success:^(BOOL successFlag) {
+    [self.viewModel getLiveDetailDataWithLiveId:liveId Success:^(NSInteger code) {
         self.teacherInfoView.viewModel = self.viewModel;
     }];
     
@@ -240,6 +240,7 @@
         if(self.isFullScreen) {
             [self backVerticalScreen];
         } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"BackToLiveVCToInitPlayer" object:nil userInfo:nil];
             [DCURLRouter popViewControllerAnimated:YES];
         }
     }];

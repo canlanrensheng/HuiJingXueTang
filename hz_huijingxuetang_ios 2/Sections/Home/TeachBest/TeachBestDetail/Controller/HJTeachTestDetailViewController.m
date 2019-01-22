@@ -20,7 +20,6 @@
 
 @property (nonatomic,strong) HJSchoolLiveInputView *bottomView;
 
-@property (nonatomic,strong) UIActivityIndicatorView *activityV;
 @property (nonatomic,strong) HJTeachDetailViewModel *viewModel;
 
 @property (nonatomic,strong) UIView *headerView;
@@ -32,6 +31,9 @@
 @property (nonatomic,strong) WKWebView *webView;
 @property (nonatomic,assign) NSInteger page;
 
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, assign) CGFloat webViewHeight;
+
 @end
 
 @implementation HJTeachTestDetailViewController
@@ -41,20 +43,6 @@
         _viewModel = [[HJTeachDetailViewModel alloc] init];
     }
     return  _viewModel;
-}
-
-- (UIActivityIndicatorView *)activityV {
-    if (!_activityV) {
-        _activityV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activityV.hidesWhenStopped = YES;
-        [self.view addSubview:_activityV];
-        
-        [_activityV mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(50, 50));
-            make.center.mas_equalTo(self.view);
-        }];
-    }
-    return _activityV;
 }
 
 - (void)viewDidLoad {
@@ -98,10 +86,72 @@
     self.tableView.tableHeaderView = _headerView;
 }
 
+- (void)createWebview {
+    WKWebViewConfiguration *wkWebConfig = [[WKWebViewConfiguration alloc] init];
+    WKUserContentController *wkUController = [[WKUserContentController alloc] init];
+    wkWebConfig.userContentController = wkUController;
+    // 自适应屏幕宽度js
+    NSString *jSString = @"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);";
+    NSString *imgJSString = @"var objs = document.getElementsByTagName('img');for(var i=0;i++){var img = objs[i];img.style.maxWidth = '100%';img.style.height='auto';}";
+    WKUserScript *wkUserScript = [[WKUserScript alloc] initWithSource:jSString injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    WKUserScript *wkImgScript = [[WKUserScript alloc] initWithSource:imgJSString injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    // 添加js调用
+    [wkUController addUserScript:wkUserScript];
+    [wkUController addUserScript:wkImgScript];
+    
+    self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - kWidth(10.0) * 2, 1) configuration:wkWebConfig];
+    self.webView.backgroundColor = [UIColor clearColor];
+    self.webView.opaque = NO;
+    self.webView.userInteractionEnabled = NO;
+    self.webView.scrollView.bounces = NO;
+    self.webView.UIDelegate = self;
+    self.webView.navigationDelegate = self;
+    [self.webView sizeToFit];
+    [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - kWidth(10.0) * 2, 1)];
+    [self.scrollView addSubview:self.webView];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"contentSize"]) {
+        // 方法一
+        UIScrollView *scrollView = (UIScrollView *)object;
+        CGFloat height = scrollView.contentSize.height;
+        if (self.webViewHeight != height) {
+            self.webViewHeight = height;
+            self.webView.frame = CGRectMake(0, 0, self.view.frame.size.width - kWidth(10.0) * 2, height);
+            self.scrollView.frame = CGRectMake(0, 0, self.view.frame.size.width - kWidth(10.0) * 2, height);
+            self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width - kWidth(10.0) * 2, height);
+            [self.tableView reloadData];
+            
+            DLog(@"webview高度变化了：%lf",height);
+        } else {
+            [self.viewModel.loadingView stopLoadingView];
+        }
+        
+        /*
+         // 方法二
+         [_webView evaluateJavaScript:@"document.body.offsetHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+         CGFloat height = [result doubleValue] + 20;
+         self.webViewHeight = height;
+         self.webView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+         self.scrollView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+         self.scrollView.contentSize =CGSizeMake(self.view.frame.size.width, height);
+         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:3 inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+         }];
+         */
+    }
+}
+
+- (void)dealloc {
+    [self.webView.scrollView removeObserver:self forKeyPath:@"contentSize"];
+}
+
 - (void)hj_setNavagation {
     __weak typeof(self)weakSelf = self;
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem barButtonItemWithTitle:nil image:V_IMAGE(@"分享-1") action:^(id sender) {
-        [weakSelf.activityV stopAnimating];
         NSString *courceName = self.viewModel.model.articaltitle;
         NSString *coursedes = @"股市前沿资讯名家讲师一手分析。想要了解更多股市资讯下载慧鲸学堂APP更多独家资讯一网打尽！";
         id shareImg = weakSelf.viewModel.model.picurl;
@@ -118,6 +168,7 @@
 
 - (void)hj_configSubViews{
     [self createHeaderView];
+    [self createWebview];
     //底部试图
     self.bottomView = [[HJSchoolLiveInputView alloc] init];
     [self.view addSubview:self.bottomView];
@@ -156,11 +207,22 @@
     [self.tableView registerClassHeaderFooter:[HJTeachTestDetailSectionHeaderView class]];
     [self.tableView registerClassCell:[HJTeachBestDetailWebViewCell class]];
     [self.tableView registerClassCell:[HJTeachBestDetailNoCommentCell class]];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"WebViewCell"];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, kHeight(49) + KHomeIndicatorHeight, 0));
     }];
     
+    //适配iPhone X
+    if(isFringeScreen) {
+        UIView *bottomView = [[UIView alloc] init];
+        bottomView.backgroundColor = white_color;
+        [self.view addSubview:bottomView];
+        [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.view);
+            make.height.mas_equalTo(KHomeIndicatorHeight);
+        }];
+    }
 }
 
 - (void)hj_loadData {
@@ -170,9 +232,10 @@
     [self.viewModel getInfoDetailWithInfoid:infoId Success:^{
         self.infoTitleLabel.text = self.viewModel.model.articaltitle;
         NSDate *date = [NSDate dateWithString:self.viewModel.model.tdays formatString:@"yyyy-MM-dd HH:mm:ss"];
-        NSString *dateString = [NSString stringWithFormat:@"%ld年%@月%@日",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+        NSString *dateString = [NSString stringWithFormat:@"%ld-%@-%@ %@:%@",(long)(date.year),[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day],[NSString convertDateSingleData:date.hour],[NSString convertDateSingleData:date.minute]];
         self.dateLabel.text = [NSString stringWithFormat:@"%@ | %@ | 阅读量 %ld",dateString,self.viewModel.model.realname,self.viewModel.model.readcount.integerValue];
         [self.liveImageV sd_setImageWithURL:URL(self.viewModel.model.picurl) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
+        [self.webView loadHTMLString:self.viewModel.model.content baseURL:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
@@ -187,6 +250,7 @@
     }];
 }
 
+//上拉加载和下拉刷新
 - (void)hj_refreshData {
     @weakify(self);
     NSString *infoId = self.params[@"infoId"];
@@ -220,9 +284,11 @@
     
 }
 
+#pragma UITableViewDalagate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0) {
-        return self.webViewCellHeight + kHeight(10.0);
+//        return self.webViewCellHeight + kHeight(10.0);
+         return _webViewHeight + kWidth(10.0);
     }
     if(self.viewModel.infoCommondArray.count <= 0){
         return kHeight(218);
@@ -248,16 +314,25 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0){
-        HJTeachBestDetailWebViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailWebViewCell class]) forIndexPath:indexPath];
-        self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
-        cell.webView.navigationDelegate = self;
-        cell.webView.UIDelegate = self;
-        self.webView = cell.webView;
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        if(self.viewModel.model.content) {
-            [cell.webView loadHTMLString:self.viewModel.model.content baseURL:nil];
-        }
-        return cell;
+//        HJTeachBestDetailWebViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailWebViewCell class]) forIndexPath:indexPath];
+//        self.tableView.separatorColor = RGBCOLOR(225, 225, 225);
+//        cell.webView.navigationDelegate = self;
+//        cell.webView.UIDelegate = self;
+//        self.webView = cell.webView;
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        if(self.viewModel.model.content) {
+//            [cell.webView loadHTMLString:self.viewModel.model.content baseURL:nil];
+//        }
+//        return cell;
+        UITableViewCell *webCell = [tableView dequeueReusableCellWithIdentifier:@"WebViewCell" forIndexPath:indexPath];
+        [webCell.contentView addSubview:self.scrollView];
+        [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(webCell.contentView).offset(kWidth(10.0));
+            make.right.equalTo(webCell.contentView).offset(-kWidth(10.0));
+            make.top.equalTo(webCell.contentView).offset(kWidth(10.0));
+            make.bottom.equalTo(webCell.contentView);
+        }];
+        return webCell;
     }
     if(self.viewModel.infoCommondArray.count <= 0){
         HJTeachBestDetailNoCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJTeachBestDetailNoCommentCell class]) forIndexPath:indexPath];
@@ -295,35 +370,24 @@
 
 #pragma mark UIWebViewDelegate
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{//这里修改导航栏的标题，动态改变
+//- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{//这里修改导航栏的标题，动态改变
 //    CGRect rect = webView.frame;
 //    rect.size.height = webView.scrollView.contentSize.height;
-//    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
+//    //    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
+//    DLog(@"获取到的数据的高度时:%lf",self.webViewCellHeight);
 //    if (self.webViewCellHeight != webView.scrollView.contentSize.height || self.webViewCellHeight <= kHeight(44)) {
-//        [self.viewModel.loadingView stopLoadingView];
-//        self.webView.frame = rect;
-//        self.webViewCellHeight = fittingSize.height;
-//        [self.activityV stopAnimating];
+//        self.webView.frame = CGRectMake(rect.origin.x, rect.origin.y, Screen_Width - kWidth(20.0), rect.size.height);
+//        self.webViewCellHeight = rect.size.height;
 //        [self.tableView reloadData];
+//    } else {
+//        [self.viewModel.loadingView stopLoadingView];
 //    }
-    CGRect rect = webView.frame;
-    rect.size.height = webView.scrollView.contentSize.height;
-    //    CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
-    DLog(@"获取到的数据的高度时:%lf",self.webViewCellHeight);
-    if (self.webViewCellHeight != webView.scrollView.contentSize.height || self.webViewCellHeight <= kHeight(44)) {
-        [self.viewModel.loadingView stopLoadingView];
-        self.webView.frame = CGRectMake(rect.origin.x, rect.origin.y, Screen_Width - kWidth(20.0), rect.size.height);
-        self.webViewCellHeight = rect.size.height;
-        //        [self.webView sizeToFit];
-        [self.activityV stopAnimating];
-        [self.tableView reloadData];
-    }
-}
-
-// 页面加载失败时调用
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
-    
-}
+//}
+//
+//// 页面加载失败时调用
+//- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
+//    [self.viewModel.loadingView stopLoadingView];
+//}
 
 // 接收到服务器跳转请求之后再执行
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
@@ -345,6 +409,11 @@
     }
     //这句是必须加上的，不然会异常
     decisionHandler(actionPolicy);
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return nil;
+    
 }
 
 @end

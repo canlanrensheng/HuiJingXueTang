@@ -60,14 +60,25 @@
                 //加载试图控制器
                 [self loadSubViews];
                 //设置自试图控制器
-                for (int index = 0; index < self.controllersClass.count; index++) {
+                NSString *index = self.params[@"index"];
+                CGFloat height = Screen_Height - kHeight(40) - kNavigationBarHeight - kBottomBarHeight;
+                if (index) {
+                    height = Screen_Height - kHeight(40) - kNavigationBarHeight;
+                }
+                for (int i = 0; i < self.controllersClass.count; i++) {
                     HJBaseInfoViewController *vc = [[HJBaseInfoViewController alloc] init];
-                    vc.view.frame = CGRectMake(Screen_Width * index, 0, Screen_Width, Screen_Height - kHeight(40) - kNavigationBarHeight - kBottomBarHeight);
+                    vc.view.frame = CGRectMake(Screen_Width * i, 0, Screen_Width, height);
                     [self addChildViewController:vc];
                     [self.scrollView addSubview:vc.view];
                     if(self.viewModel.newsItemArray.count > 0){
-                        vc.model = self.viewModel.newsItemArray[index];
+                        vc.model = self.viewModel.newsItemArray[i];
                     }
+                }
+                if(index) {
+                    self.sementView.selectIndex = index.integerValue ;
+//                    [UIView animateWithDuration:0.25 animations:^{
+                    [self.scrollView setContentOffset:CGPointMake(self.sementView.selectIndex * Screen_Width, 0)];
+//                    }];
                 }
             }
         } else {
@@ -92,9 +103,15 @@
     
     //创建控制器容器
     self.controllersClass = @[@"HJBaseInfoViewController",@"HJBaseInfoViewController",@"HJBaseInfoViewController",@"HJBaseInfoViewController"];
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, kHeight(40) , Screen_Width, Screen_Height - kHeight(40) - kNavigationBarHeight - kBottomBarHeight)];
+    
+    CGFloat height = Screen_Height - kHeight(40) - kNavigationBarHeight - kBottomBarHeight;
+    NSString *index = self.params[@"index"];
+    if(index) {
+        height = Screen_Height - kHeight(40) - kNavigationBarHeight;
+    }
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, kHeight(40) , Screen_Width, height)];
     [self.view addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kHeight(40) - kNavigationBarHeight - kBottomBarHeight);
+    scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  height);
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.pagingEnabled = YES;
     scrollView.scrollEnabled = YES;

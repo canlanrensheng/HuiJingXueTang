@@ -39,7 +39,7 @@
 - (void)hj_configSubViews{
     [self.tableView registerClass:[HJSearchResultCourceCell class] forCellReuseIdentifier:NSStringFromClass([HJSearchResultCourceCell class])];
     
-    [self.view addSubview:self.tableView];
+//    [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0 , 0, 0, 0));
     }];

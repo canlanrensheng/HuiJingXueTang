@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 //是否已经展示了流量的弹窗
 @property (nonatomic,assign) BOOL hasShowedTrafficMonitoringView;
 
+@property (nonatomic,copy) NSString *selectCourseId;
 
 
 @end

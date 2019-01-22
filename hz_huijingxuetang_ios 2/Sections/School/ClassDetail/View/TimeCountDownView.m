@@ -48,7 +48,7 @@
     if (self = [super initWithFrame:frame]) {
         //秒
         UILabel *miaoLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(@"05",MediumFont(font(11)),white_color);
+            label.ljTitle_font_textColor(@"00",MediumFont(font(11)),white_color);
             label.backgroundColor = HEXColor(@"#333740");
             label.textAlignment = NSTextAlignmentCenter;
             label.numberOfLines = 0;
@@ -144,7 +144,7 @@
     
         //天
         UILabel *dayNumLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(@"05",MediumFont(font(11)),white_color);
+            label.ljTitle_font_textColor(@"00",MediumFont(font(11)),white_color);
             label.backgroundColor = HEXColor(@"#333740");
             label.textAlignment = NSTextAlignmentCenter;
             label.numberOfLines = 0;
@@ -162,7 +162,7 @@
     
         //限时特惠
         UILabel *limitLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor(@"限时特惠",MediumFont(font(11)),white_color);
+            label.ljTitle_font_textColor(@"秒杀特供",MediumFont(font(11)),white_color);
             label.backgroundColor = HEXColor(@"#DC1E4F");
             label.textAlignment = NSTextAlignmentCenter;
             label.numberOfLines = 0;

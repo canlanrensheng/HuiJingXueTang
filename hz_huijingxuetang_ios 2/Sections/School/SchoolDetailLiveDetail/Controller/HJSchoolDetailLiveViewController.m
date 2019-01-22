@@ -30,7 +30,7 @@
 
 @interface HJSchoolDetailLiveViewController() <NELivePlayerControlViewProtocol,NIMChatManagerDelegate,UIScrollViewDelegate>
 {
-    dispatch_source_t _timer;
+//    dispatch_source_t _timer;
 }
 
 @property (nonatomic, strong) NSArray *controllersClass;
@@ -66,6 +66,8 @@
 
 @property (nonatomic,strong) UIView *topView;
 
+@property (nonatomic,strong) NSTimer *timer;
+
 @end
 
 
@@ -85,6 +87,16 @@
     });
     self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
     self.fd_interactivePopDisabled = YES;
+    
+   
+    
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"BackToLiveVCToInitPlayer" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        [self.controlView.loadingView startAnimating];
+        self.controlView.loadingView.speedTextLabel.hidden = NO;
+        [self doInitPlayer];
+    }];
 }
 
 - (UIButton *)playShangButton {
@@ -149,21 +161,19 @@
     self.fd_interactivePopDisabled = NO;
 }
 
-//- (void)viewDidDisappear:(BOOL)animated {
-//    [super viewDidDisappear:animated];
-//    [self doDestroyPlayer];
-//    [[NIMSDK sharedSDK].chatManager removeDelegate:self];
-//}
-
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.controlView.playBtn setSelected:NO];
     [self.player pause];
+    [self.player shutdown]; // 退出播放并释放相关资源
+    self.player = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)dealloc {
     [self doDestroyPlayer];
     [[NIMSDK sharedSDK].chatManager removeDelegate:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)hj_loadData {
@@ -172,8 +182,8 @@
     self.viewModel.teacherId = self.params[@"teacherId"];
     self.viewModel.liveId = liveId;
     
-    [self.viewModel getLiveDetailDataWithLiveId:liveId Success:^(BOOL successFlag) {
-        if(successFlag) {
+    [self.viewModel getLiveDetailDataWithLiveId:liveId Success:^(NSInteger  code) {
+        if(code == 200) {
             self.chartVC.viewModel = self.viewModel;
             self.teacherInfoView.viewModel = self.viewModel;
             //是否是免费的课程
@@ -185,13 +195,12 @@
             self.reviewPastVC.viewModel = self.viewModel;
             
             self.controlView.fileTitleLabel.text = self.viewModel.model.course.coursename.length > 0 ? self.viewModel.model.course.coursename : @"暂无直播名称";
-
             if(self.viewModel.model.room.hlsPullUrl) {
                 //初始化播放控制器
                 [self.controlView.loadingView startAnimating];
                 self.controlView.loadingView.speedTextLabel.hidden = NO;
                 [self doInitPlayer];
-            
+
             } else {
                 if(self.viewModel.model.course.liveflag == 2) {
                     //往期回顾
@@ -205,14 +214,28 @@
             }
             NSMutableArray *modelArr = [[TXDataManage shareManage] unarchiveObjectWithFileName:[NSString stringWithFormat:@"WatchedHistoryLive%@",[APPUserDataIofo UserID]]];
             NSMutableArray *marr = [NSMutableArray arrayWithArray:modelArr];
-            [marr addObject:self.viewModel.model];
-            NSMutableDictionary *marrDict  = [NSMutableDictionary dictionary];
-            for (HJLiveDetailModel *model in marr) {
-                model.course.date = [NSDate date];
-                [marrDict setValue:model forKey:model.course.courseid];
+            self.viewModel.model.course.date = [NSDate date];
+            for (int i = 0;i < marr.count;i++) {
+                HJLiveDetailModel *selctModel = marr[i];
+                if([selctModel.course.courseid isEqualToString:self.viewModel.model.course.courseid]) {
+                    [marr replaceObjectAtIndex:i withObject:self.viewModel.model];
+                    
+                    [[TXDataManage shareManage] archiveObject:marr withFileName:[NSString stringWithFormat:@"WatchedHistoryLive%@",[APPUserDataIofo UserID]]];
+                    return;
+                }
             }
-            [[TXDataManage shareManage] archiveObject:marrDict.allValues withFileName:[NSString stringWithFormat:@"WatchedHistoryLive%@",[APPUserDataIofo UserID]]];
-        }else {
+            [marr addObject:self.viewModel.model];
+//            NSMutableDictionary *marrDict  = [NSMutableDictionary dictionary];
+//            for (HJLiveDetailModel *model in marr) {
+//                [marrDict setValue:model forKey:model.course.courseid];
+//            }
+            [[TXDataManage shareManage] archiveObject:marr withFileName:[NSString stringWithFormat:@"WatchedHistoryLive%@",[APPUserDataIofo UserID]]];
+        }
+        //付费课程没购买
+        else if (code == 22) {
+            self.teacherInfoView.viewModel = self.viewModel;
+        }
+        else {
 //            没有购买课程的时候不能分享
          
         }
@@ -386,9 +409,13 @@
     [NELivePlayerController setLogLevel:NELP_LOG_VERBOSE];
     NSLog(@"%@", [NELivePlayerController getSDKVersion]);
     NSError *error = nil;
-    
+    if(self.player){
+        [self doDestroyPlayer];
+    }
     self.player = [[NELivePlayerController alloc] initWithContentURL:URL(self.viewModel.model.room.hlsPullUrl) error:&error];
     if (self.player == nil) {
+        self.controlView.loadingView.speedTextLabel.hidden = YES;
+        [self.controlView.loadingView stopAnimating];
         NSLog(@"player initilize failed, please tay again.error = [%@]!", error);
     }
     self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -486,39 +513,62 @@
 
 - (void)syncUIStatus {
     _controlView.isPlaying = NO;
-    __block NSTimeInterval mDuration = 0;
-    __block bool getDurFlag = false;
-    __weak typeof(self) weakSelf = self;
-    dispatch_queue_t syncUIQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    _timer = CreateSyncUITimerN(1.0, syncUIQueue, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!getDurFlag) {
-                mDuration = [weakSelf.player duration];
-                if (mDuration > 0) {
-                    getDurFlag = true;
-                }
-            }
-            weakSelf.controlView.isAllowSeek = (mDuration > 0);
-            weakSelf.controlView.duration = mDuration;
-            weakSelf.controlView.currentPos = [weakSelf.player currentPlaybackTime];
-            weakSelf.controlView.isPlaying = ([weakSelf.player playbackState] == NELPMoviePlaybackStatePlaying);
-        });
-    });
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timeChange) userInfo:nil repeats:YES];
+    //把定时器添加到当前runloop中，并设置该runloop的运行模式，避免它受runloop的影响
+    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
-dispatch_source_t CreateSyncUITimerN(double interval, dispatch_queue_t queue, dispatch_block_t block) {
-    //创建Timer
-    dispatch_source_t timer  = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);//queue是一个专门执行timer回调的GCD队列
-    if (timer) {
-        //使用dispatch_source_set_timer函数设置timer参数
-        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, interval*NSEC_PER_SEC), interval*NSEC_PER_SEC, (1ull * NSEC_PER_SEC)/10);
-        //设置回调
-        dispatch_source_set_event_handler(timer, block);
-        //dispatch_source默认是Suspended状态，通过dispatch_resume函数开始它
-        dispatch_resume(timer);
+//定时器改变
+- (void)timeChange {
+    NSTimeInterval mDuration = 0;
+    bool getDurFlag = false;
+    if (!getDurFlag) {
+        mDuration = [self.player duration];
+        if (mDuration > 0) {
+            getDurFlag = true;
+        }
     }
-    return timer;
+    self.controlView.isAllowSeek = YES;
+    self.controlView.duration = mDuration;
+    self.controlView.currentPos = self.player.currentPlaybackTime;
+    self.controlView.isPlaying = ([self.player playbackState] == NELPMoviePlaybackStatePlaying);
 }
+
+//- (void)syncUIStatus {
+//    _controlView.isPlaying = NO;
+//    __block NSTimeInterval mDuration = 0;
+//    __block bool getDurFlag = false;
+//    __weak typeof(self) weakSelf = self;
+//    dispatch_queue_t syncUIQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//    _timer = CreateSyncUITimerN(1.0, syncUIQueue, ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!getDurFlag) {
+//                mDuration = [weakSelf.player duration];
+//                if (mDuration > 0) {
+//                    getDurFlag = true;
+//                }
+//            }
+//            weakSelf.controlView.isAllowSeek = (mDuration > 0);
+//            weakSelf.controlView.duration = mDuration;
+//            weakSelf.controlView.currentPos = [weakSelf.player currentPlaybackTime];
+//            weakSelf.controlView.isPlaying = ([weakSelf.player playbackState] == NELPMoviePlaybackStatePlaying);
+//        });
+//    });
+//}
+//
+//dispatch_source_t CreateSyncUITimerN(double interval, dispatch_queue_t queue, dispatch_block_t block) {
+//    //创建Timer
+//    dispatch_source_t timer  = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);//queue是一个专门执行timer回调的GCD队列
+//    if (timer) {
+//        //使用dispatch_source_set_timer函数设置timer参数
+//        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, interval*NSEC_PER_SEC), interval*NSEC_PER_SEC, (1ull * NSEC_PER_SEC)/10);
+//        //设置回调
+//        dispatch_source_set_event_handler(timer, block);
+//        //dispatch_source默认是Suspended状态，通过dispatch_resume函数开始它
+//        dispatch_resume(timer);
+//    }
+//    return timer;
+//}
 
 - (void)NELivePlayerPlaybackStateChanged:(NSNotification*)notification {
     NSLog(@"[NELivePlayer Demo] 收到 NELivePlayerPlaybackStateChangedNotification 通知");
@@ -573,7 +623,7 @@ dispatch_source_t CreateSyncUITimerN(double interval, dispatch_queue_t queue, di
         {
             self.controlView.loadingView.speedTextLabel.hidden = YES;
             [self.controlView.loadingView stopAnimating];
-            ShowMessage(@"播放失败");
+//            ShowMessage(@"播放失败");
             break;
         }
             

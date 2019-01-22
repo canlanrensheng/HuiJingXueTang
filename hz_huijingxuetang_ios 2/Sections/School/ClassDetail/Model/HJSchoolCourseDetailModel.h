@@ -69,6 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
 //是否常见过砍价订单 1创建过砍价订单 0没有创建过砍价订单
 @property (nonatomic,assign) NSInteger createdBargainOrderStatus;
 
+//课程名称
+@property (nonatomic,copy) NSString *coursename;
+
 @end
 
 NS_ASSUME_NONNULL_END

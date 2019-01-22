@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //获取直播详情的错误代码
 @property (nonatomic,assign) NSInteger liveDetailErrorCode;
-- (void)getLiveDetailDataWithLiveId:(NSString *)liveId  Success:(void (^)(BOOL successFlag))success;
+- (void)getLiveDetailDataWithLiveId:(NSString *)liveId  Success:(void (^)(NSInteger code))success;
 
 //获取往期回顾的列表的数据
 @property (nonatomic,strong) NSMutableArray *pastListArray;

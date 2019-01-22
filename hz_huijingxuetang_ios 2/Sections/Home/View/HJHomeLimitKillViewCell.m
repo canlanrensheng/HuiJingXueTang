@@ -124,14 +124,21 @@
         //只剩下多少小时
         NSDate *endDate = [NSDate dateWithString:model.endtime formatString:@"yyyy-MM-dd HH:mm:ss"];
         NSDate *startDate = [NSDate date];
-
         DTTimePeriod *timePeriod =[[DTTimePeriod alloc] initWithStartDate:startDate endDate:endDate];
-        double  durationInHours   = [timePeriod durationInHours];
-
+        double  durationInSeconds  = [timePeriod durationInSeconds];
+        NSInteger ms = durationInSeconds;
+        NSInteger ss = 1;
+        NSInteger mi = ss * 60;
+        NSInteger hh = mi * 60;
+        NSInteger dd = hh * 24;
+        // 剩余的
+        NSInteger day = ms / dd;// 天
+        NSInteger hour = (ms - day * dd) / hh;// 时
         UILabel *leftTimeLabel = [UILabel creatLabel:^(UILabel *label) {
-            label.ljTitle_font_textColor([NSString stringWithFormat:@"只剩%.0f小时",durationInHours],MediumFont(font(10)),HEXColor(@"#999999"));
+            label.ljTitle_font_textColor([NSString stringWithFormat:@"只剩%@天%@小时",[NSString convertDateSingleData:day],[NSString convertDateSingleData:hour]],MediumFont(font(10)),HEXColor(@"#999999"));
             [label sizeToFit];
         }];
+//        DLog(@"获取到的数据是:%ld %.0f",[endDate daysFrom:startDate],[endDate hoursFrom:startDate]);
         [backView addSubview:leftTimeLabel];
         [leftTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(backView).offset(-kHeight(11.0));
@@ -156,6 +163,26 @@
     }
     self.scrollView.contentSize = CGSizeMake((width + padding) * assetCount, kHeight(170 + 5.0));
 }
+//
+//- (void)getDetailTimeWithTimestamp:(NSInteger)timestamp{
+//    NSInteger ms = timestamp;
+//    NSInteger ss = 1;
+//    NSInteger mi = ss * 60;
+//    NSInteger hh = mi * 60;
+//    NSInteger dd = hh * 24;
+//    
+//    // 剩余的
+//    NSInteger day = ms / dd;// 天
+//    NSInteger hour = (ms - day * dd) / hh;// 时
+//    NSInteger minute = (ms - day * dd - hour * hh) / mi;// 分
+//    NSInteger second = (ms - day * dd - hour * hh - minute * mi) / ss;// 秒
+//    
+//    self.dayLabel.text = [NSString stringWithFormat:@"%@",[NSString convertDateSingleData:day]];
+//    self.hourLabel.text = [NSString stringWithFormat:@"%@",[NSString convertDateSingleData:hour]];
+//    self.minuesLabel.text = [NSString stringWithFormat:@"%@",[NSString convertDateSingleData:minute]];
+//    self.secondsLabel.text = [NSString stringWithFormat:@"%@",[NSString convertDateSingleData:second]];
+//    
+//}
 
 - (void)setCornerOnTop:(CGFloat )cornerRadius view:(UIView *)view{
     UIBezierPath *maskPath;

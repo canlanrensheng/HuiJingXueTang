@@ -27,5 +27,7 @@ typedef NS_ENUM(NSInteger,UserInfoType){
 //修改用户信息的接口
 - (void)updateUserInfoWithMessage:(NSString *)message  userInfoType:(UserInfoType)userInfoType success:(void (^)(void))success;
 
+//获取省市区的信息的数据
+- (void)getAreaWithSuccess:(void (^)(NSArray *dataArray))success;
 
 @end

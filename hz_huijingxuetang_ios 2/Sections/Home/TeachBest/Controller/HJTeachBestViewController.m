@@ -31,8 +31,7 @@
     self.title = @"教参精华";
 }
 
-- (void)hj_configSubViews{
-    //    self.tableView.scrollEnabled = NO;
+- (void)hj_configSubViews {
     self.numberOfSections = 1;
     
     self.sectionFooterHeight = 0.001f;
@@ -102,7 +101,6 @@
             [self.tableView reloadData];
         }
     }];
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -176,7 +174,6 @@
         if(self.isVip) {
             text = @"暂无相关文章";
         } else {
-//            text = @"您还尚未购买课程";
             text = @"您没有购买课程，暂无相关文章可查看";
         }
     }
@@ -202,6 +199,7 @@
     if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
         [self hj_loadData];
     } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"JumpToSchoolVCourse" object:nil userInfo:nil];
         self.tabBarController.selectedIndex = 1;
         [self.navigationController popToRootViewControllerAnimated:YES];
     }

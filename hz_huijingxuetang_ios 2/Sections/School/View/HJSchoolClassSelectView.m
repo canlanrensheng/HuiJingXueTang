@@ -58,7 +58,7 @@
                 
                 //点击的操作
                 if (i == 0) {
-                    [self reloadScrollSmartClassifyViewWithImageArr:@[@"限时特惠"]];
+                    [self reloadScrollSmartClassifyViewWithImageArr:@[@"秒杀特供"]];
                 } else {
                     NSMutableArray *marr = [NSMutableArray array];
                     for (Price *price in _viewModel.model.price){
@@ -137,7 +137,7 @@
     }];
     
     self.rightView = rightView;
-    [self reloadScrollSmartClassifyViewWithImageArr:@[@"限时特惠"]];
+    [self reloadScrollSmartClassifyViewWithImageArr:@[@"秒杀特供"]];
 }
 
 - (void)reloadScrollSmartClassifyViewWithImageArr:(NSArray *)assets{

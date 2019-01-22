@@ -29,7 +29,7 @@
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
             if(!self.isFirstLoad) {
                 [self.loadingView stopLoadingView];
-                self.isFirstLoad = YES;
+                self.firstLoad = YES;
             }
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
@@ -54,14 +54,14 @@
             } else {
                 if(!self.isFirstLoad) {
                     [self.loadingView stopLoadingView];
-                    self.isFirstLoad = YES;
+                    self.firstLoad = YES;
                 }
                 ShowError([dic objectForKey:@"msg"]);
             }
         } fail:^(id error) {
             if(!self.isFirstLoad) {
                 [self.loadingView stopLoadingView];
-                self.isFirstLoad = YES;
+                self.firstLoad = YES;
             }
             hideHud();
             ShowError(error);

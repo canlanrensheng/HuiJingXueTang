@@ -60,17 +60,22 @@
 - (void)hj_loadData {
     NSString *teacherId = self.params[@"teacherId"];
     self.viewModel.teacherId = teacherId;
-//    [self.viewModel play];
     [self.viewModel getTeacherDetailWithTeacherId:teacherId Success:^{
-//        [self.viewModel stop];
         self.headerView.model = self.viewModel.model;
         self.headerView.viewModel = self.viewModel;
     }];
 }
 
+- (void)hj_bindViewModel {
+    @weakify(self);
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshTeacherDetailData" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        [self hj_loadData];
+    }];
+}
+
 - (void)hj_configSubViews {
 //    顶部试图
-    
     CGFloat headerHeight = kHeight(255.0) + kStatusBarHeight;
     [self.view addSubview:self.headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {

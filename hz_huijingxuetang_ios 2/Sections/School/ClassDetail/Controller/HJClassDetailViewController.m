@@ -84,6 +84,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self.timer setFireDate:[NSDate distantPast]];
+    
     [self.viewModel.loadingView startAnimating];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(CGFLOAT_MIN * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.navigationController setNavigationBarHidden:YES animated:NO];
@@ -112,6 +114,7 @@
 - (void)dealloc {
     [self doDestroyPlayer];
     [self.timer setFireDate:[NSDate distantFuture]];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -168,7 +171,7 @@
         NSString *courseId = self.params[@"courseId"];
         __weak typeof(self)weakSelf = self;
         [self.viewModel createFreeCourseOrderWithCourseId:courseId Success:^(BOOL succcessFlag) {
-            if(succcessFlag){
+//            if(succcessFlag){
                 NSString *courseId = self.params[@"courseId"];
                 self.viewModel.courseId = courseId;
                 [weakSelf.viewModel.loadingView startAnimating];
@@ -181,10 +184,11 @@
                     weakSelf.evaluationVC.viewModel = weakSelf.viewModel;
                     //处理显示隐藏的部分
                     [weakSelf dealViewShowOrHidden];
+                    weakSelf.titleView.titleTextLabel.text = weakSelf.viewModel.model.coursename;
                 }];
-            } else {
-                [weakSelf.viewModel.loadingView stopLoadingView];
-            }
+//            } else {
+//                [weakSelf.viewModel.loadingView stopLoadingView];
+//            }
         }];
         return;
     } else {
@@ -197,6 +201,7 @@
             weakSelf.baseClassDetailVC.viewModel = weakSelf.viewModel;
             weakSelf.selectJiVC.viewModel = weakSelf.viewModel;
             weakSelf.evaluationVC.viewModel = weakSelf.viewModel;
+            weakSelf.titleView.titleTextLabel.text = weakSelf.viewModel.model.coursename;
             //处理显示隐藏的部分
             [weakSelf dealViewShowOrHidden];
         }];
@@ -367,7 +372,7 @@
                 self.videoUrl = model.videourl;
                 NSString *videoName = model.videoname;
                 self.videoid = model.videoid;
-                self.titleView.titleTextLabel.text = videoName;
+//                self.titleView.titleTextLabel.text = videoName;
                 self.controlView.fileTitleLabel.text = model.videoname.length > 0 ? model.videoname : @"暂无课程名称";
                 [self playClick:self.playBtn];
                 
@@ -403,12 +408,14 @@
 
     //添加进入购物车
     if(!MaJia) {
+        [self.goInShopCarBtn setFrame:CGRectMake(Screen_Width - kWidth(14.0) - kWidth(46.0), Screen_Height - KHomeIndicatorHeight - kHeight(122 + 49.0), kWidth(46.0), kHeight(46.0))];
         [self.view addSubview:self.goInShopCarBtn];
-        [self.goInShopCarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.view).offset(-kWidth(14.0));
-            make.size.mas_equalTo(CGSizeMake(kWidth(46.0), kHeight(46.0)));
-            make.bottom.equalTo(self.view).offset(-kHeight(122 + 49.0));
-        }];
+        
+//        [self.goInShopCarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.right.equalTo(self.view).offset(-kWidth(14.0));
+//            make.size.mas_equalTo(CGSizeMake(kWidth(46.0), kHeight(46.0)));
+//            make.bottom.equalTo(self.view).offset(-kHeight(122 + 49.0));
+//        }];
     }
     
 }
@@ -516,7 +523,7 @@
         self.videoUrl = model.videourl;
         NSString *videoName = model.videoname;
         self.videoid = model.videoid;
-        self.titleView.titleTextLabel.text = videoName;
+//        self.titleView.titleTextLabel.text = videoName;
         self.controlView.fileTitleLabel.text = model.videoname.length > 0 ? model.videoname : @"暂无课程名称";
     }];
     
@@ -547,16 +554,18 @@
         self.controlView.killPriceImageV.hidden = YES;
     } else {
         //付费的课程
-        
-        //是否能推广
-        if(self.viewModel.model.canpromote == 0){
-            //不能推广 
+        if(MaJia) {
             self.controlView.killPriceImageV.hidden = YES;
         } else {
-            //可以推广
-            //显示分享好友的弹窗
-            self.controlView.killPriceImageV.hidden = NO;
-          
+            //是否能推广
+            if(self.viewModel.model.canpromote == 0){
+                //不能推广
+                self.controlView.killPriceImageV.hidden = YES;
+            } else {
+                //可以推广
+                //显示分享好友的弹窗
+                self.controlView.killPriceImageV.hidden = NO;
+            }
         }
         
         //是否可以限时特惠
@@ -664,7 +673,6 @@
 - (void)NELivePlayerDidPreparedToPlay:(NSNotification*)notification {
     //add some methods
     NSLog(@"[NELivePlayer Demo] 收到 NELivePlayerDidPreparedToPlayNotification 通知");
-    
     //获取视频信息，主要是为了告诉界面的可视范围，方便字幕显示
     NELPVideoInfo info;
     memset(&info, 0, sizeof(NELPVideoInfo));
@@ -693,7 +701,6 @@
     
     //关
     [_player setRealTimeListenerWithIntervalMS:500 callback:nil];
-
 }
 
 //记录播放存为历史的播放
@@ -731,10 +738,22 @@
     if(self.isFullScreen) {
         self.controlView.killPriceImageV.hidden = YES;
     } else {
-        if(self.player.playbackState == NELPMoviePlaybackStatePlaying) {
-            self.controlView.killPriceImageV.hidden = YES;
+        if(MaJia) {
+           self.controlView.killPriceImageV.hidden = YES;
         } else {
-            self.controlView.killPriceImageV.hidden = NO;
+            if(self.player.playbackState == NELPMoviePlaybackStatePlaying) {
+                self.controlView.killPriceImageV.hidden = YES;
+            } else {
+                //是否能推广
+                if(self.viewModel.model.canpromote == 0){
+                    //不能推广
+                    self.controlView.killPriceImageV.hidden = YES;
+                } else {
+                    //可以推广
+                    //显示分享好友的弹窗
+                    self.controlView.killPriceImageV.hidden = NO;
+                }
+            }
         }
     }
     
@@ -1035,11 +1054,49 @@
                 make.right.equalTo(button).offset(-kWidth(9.0));
                 make.size.mas_equalTo(CGSizeMake(kWidth(13.0), kHeight(13.0)));
             }];
+            courseCountLabel.hidden = YES;
             self.redBotLabel = courseCountLabel;
         }];
+        
+        UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        [_goInShopCarBtn addGestureRecognizer:pan];//给图片添加手势
     }
     return _goInShopCarBtn;
 }
+
+//按钮拖动的时候进型的操作
+- (void)handlePan:(UIPanGestureRecognizer *)rec {
+    [self.goInShopCarBtn setHighlighted:YES];
+    CGFloat KWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat KHeight = [UIScreen mainScreen].bounds.size.height;
+   //拖动后，相对坐标的偏移量
+    CGPoint point = [rec translationInView:self.view];
+    
+//     NSLog(@"%f,%f",point.x,point.y);
+    CGFloat centerX = rec.view.center.x + point.x;
+    CGFloat centerY = rec.view.center.y + point.y;
+    CGFloat viewHalfH = rec.view.frame.size.height / 2;
+    CGFloat viewhalfW = rec.view.frame.size.width / 2;
+    //确定特殊的centerY
+    if (centerY - viewHalfH < 0 ) {
+        centerY = viewHalfH;
+     }
+    if (centerY + viewHalfH > KHeight ) {
+       centerY = KHeight - viewHalfH;
+    }
+     //确定特殊的centerX
+    if (centerX - viewhalfW < 0){
+        centerX = viewhalfW;
+    }
+    if (centerX + viewhalfW > KWidth){
+       centerX = KWidth - viewhalfW;
+    }
+    rec.view.center = CGPointMake(centerX, centerY);
+   
+    //拖动完之后，每次都要用setTranslation:方法制0这样才不至于不受控制般滑动出视图
+    [rec setTranslation:CGPointMake(0, 0) inView:self.view];
+}
+
 
 @end
 

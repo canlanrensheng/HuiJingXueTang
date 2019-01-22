@@ -34,20 +34,12 @@
     self.responseSerializer = [AFCompoundResponseSerializer serializer];
     self.requestSerializer = [AFHTTPRequestSerializer serializer];
     self.requestSerializer.timeoutInterval = 30.0;//设置网络超时
-
+    
     
     AFSecurityPolicy *securityPolicy = [AFSecurityPolicy defaultPolicy];
     securityPolicy.validatesDomainName = NO;
     securityPolicy.allowInvalidCertificates = YES;
     self.securityPolicy = securityPolicy;
-
-
-    //设置带蒙版
-//    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
-//    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
-//    [SVProgressHUD setMinimumDismissTimeInterval:2.0];
-//    [SVProgressHUD setBackgroundColor:RGBA(206, 206, 206, 0.9)];
-//    SVShow;
     
     //判断请求方法是GET还是POST
     if ([method isEqualToString:@"GET"]) {

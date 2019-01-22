@@ -44,6 +44,10 @@
     [super viewDidLoad];
 }
 
+- (void)injected{
+    [self viewDidLoad];
+}
+
 - (HJHomeHeaderView *)homeHeaderView {
     if(!_homeHeaderView){
         _homeHeaderView = [[HJHomeHeaderView alloc] init];
@@ -58,7 +62,6 @@
     }
     return _latestSatausView;
 }
-
 
 - (HJHomeViewModel *)viewModel {
     if(!_viewModel){
@@ -168,6 +171,11 @@
     //加载正在直播的数据
     [self.viewModel getLiveListSuccess:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            if(self.viewModel.liveListArray.count > 0){
+                 [self.homeHeaderView.onLiveButton setBackgroundImage:[UIImage imageNamed:@"直播有消息"] forState:UIControlStateNormal];
+            } else {
+                 [self.homeHeaderView.onLiveButton setBackgroundImage:[UIImage imageNamed:@"直播ICON"] forState:UIControlStateNormal];
+            }
             [self.tableView reloadData];
         });
     }];
@@ -184,8 +192,8 @@
             [self.tableView reloadData];
         });
     }];
-    //加载课程列表
     
+    //加载课程列表
     NSString *courseType = @"";
     if(MaJia) {
         courseType = @"free";
@@ -231,7 +239,7 @@
         if(MaJia) {
             return 0.00001f;
         }
-        if (self.viewModel.liveListArray.count > 0) {
+        if (self.viewModel.liveListArray.count > 3) {
             return kHeight(160.0 + 25.0);
         }
         return 0.00001f;
@@ -303,14 +311,13 @@
         if(MaJia) {
             cell.hidden = YES;
         } else {
-            if (self.viewModel.liveListArray.count > 0) {
+            if (self.viewModel.liveListArray.count > 3) {
                 cell.hidden = NO;
                 [cell setViewModel:self.viewModel indexPath:indexPath];
             } else {
                 cell.hidden = YES;
             }
         }
-        
         return cell;
     }
     if (indexPath.section == 2) {
@@ -347,7 +354,7 @@
         sectionHeaderView = [[HJHomeSectionHeaderView alloc] initWithReuseIdentifier:@"HJHomeSectionHeaderView"];
     
     if(section == 0) {
-        sectionHeaderView.titleTextLabel.text = @"限时特惠";
+        sectionHeaderView.titleTextLabel.text = @"秒杀特供";
         UIView *backView = [[UIView alloc] init];
         backView.backgroundColor = white_color;
         sectionHeaderView.backgroundView = backView;
@@ -377,18 +384,18 @@
         sectionHeaderView.backgroundView = backView;
         sectionHeaderView.moreBtn.hidden = YES;
         [sectionHeaderView.backSubject subscribeNext:^(id  _Nullable x) {
-
+            //更多的直播的列表
+            
         }];
         if(MaJia) {
             sectionHeaderView.hidden = YES;
         } else {
-            if (self.viewModel.liveListArray.count > 0) {
+            if (self.viewModel.liveListArray.count > 3) {
                 sectionHeaderView.hidden = NO;
             } else {
                 sectionHeaderView.hidden = YES;
             }
         }
-       
         return  sectionHeaderView;
     }
     if (section == 2) {
@@ -403,7 +410,6 @@
             } else {
                 VisibleViewController().tabBarController.selectedIndex = 3;
             }
-            
         }];
         return  sectionHeaderView;
     }
@@ -474,7 +480,7 @@
         if (MaJia) {
             return 0.00001f;
         } else {
-            if (self.viewModel.liveListArray.count > 0) {
+            if (self.viewModel.liveListArray.count > 3) {
                 return kHeight(60);
             } else {
                 return 0.00001f;
@@ -488,6 +494,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 5) {
         //课程推荐
+        if([APPUserDataIofo AccessToken].length <= 0) {
+            [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+            return;
+        }
         kRepeatClickTime(1.0);
         HJHomeCourseRecommendedModel *model = self.viewModel.recommongCourceDataArray[indexPath.row];
         [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.courseid .length > 0 ? model.courseid : @""} animated:YES];

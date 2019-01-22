@@ -20,7 +20,7 @@
 
 - (void)hj_configSubViews {
     UILabel *teacherInfoLabel = [UILabel creatLabel:^(UILabel *label) {
-        label.ljTitle_font_textColor(@"讲师简介",BoldFont(font(15)),HEXColor(@"#22476B"));
+        label.ljTitle_font_textColor(@"课程评价",BoldFont(font(15)),HEXColor(@"#22476B"));
         label.numberOfLines = 0;
         [label sizeToFit];
     }];

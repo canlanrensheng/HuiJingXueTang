@@ -114,7 +114,7 @@
         self.contentTitleLabel.text = model.infomationtitle;
         self.readCountLabel.text = [NSString stringWithFormat:@"%ld",model.readingquantity];
         NSDate *date = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
-        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%@/%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day]];
+        self.dateLabel.text = [NSString stringWithFormat:@"%ld/%@/%@ %@:%@",date.year,[NSString convertDateSingleData:date.month],[NSString convertDateSingleData:date.day],[NSString convertDateSingleData:date.hour],[NSString convertDateSingleData:date.minute]];
     }
 }
 

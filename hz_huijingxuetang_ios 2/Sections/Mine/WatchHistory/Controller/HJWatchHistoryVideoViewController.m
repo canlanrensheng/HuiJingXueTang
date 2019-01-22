@@ -70,12 +70,13 @@
         cell.totalTimeLabel.text = [NSString stringWithFormat:@"%@",totalTime];
         cell.teacherNameLabel.text = [NSString stringWithFormat:@"讲师：%@",model.realName];
         //几小时前
-        NSDate *endDate = [NSDate date];
+//        NSDate *endDate = [NSDate date];
         NSDate *startDate = model.date;
+        cell.timeLabel.text = [NSDate compareCurrentTime:startDate];
         
-        DTTimePeriod *timePeriod =[[DTTimePeriod alloc] initWithStartDate:startDate endDate:endDate];
-        double durationInHours  = [timePeriod durationInHours];
-        cell.timeLabel.text = [NSString stringWithFormat:@"%ld小时前",(long)durationInHours];
+//        DTTimePeriod *timePeriod =[[DTTimePeriod alloc] initWithStartDate:startDate endDate:endDate];
+//        double durationInHours  = [timePeriod durationInHours];
+//        cell.timeLabel.text = [NSString stringWithFormat:@"%ld小时前",(long)durationInHours];
     }
     return cell;
 }

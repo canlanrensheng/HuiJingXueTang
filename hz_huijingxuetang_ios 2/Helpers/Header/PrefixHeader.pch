@@ -47,21 +47,21 @@
 
 /*接口域名*/
 //正式环境
-//#define API_BASEURL @"https://api.huijingschool.com/"
+#define API_BASEURL @"https://api.huijingschool.com/"
 //测试环境
-#define API_BASEURL @"http://192.168.10.18:8084/"
+//#define API_BASEURL @"http://192.168.10.18:8084/"
 
 /*分享链接的URL的域名*/
 //正式环境
-//#define API_SHAREURL @"http://mp.huijingschool.com/"
+#define API_SHAREURL @"http://mp.huijingschool.com/"
 //测试环境
-#define API_SHAREURL @"http://192.168.10.144:8081/"
+//#define API_SHAREURL @"http://192.168.10.144:8081/"
 
 /*是否展示马甲*/
 //正式环境
-//#define MaJia (([UserInfoSingleObject  shareInstance].isShowMaJia) || ([[APPUserDataIofo phone] isEqualToString:@"15123456789"]))
+#define MaJia (([UserInfoSingleObject  shareInstance].isShowMaJia) || ([[APPUserDataIofo phone] isEqualToString:@"15123456789"]))
 //测试环境
-#define MaJia 0
+//#define MaJia 0
 
 //图片Url
 //#define _IMGURL @"http://api.huijingschool.com"

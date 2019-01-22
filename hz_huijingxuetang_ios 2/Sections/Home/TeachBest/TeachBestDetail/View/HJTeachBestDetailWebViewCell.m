@@ -18,6 +18,7 @@
     _webView.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
     _webView.scrollView.bounces = NO;
     _webView.scrollView.scrollEnabled = NO;
+
     [self addSubview:_webView];
 }
 

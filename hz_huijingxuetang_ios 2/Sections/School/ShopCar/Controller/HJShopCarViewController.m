@@ -57,7 +57,7 @@
     [self.tableView registerClass:[HJShopCarTotalMoneyCell class] forCellReuseIdentifier:NSStringFromClass([HJShopCarTotalMoneyCell class])];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, kHeight(49.0), 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, kHeight(49.0) + KHomeIndicatorHeight, 0));
     }];
 }
 
@@ -76,6 +76,7 @@
     self.bottomView.layer.shadowOpacity = 1;
     self.bottomView.layer.shadowRadius = 5;
     
+    //已选的按钮
     UIButton *allSelectButton = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@" 已选（0） ",MediumFont(font(14)),HEXColor(@"#22476B"),0);
         [button setImage:[UIImage imageNamed:@"未选中"] forState:UIControlStateNormal];
@@ -97,20 +98,7 @@
         make.width.mas_equalTo(kWidth(100.0));
     }];
     
-//    UILabel *countLabel = [UILabel creatLabel:^(UILabel *label) {
-//        label.ljTitle_font_textColor(@"已选（0）",MediumFont(font(14)),HEXColor(@"#22476B"));
-//        label.textAlignment = NSTextAlignmentLeft;
-//        label.numberOfLines = 1.0;
-//        [label sizeToFit];
-//    }];
-//    [self.bottomView addSubview:countLabel];
-//    [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(self.bottomView);
-//        make.left.equalTo(allSelectButton.mas_right).offset(kWidth(6.0));
-//        make.height.mas_equalTo(kHeight(14.0));
-//    }];
-//    self.selctCountLabel = countLabel;
-    
+    //立即购买的按钮
     UIButton *buyButton = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"立即购买",MediumFont(font(15)),white_color,0);
         button.backgroundColor = HEXColor(@"#FF4400");
@@ -125,6 +113,17 @@
         make.right.bottom.top.equalTo(self.bottomView);
         make.width.mas_equalTo(kWidth(119));
     }];
+    
+    //适配iPhone X
+    if(isFringeScreen) {
+        UIView *bottomView = [[UIView alloc] init];
+        bottomView.backgroundColor = white_color;
+        [self.view addSubview:bottomView];
+        [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.view);
+            make.height.mas_equalTo(KHomeIndicatorHeight);
+        }];
+    }
 }
 
 //立即购买的操作
@@ -243,10 +242,9 @@
         HJShopCarListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJShopCarListCell class]) forIndexPath:indexPath];
         self.tableView.separatorColor = HEXColor(@"#EAEAEA");
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [cell setViewModel:self.viewModel indexPath:indexPath];
-//        [cell.backSub subscribeNext:^(id  _Nullable x) {
-//            [self dealSelectData];
-//        }];
+        if (indexPath.row < self.viewModel.shopCarListArray.count) {
+            [cell setViewModel:self.viewModel indexPath:indexPath];
+        }
         return cell;
     }
     HJShopCarTotalMoneyCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJShopCarTotalMoneyCell class]) forIndexPath:indexPath];
@@ -274,7 +272,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return kHeight(10.0);
+    return 0.0001f;
 }
 
 
@@ -297,11 +295,12 @@
             if (indexPath.row < self.viewModel.shopCarListArray.count) {
                 HJShopCarListModel *model = self.viewModel.shopCarListArray[indexPath.row];
                 [self.viewModel deleteShopListWithCourseid:model.courseid Success:^{
-                    if(indexPath.row < self.viewModel.shopCarListArray.count) {
-                        [self.viewModel.shopCarListArray removeObjectAtIndex:indexPath.row];
-                        [self dealSelectData];
-                    }
-                   
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (indexPath.row < self.viewModel.shopCarListArray.count) {
+                            [self.viewModel.shopCarListArray removeObjectAtIndex:indexPath.row];
+                            [self dealSelectData];
+                        }
+                    });
                 }];
             }
         }
@@ -321,7 +320,11 @@
         if (model.isSelect) {
             if(marr.count < MaxCourseCount) {
                 [marr addObject:model];
-                totalMoney += model.coursemoney.floatValue;
+                if(model.hassecond == 1) {
+                    totalMoney += model.secondprice.floatValue;
+                } else {
+                    totalMoney += model.coursemoney.floatValue;
+                }
             } else {
                 model.isSelect = NO;
                 ShowMessage([NSString stringWithFormat:@"一次最多只能购买%d门课程",MaxCourseCount]);
@@ -329,7 +332,6 @@
             }
         }
     }
-//    self.selctCountLabel.text = [NSString stringWithFormat:@"已选（%ld）",marr.count];
     [self.allSelectButton setTitle:[NSString stringWithFormat:@" 已选（%ld）",marr.count] forState:UIControlStateNormal];
     if (marr.count == self.viewModel.shopCarListArray.count) {
         self.allSelectButton.selected = YES;
@@ -352,7 +354,12 @@
     for (HJShopCarListModel *model in marr) {
         model.isSelect = isSelect;
         if (model.isSelect) {
-            totalMoney += model.coursemoney.floatValue;
+//            totalMoney += model.coursemoney.floatValue;
+            if(model.hassecond == 1) {
+                totalMoney += model.secondprice.floatValue;
+            } else {
+                totalMoney += model.coursemoney.floatValue;
+            }
         }
     }
     if (isSelect) {

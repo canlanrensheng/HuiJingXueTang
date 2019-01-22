@@ -37,7 +37,6 @@ typedef void (^backBlock)(NSInteger type);
 - (void)set{
     [UIView animateWithDuration:0.3 animations:^{
         _contentView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - KAlertHeight - KHomeIndicatorHeight, [UIScreen mainScreen].bounds.size.width, KAlertHeight);
-//        _contentView.transform = CGAffineTransformMakeRotation(M_PI/2);
         _contentView.backgroundColor = [UIColor whiteColor];
     }];
 }
@@ -49,13 +48,21 @@ typedef void (^backBlock)(NSInteger type);
         back.backgroundColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.3];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TapGesture)];
         [back addGestureRecognizer:tap];
-        
         [self addSubview:back];
+        
+        //占位的视图
+        if(isFringeScreen) {
+            UIView *bottomView =[[UIView alloc] init];
+            bottomView.backgroundColor = white_color;
+            [back addSubview:bottomView];
+            [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.bottom.equalTo(back);
+                make.height.mas_equalTo(KHomeIndicatorHeight);
+            }];
+        }
         
         _contentView = [[UIView alloc]initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - KHomeIndicatorHeight,  [UIScreen mainScreen].bounds.size.width,_alertViewHeight)];
         [self addSubview:_contentView];
-        
-      
     
         //链接
         //一行放几个

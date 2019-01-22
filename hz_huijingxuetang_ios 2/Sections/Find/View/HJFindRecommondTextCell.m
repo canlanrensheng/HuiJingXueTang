@@ -29,6 +29,7 @@
 @implementation HJFindRecommondTextCell
 
 - (void)hj_configSubViews {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     //头像
     UIImageView *iconImageV = [[UIImageView alloc] init];
     iconImageV.image = V_IMAGE(@"默认头像");
@@ -175,7 +176,9 @@
     self.nameLabel.text = model.realname;
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;
-    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+//    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+    NSDate *startDate = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+    self.dateLabel.text = [NSDate compareCurrentTime:startDate];
 }
 
 - (RACSubject *)backRefreshSubject {

@@ -67,7 +67,8 @@
         if([isToStudy integerValue] == 1) {
             //跳转到课程详情
             CourseResponsesModel *model = self.model.courseResponses[indexPath.row];
-            [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.courseid} animated:YES];
+            [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : model.courseid
+                                                                        } animated:YES];
         } else {
             //跳转到评价的页面
             CourseResponsesModel *model = self.model.courseResponses[indexPath.row];

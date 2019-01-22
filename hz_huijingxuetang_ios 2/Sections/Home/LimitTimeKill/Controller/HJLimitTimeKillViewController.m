@@ -31,7 +31,7 @@
 }
 
 - (void)hj_configSubViews{
-    self.title = @"限时特惠";
+    self.title = @"秒杀特供";
     [self.tableView registerClass:[HJLimitTimeKillCell class] forCellReuseIdentifier:NSStringFromClass([HJLimitTimeKillCell class])];
     
     [self.view addSubview:self.tableView];
@@ -122,7 +122,7 @@
     if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
         text = @"网络好像出了点问题";
     } else{
-        text = @"暂无限时特惠";
+        text = @"暂无秒杀特供";
     }
     
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};

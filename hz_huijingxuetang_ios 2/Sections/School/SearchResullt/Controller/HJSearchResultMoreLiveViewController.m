@@ -28,6 +28,7 @@
     self.title = @"直播";
 }
 
+
 - (void)hj_loadData {
     self.viewModel.tableView = self.tableView;
     self.tableView.mj_footer.hidden = YES;
@@ -77,7 +78,7 @@
 
 - (void)hj_configSubViews{
     [self.tableView registerClass:[HJSearchResultLiveCell class] forCellReuseIdentifier:NSStringFromClass([HJSearchResultLiveCell class])];
-    [self.view addSubview:self.tableView];
+//    [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0 , 0, 0, 0));
     }];
@@ -108,6 +109,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HJSearchResultLiveCell *cell = (HJSearchResultLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.row < self.viewModel.liveListArray.count) {
         kRepeatClickTime(1.0);
         CourseLiveModel *model = self.viewModel.liveListArray[indexPath.row];
@@ -135,7 +137,9 @@
                 return;
             }
         }
+        [cell.loadingView startAnimating];
         [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
+            [cell.loadingView stopLoadingView];
             //没有设置密码
             if(isSetPwd) {
                 [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId,
@@ -152,7 +156,7 @@
             
         } error:^{
             //设置了密码，弹窗提示
-            
+            [cell.loadingView stopLoadingView];
         }];
     }
 }
@@ -173,7 +177,7 @@
     } else{
         text = @"暂无相关直播";
     }
-    
+
     NSDictionary *attribute = @{NSFontAttributeName: MediumFont(font(15)), NSForegroundColorAttributeName: HEXColor(@"#999999")};
     return [[NSAttributedString alloc] initWithString:text attributes:attribute];
 }
@@ -200,7 +204,7 @@
     if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
         [self hj_loadData];
     } else {
-        
+
     }
 }
 

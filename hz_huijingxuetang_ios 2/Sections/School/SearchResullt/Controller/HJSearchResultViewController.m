@@ -755,6 +755,7 @@
                 }
             } else if (indexPath.section == 2) {
                 //直播
+                HJSearchResultLiveCell *cell = (HJSearchResultLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
                 if (indexPath.row  < self.viewModel.model.courseLiveResponses.count) {
                     CourseLiveModel *model = self.viewModel.model.courseLiveResponses[indexPath.row];
                     NSString *liveId = @"";
@@ -781,7 +782,9 @@
                             return;
                         }
                     }
+                    [cell.loadingView startAnimating];
                     [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
+                        [cell.loadingView stopLoadingView];
                         //没有设置密码
                         if(isSetPwd) {
                             [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId
@@ -795,7 +798,7 @@
                         
                     } error:^{
                         //设置了密码，弹窗提示
-                        
+                        [cell.loadingView stopLoadingView];
                     }];
                 }
             } else {
@@ -831,6 +834,7 @@
         } else {
             //直播
             if(indexPath.section == 0) {
+                HJSearchResultLiveCell *cell = (HJSearchResultLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
                 if([APPUserDataIofo AccessToken].length <= 0) {
 //                    ShowMessage(@"您还未登录");
                     [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
@@ -862,8 +866,9 @@
                             return;
                         }
                     }
-                    
+                    [cell.loadingView startAnimating];
                     [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
+                        [cell.loadingView stopLoadingView];
                         //没有设置密码
                         if(isSetPwd) {
                             [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId,
@@ -880,7 +885,7 @@
                         
                     } error:^{
                         //设置了密码，弹窗提示
-                        
+                        [cell.loadingView stopLoadingView];
                     }];
                 }
                

@@ -68,7 +68,7 @@
     [self.tableView registerClass:[HJTeacherDetailLiveCell class] forCellReuseIdentifier:NSStringFromClass([HJTeacherDetailLiveCell class])];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0 , 0, 0, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0 , 0, KHomeIndicatorHeight, 0));
     }];
 }
 
@@ -95,6 +95,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HJTeacherDetailLiveCell *cell = (HJTeacherDetailLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
     if(indexPath.row < self.viewModel.liveListArray.count) {
         kRepeatClickTime(1.0);
         HJTeacherLiveModel *model = self.viewModel.liveListArray[indexPath.row];
@@ -122,8 +123,9 @@
                 return;
             }
         }
-        
+        [cell.loadingView startAnimating];
         [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
+            [cell.loadingView stopLoadingView];
             //没有设置密码
             if(isSetPwd) {
                 [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId,
@@ -140,7 +142,7 @@
             
         } error:^{
             //设置了密码，弹窗提示
-            
+            [cell.loadingView stopLoadingView];
         }];
     }
 }

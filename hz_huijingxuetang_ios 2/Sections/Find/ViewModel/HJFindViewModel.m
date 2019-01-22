@@ -60,8 +60,9 @@
             }
             if(MaJia) {
                 parameters = @{
-                               @"teacherid" : teacherid.length > 0 ? teacherid : @"",
-                               @"vesttype" : @"free"
+                               @"teacherid" : teacherid.length > 0 ? teacherid : @""
+                               ,@"vesttype" : @"free",
+                                @"accesstoken" : [APPUserDataIofo AccessToken]
                                };
             }
         } else {
@@ -72,7 +73,7 @@
                 if(MaJia) {
                     parameters =  @{
                                     @"page" : [NSString stringWithFormat:@"%ld",self.page],
-                                   @"vesttype" : @"free"
+                                    @"vesttype" : @"free"
                                    };
                 }
             } else {

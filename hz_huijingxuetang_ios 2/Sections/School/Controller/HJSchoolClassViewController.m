@@ -80,7 +80,11 @@
     
     self.toolView = toolView;
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0), 0, kBottomBarHeight, 0));
+        if(isFringeScreen) {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0), 0, 0, 0));
+        } else {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0), 0, KHomeIndicatorHeight, 0));
+        }
     }];
     //添加筛选的试图
     [[UIApplication sharedApplication].keyWindow addSubview:self.selectView];
@@ -104,13 +108,14 @@
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshVideoCourseListData" object:nil] subscribeNext:^(id x) {
         @strongify(self);
-        self.viewModel.page = 1;
-        [self.tableView.mj_footer resetNoMoreData];
-        [self.viewModel getListWithSuccess:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-               [self.tableView reloadData];
-            });
-        }];
+//        self.viewModel.page = 1;
+//        [self.tableView.mj_footer resetNoMoreData];
+//        [self.viewModel getListWithSuccess:^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//               [self.tableView reloadData];
+//            });
+//        }];
+        [self.tableView.mj_header beginRefreshing];
     }];
     
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"HiddenSelectView" object:nil] subscribeNext:^(id x) {

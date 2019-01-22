@@ -19,6 +19,7 @@
 		1302FBA5219D92C000A6811B /* HJTeacherRecommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1302FBA4219D92C000A6811B /* HJTeacherRecommentModel.m */; };
 		1302FBA8219D970B00A6811B /* HJTeacherDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1302FBA7219D970B00A6811B /* HJTeacherDetailViewModel.m */; };
 		1309F1D721C8D9C700E1B540 /* HJTextAndPicButoton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1309F1D621C8D9C700E1B540 /* HJTextAndPicButoton.m */; };
+		130BD39F21EC25A700726E15 /* HJKillPriceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 130BD39E21EC25A700726E15 /* HJKillPriceModel.m */; };
 		131AD62B21C0EB2C00E7E8E1 /* HJPlaceHoderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD62A21C0EB2C00E7E8E1 /* HJPlaceHoderViewController.m */; };
 		131AD62F21C2202600E7E8E1 /* HJForceToUpdateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD62E21C2202600E7E8E1 /* HJForceToUpdateView.m */; };
 		131AD63221C228E100E7E8E1 /* HJVersionUpdateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AD63121C228E100E7E8E1 /* HJVersionUpdateCell.m */; };
@@ -119,6 +120,12 @@
 		133A9665219122380092B5CD /* HJInfoSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A9664219122380092B5CD /* HJInfoSegmentView.m */; };
 		133A966B2191242B0092B5CD /* HJBaseInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A966A2191242B0092B5CD /* HJBaseInfoCell.m */; };
 		133A966E219124800092B5CD /* HJBaseInfoHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A966D219124800092B5CD /* HJBaseInfoHeaderView.m */; };
+		13405B6D21E8C0A700C9E92E /* HJOnLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B6C21E8C0A600C9E92E /* HJOnLiveViewController.m */; };
+		13405B7021E8C0BF00C9E92E /* HJKillPriceCourseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B6F21E8C0BF00C9E92E /* HJKillPriceCourseViewController.m */; };
+		13405B7321E8C1AC00C9E92E /* HJKillPriceCourseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B7221E8C1AC00C9E92E /* HJKillPriceCourseCell.m */; };
+		13405B7621E8C1C000C9E92E /* HJKillPriceCourseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B7521E8C1C000C9E92E /* HJKillPriceCourseViewModel.m */; };
+		13405B7921E8C1E100C9E92E /* HJOnLiveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B7821E8C1E100C9E92E /* HJOnLiveCell.m */; };
+		13405B7C21E8C1F700C9E92E /* HJOnLiveViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13405B7B21E8C1F700C9E92E /* HJOnLiveViewModel.m */; };
 		1341096E2183266900287F93 /* HJSchoolDetailLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1341096D2183266900287F93 /* HJSchoolDetailLiveViewController.m */; };
 		134109712183275F00287F93 /* HJSchoolDetailChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109702183275F00287F93 /* HJSchoolDetailChatViewController.m */; };
 		134109742183279E00287F93 /* HJSchoolDetailReviewPastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134109732183279E00287F93 /* HJSchoolDetailReviewPastViewController.m */; };
@@ -471,6 +478,8 @@
 		1302FBA7219D970B00A6811B /* HJTeacherDetailViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJTeacherDetailViewModel.m; sourceTree = "<group>"; };
 		1309F1D521C8D9C700E1B540 /* HJTextAndPicButoton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJTextAndPicButoton.h; sourceTree = "<group>"; };
 		1309F1D621C8D9C700E1B540 /* HJTextAndPicButoton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJTextAndPicButoton.m; sourceTree = "<group>"; };
+		130BD39D21EC25A700726E15 /* HJKillPriceModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJKillPriceModel.h; sourceTree = "<group>"; };
+		130BD39E21EC25A700726E15 /* HJKillPriceModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJKillPriceModel.m; sourceTree = "<group>"; };
 		131AD62921C0EB2C00E7E8E1 /* HJPlaceHoderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJPlaceHoderViewController.h; sourceTree = "<group>"; };
 		131AD62A21C0EB2C00E7E8E1 /* HJPlaceHoderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJPlaceHoderViewController.m; sourceTree = "<group>"; };
 		131AD62D21C2202600E7E8E1 /* HJForceToUpdateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJForceToUpdateView.h; sourceTree = "<group>"; };
@@ -672,6 +681,18 @@
 		133A966A2191242B0092B5CD /* HJBaseInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJBaseInfoCell.m; sourceTree = "<group>"; };
 		133A966C219124800092B5CD /* HJBaseInfoHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJBaseInfoHeaderView.h; sourceTree = "<group>"; };
 		133A966D219124800092B5CD /* HJBaseInfoHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJBaseInfoHeaderView.m; sourceTree = "<group>"; };
+		13405B6B21E8C0A600C9E92E /* HJOnLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJOnLiveViewController.h; sourceTree = "<group>"; };
+		13405B6C21E8C0A600C9E92E /* HJOnLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJOnLiveViewController.m; sourceTree = "<group>"; };
+		13405B6E21E8C0BF00C9E92E /* HJKillPriceCourseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJKillPriceCourseViewController.h; sourceTree = "<group>"; };
+		13405B6F21E8C0BF00C9E92E /* HJKillPriceCourseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJKillPriceCourseViewController.m; sourceTree = "<group>"; };
+		13405B7121E8C1AC00C9E92E /* HJKillPriceCourseCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJKillPriceCourseCell.h; sourceTree = "<group>"; };
+		13405B7221E8C1AC00C9E92E /* HJKillPriceCourseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJKillPriceCourseCell.m; sourceTree = "<group>"; };
+		13405B7421E8C1C000C9E92E /* HJKillPriceCourseViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJKillPriceCourseViewModel.h; sourceTree = "<group>"; };
+		13405B7521E8C1C000C9E92E /* HJKillPriceCourseViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJKillPriceCourseViewModel.m; sourceTree = "<group>"; };
+		13405B7721E8C1E100C9E92E /* HJOnLiveCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJOnLiveCell.h; sourceTree = "<group>"; };
+		13405B7821E8C1E100C9E92E /* HJOnLiveCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJOnLiveCell.m; sourceTree = "<group>"; };
+		13405B7A21E8C1F700C9E92E /* HJOnLiveViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJOnLiveViewModel.h; sourceTree = "<group>"; };
+		13405B7B21E8C1F700C9E92E /* HJOnLiveViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJOnLiveViewModel.m; sourceTree = "<group>"; };
 		1341096C2183266900287F93 /* HJSchoolDetailLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailLiveViewController.h; sourceTree = "<group>"; };
 		1341096D2183266900287F93 /* HJSchoolDetailLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJSchoolDetailLiveViewController.m; sourceTree = "<group>"; };
 		1341096F2183275F00287F93 /* HJSchoolDetailChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJSchoolDetailChatViewController.h; sourceTree = "<group>"; };
@@ -1433,6 +1454,8 @@
 		131D730B2177302F00DC94C7 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				13405B6621E8BFCA00C9E92E /* KillPriceCourse */,
+				13405B6121E8BE2D00C9E92E /* OnLive */,
 				131AD63821C2750B00E7E8E1 /* MaJiaFreeLive */,
 				13466DA721ABEA69003714AC /* RecommentCourse */,
 				136BE0DD2193FED500DE5E5F /* TeacherRecommond */,
@@ -1962,6 +1985,98 @@
 			children = (
 				1302FBA6219D970B00A6811B /* HJTeacherDetailViewModel.h */,
 				1302FBA7219D970B00A6811B /* HJTeacherDetailViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		13405B6121E8BE2D00C9E92E /* OnLive */ = {
+			isa = PBXGroup;
+			children = (
+				13405B6221E8BE2D00C9E92E /* Controller */,
+				13405B6321E8BE2D00C9E92E /* Model */,
+				13405B6421E8BE2D00C9E92E /* View */,
+				13405B6521E8BE2D00C9E92E /* ViewModel */,
+			);
+			path = OnLive;
+			sourceTree = "<group>";
+		};
+		13405B6221E8BE2D00C9E92E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				13405B6B21E8C0A600C9E92E /* HJOnLiveViewController.h */,
+				13405B6C21E8C0A600C9E92E /* HJOnLiveViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13405B6321E8BE2D00C9E92E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13405B6421E8BE2D00C9E92E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13405B7721E8C1E100C9E92E /* HJOnLiveCell.h */,
+				13405B7821E8C1E100C9E92E /* HJOnLiveCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13405B6521E8BE2D00C9E92E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				13405B7A21E8C1F700C9E92E /* HJOnLiveViewModel.h */,
+				13405B7B21E8C1F700C9E92E /* HJOnLiveViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		13405B6621E8BFCA00C9E92E /* KillPriceCourse */ = {
+			isa = PBXGroup;
+			children = (
+				13405B6721E8BFCA00C9E92E /* Controller */,
+				13405B6821E8BFCA00C9E92E /* Model */,
+				13405B6921E8BFCA00C9E92E /* View */,
+				13405B6A21E8BFCA00C9E92E /* ViewModel */,
+			);
+			path = KillPriceCourse;
+			sourceTree = "<group>";
+		};
+		13405B6721E8BFCA00C9E92E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				13405B6E21E8C0BF00C9E92E /* HJKillPriceCourseViewController.h */,
+				13405B6F21E8C0BF00C9E92E /* HJKillPriceCourseViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		13405B6821E8BFCA00C9E92E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				130BD39D21EC25A700726E15 /* HJKillPriceModel.h */,
+				130BD39E21EC25A700726E15 /* HJKillPriceModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		13405B6921E8BFCA00C9E92E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				13405B7121E8C1AC00C9E92E /* HJKillPriceCourseCell.h */,
+				13405B7221E8C1AC00C9E92E /* HJKillPriceCourseCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		13405B6A21E8BFCA00C9E92E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				13405B7421E8C1C000C9E92E /* HJKillPriceCourseViewModel.h */,
+				13405B7521E8C1C000C9E92E /* HJKillPriceCourseViewModel.m */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -4344,6 +4459,7 @@
 				1377CDE3219E72BA00EFF59A /* HJTeacherCourseModel.m in Sources */,
 				13A52CB42181A0F800A3852D /* HJBaseClassDetailGroupCell.m in Sources */,
 				131D74552177308E00DC94C7 /* AdJumpViewController.m in Sources */,
+				13405B7621E8C1C000C9E92E /* HJKillPriceCourseViewModel.m in Sources */,
 				136BE0CE2193D75900DE5E5F /* HJMessageViewController.m in Sources */,
 				13A52C24217DA73000A3852D /* SDCycleScrollView.m in Sources */,
 				136BE0B92192ADD800DE5E5F /* HJMineHeaderView.m in Sources */,
@@ -4370,6 +4486,7 @@
 				132743BF21AB9B7400396345 /* AnimationTabbarItem.m in Sources */,
 				13466DF321B1113B003714AC /* HJCheckLivePwdAlertView.m in Sources */,
 				131D74BF2177506100DC94C7 /* NotificationConst.m in Sources */,
+				13405B7021E8C0BF00C9E92E /* HJKillPriceCourseViewController.m in Sources */,
 				13F652E221BA426500BAE0CE /* HJMessageViewModel.m in Sources */,
 				13F558A22186AFAB0089BABB /* HJStuntJudgeDetailViewController.m in Sources */,
 				13F559B3218971FB0089BABB /* HJFindRecommondLinkCell.m in Sources */,
@@ -4602,6 +4719,7 @@
 				1377CE12219EC02800EFF59A /* HJDealNullTool.m in Sources */,
 				131D74572177308E00DC94C7 /* ConventionJudge.m in Sources */,
 				13A52C9F218152E500A3852D /* HJClassDetailViewController.m in Sources */,
+				13405B7C21E8C1F700C9E92E /* HJOnLiveViewModel.m in Sources */,
 				132B949221A42EC8007FFD6C /* HJGiftRewardAlertView.m in Sources */,
 				1328D74F21BF85DD00FE2C3D /* HJUsedMyCardVoucherViewController.m in Sources */,
 				13E885312179AC12002598AD /* HJForgetPwdNavigationController.m in Sources */,
@@ -4629,9 +4747,11 @@
 				1377CDDA219E5C4600EFF59A /* HJTeacherDetailModel.m in Sources */,
 				131D74562177308E00DC94C7 /* APPUserDataIofo.m in Sources */,
 				13A52C0E217DA3A700A3852D /* HJHomeViewModel.m in Sources */,
+				13405B6D21E8C0A700C9E92E /* HJOnLiveViewController.m in Sources */,
 				136BE0DC2193DE4F00DE5E5F /* HJMessageDetailCell.m in Sources */,
 				1366B9DC219A657C00765C9C /* HJTeachBestListModel.m in Sources */,
 				131D73DC2177302F00DC94C7 /* LoginViewController.m in Sources */,
+				13405B7321E8C1AC00C9E92E /* HJKillPriceCourseCell.m in Sources */,
 				13F6530721BBE28900BAE0CE /* HJOrderDetailViewController.m in Sources */,
 				134FE5CA21B5067E0056F648 /* HJBrokerageDetailFooterView.m in Sources */,
 				1332D42B21798664009190A6 /* AppDelegate+Category.m in Sources */,
@@ -4699,9 +4819,11 @@
 				13B25F8121957AB800DD3647 /* HJMyCardVoucherViewController.m in Sources */,
 				13A728F921A7E4D100C04622 /* HJWithDrawRecordCell.m in Sources */,
 				13A0CB282182F98E00028DE0 /* HJMoreResultViewController.m in Sources */,
+				13405B7921E8C1E100C9E92E /* HJOnLiveCell.m in Sources */,
 				13466DED21B00B15003714AC /* NELivePlayerControlView.m in Sources */,
 				13B25F762195744C00DD3647 /* HJWatchHistoryLiveViewController.m in Sources */,
 				13FF0E4921847AEF00F6B6AD /* HJStuntJudgeWaitReplyCell.m in Sources */,
+				130BD39F21EC25A700726E15 /* HJKillPriceModel.m in Sources */,
 				134FE5AC21B4DB500056F648 /* HJMyShareCommunityCell.m in Sources */,
 				13B25F6A219572FB00DD3647 /* HJWatchHistoryViewController.m in Sources */,
 				13A728F621A7E42C00C04622 /* HJWithDrawRecordViewController.m in Sources */,
@@ -5129,7 +5251,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huijing.school;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Dis;
+				PROVISIONING_PROFILE_SPECIFIER = "New Dis";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

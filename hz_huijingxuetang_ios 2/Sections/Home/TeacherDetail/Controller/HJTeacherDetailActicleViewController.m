@@ -78,7 +78,7 @@
     [self.tableView registerClass:[HJTeacherInfoCell class] forCellReuseIdentifier:NSStringFromClass([HJTeacherInfoCell class])];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, KHomeIndicatorHeight, 0));
     }];
 }
 

@@ -33,8 +33,8 @@
     [self addSubview:_scrollView];
 
     //
-    NSArray *btnimgarr = @[@"直播ICON",@"教学跟踪ICON",@"绝技诊股ICON",@"教参精华"];
-    NSArray *btnlbarr = @[@"直播教学",@"教学跟踪",@"绝技诊股",@"教参精华"];
+    NSArray *btnimgarr = @[@"直播ICON",@"砍价抢课ICON",@"绝技诊股ICON",@"教参精华"];
+    NSArray *btnlbarr = @[@"正在直播",@"砍价抢课",@"绝技诊股",@"教参精华"];
     if(MaJia) {
         btnimgarr = @[@"教学跟踪ICON",@"绝技诊股ICON",@"教参精华"];
         btnlbarr = @[@"教学跟踪",@"绝技诊股",@"教参精华"];
@@ -49,6 +49,9 @@
         [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [btn setBackgroundImage:[UIImage imageNamed:btnimgarr[i]] forState:UIControlStateNormal];
         [view addSubview:btn];
+        if((!MaJia) && (i == 0)){
+            self.onLiveButton = btn;
+        }
 
         UILabel *btnlb = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn.frame) + kHeight(10.0), view.width, kHeight(10.0))];
         btnlb.textColor = HEXColor(@"#333333");
@@ -62,41 +65,48 @@
 //点击跳转的处理
 - (void)btnAction:(UIButton *)btn {
     if (btn.tag == 0) {
-        //直播教学
         if(MaJia){
-            VisibleViewController().tabBarController.selectedIndex = 2;
+           //教学跟踪
+//            VisibleViewController().tabBarController.selectedIndex = 2;
+            NSDictionary *para = @{@"index" : @(0)};
+            [DCURLRouter pushURLString:@"route://infoVC" query:para animated:YES];
             return;
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SetToLiveVC" object:nil userInfo:nil];
-        VisibleViewController().tabBarController.selectedIndex = 1;
+        //正在直播
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"SetToLiveVC" object:nil userInfo:nil];
+//        VisibleViewController().tabBarController.selectedIndex = 1;
+        [DCURLRouter pushURLString:@"route://onLiveVC" animated:YES];
     } else if ( btn.tag == 1) {
         //教学跟踪
         if(MaJia) {
+            //绝技诊股
             if([APPUserDataIofo AccessToken].length <= 0) {
-//                ShowMessage(@"您还未登录");
                 [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                 return;
             }
             [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
             return;
         }
-        VisibleViewController().tabBarController.selectedIndex = 3;
+//        VisibleViewController().tabBarController.selectedIndex = 3;
+        //砍价抢课
+        [DCURLRouter pushURLString:@"route://killPriceCourseVC" animated:YES];
     } else if (btn.tag == 2) {
-        //绝技诊股
         if(MaJia) {
             //教参精华
-            VisibleViewController().tabBarController.selectedIndex = 2;
+//            VisibleViewController().tabBarController.selectedIndex = 2;
+            NSDictionary *para = @{@"index" : @(2)};
+            [DCURLRouter pushURLString:@"route://infoVC" query:para animated:YES];
             return;
         }
         if([APPUserDataIofo AccessToken].length <= 0) {
-//            ShowMessage(@"您还未登录");
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }
+        //绝技诊股
         [DCURLRouter pushURLString:@"route://stuntJudgeVC" animated:YES];
     } else if ( btn.tag == 3) {
-        //教参精华
         if(MaJia) {
+             //马甲跳转到资讯页面
             VisibleViewController().tabBarController.selectedIndex = 2;
             return;
         }
@@ -105,6 +115,7 @@
             [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
             return;
         }
+        //教参精华
         [DCURLRouter pushURLString:@"route://teachBestVC" animated:YES];
     }
 }
@@ -115,7 +126,11 @@
         NSDictionary *dic = self.listViewModel.cycleScrollViewDataArray[index];
         NSString *courseId = [dic valueForKey:@"content"];
         if(courseId.length > 0) {
-             [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : [dic valueForKey:@"content"]} animated:YES];
+            if([APPUserDataIofo AccessToken].length <= 0) {
+                [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+                return;
+            }
+            [DCURLRouter pushURLString:@"route://classDetailVC" query:@{@"courseId" : [dic valueForKey:@"content"]} animated:YES];
         } else{
             ShowMessage(@"课程Id不能为空");
         }

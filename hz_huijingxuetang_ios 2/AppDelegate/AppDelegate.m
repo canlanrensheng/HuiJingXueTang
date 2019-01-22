@@ -57,7 +57,6 @@
             if (code == 200) {
                 NSString *data = [responseObject objectForKey:@"data"];
                 [UserInfoSingleObject shareInstance].isShowMaJia = [data boolValue];
-
                 //自动登录
                 if ([APPUserDataIofo AccessToken].length > 0) {
                     [YJAPPNetwork AutoLoginWithAccesstoken:[APPUserDataIofo AccessToken] success:^(NSDictionary *responseObject) {
@@ -98,6 +97,14 @@
         }];
     });
     
+#if DEBUG
+    //    for iOS
+    [[NSBundle bundleWithPath:@"/Applications/InjectionIII.app/Contents/Resources/iOSInjection10.bundle"] load];
+    //    for tvOS
+    [[NSBundle bundleWithPath:@"/Applications/InjectionIII.app/Contents/Resources/tvOSInjection10.bundle"] load];
+    //    for masOS
+    [[NSBundle bundleWithPath:@"/Applications/InjectionIII.app/Contents/Resources/macOSInjection10.bundle"] load];
+#endif
     return NO;
 }
 
@@ -120,79 +127,6 @@
     });
 }
 
-//#pragma mark 请求通讯录权限
-//- (void)requestContactAuthorAfterSystemVersion9{
-//    CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
-//    if (status == CNAuthorizationStatusNotDetermined) {
-//        CNContactStore *store = [[CNContactStore alloc] init];
-//        [store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError*  _Nullable error) {
-//            if (error) {
-//                DLog(@"授权失败");
-//            }else {
-//                DLog(@"成功授权");
-//                [self openContact];
-//            }
-//        }];
-//    } else if(status == CNAuthorizationStatusRestricted) {
-//        DLog(@"用户拒绝");
-//        [self showAlertViewAboutNotAuthorAccessContact];
-//    } else if (status == CNAuthorizationStatusDenied) {
-//        DLog(@"用户拒绝");
-//        [self showAlertViewAboutNotAuthorAccessContact];
-//    } else if (status == CNAuthorizationStatusAuthorized) {
-//        //已经授权
-//        //有通讯录权限-- 进行下一步操作
-//        [self openContact];
-//    }
-//}
-//
-////有通讯录权限-- 进行下一步操作
-//- (void)openContact{
-//    // 获取指定的字段,并不是要获取所有字段，需要指定具体的字段
-//    NSArray *keysToFetch = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey];
-//    CNContactFetchRequest *fetchRequest = [[CNContactFetchRequest alloc] initWithKeysToFetch:keysToFetch];
-//    CNContactStore *contactStore = [[CNContactStore alloc] init];
-//    [contactStore enumerateContactsWithFetchRequest:fetchRequest error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
-//
-//        NSString *givenName = contact.givenName;
-//        NSString *familyName = contact.familyName;
-//        NSLog(@"givenName=%@, familyName=%@", givenName, familyName);
-//        //拼接姓名
-////        NSString *nameStr = [NSString stringWithFormat:@"%@%@",contact.familyName,contact.givenName];
-//        NSArray *phoneNumbers = contact.phoneNumbers;
-//
-//        NSMutableArray *marr = [NSMutableArray array];
-//        for (CNLabeledValue *labelValue in phoneNumbers) {
-//            //遍历一个人名下的多个电话号码
-//            CNPhoneNumber *phoneNumber = labelValue.value;
-//            NSString * string = phoneNumber.stringValue ;
-//            //去掉电话中的特殊字符
-//            string = [string stringByReplacingOccurrencesOfString:@"+86" withString:@""];
-//            string = [string stringByReplacingOccurrencesOfString:@"-" withString:@""];
-//            string = [string stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//            string = [string stringByReplacingOccurrencesOfString:@")" withString:@""];
-//            string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-//            string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-//
-//            [marr addObject:string];
-//        }
-////        DLog(@"获取到的数据是:%@",marr);
-//    }];
-//
-//}
-//
-////提示没有通讯录权限
-//- (void)showAlertViewAboutNotAuthorAccessContact{
-//
-//    UIAlertController *alertController = [UIAlertController
-//                                          alertControllerWithTitle:@"请授权通讯录权限"
-//                                          message:@"请在iPhone的\"设置-隐私-通讯录\"选项中,允许慧鲸学堂访问你的通讯录"
-//                                          preferredStyle: UIAlertControllerStyleAlert];
-//
-//    UIAlertAction *OKAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
-//    [alertController addAction:OKAction];
-//    [VisibleViewController() presentViewController:alertController animated:YES completion:nil];
-//}
 
 /**
  *  设置全局支持方向，然后在控制器中单独配置各自的支持方向

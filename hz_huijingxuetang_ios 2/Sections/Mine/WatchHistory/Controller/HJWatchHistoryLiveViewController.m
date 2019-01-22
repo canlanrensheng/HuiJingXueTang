@@ -68,6 +68,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HJWatchHistoryLiveCell *cell = (HJWatchHistoryLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.row < self.dataArr.count) {
         kRepeatClickTime(1.0);
         HJLiveDetailModel *detailModel = self.dataArr[indexPath.row];
@@ -92,8 +93,10 @@
             }
         }
         //校验密码
+        [cell.loadingView startAnimating];
         [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
             //没有设置密码
+            [cell.loadingView stopLoadingView];
             if(isSetPwd) {
                 [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId,
                                                                                  @"teacherId" : model.userid.length > 0 ? model.userid : @""
@@ -109,7 +112,7 @@
             }
             
         } error:^{
-            
+            [cell.loadingView stopLoadingView];
         }];
     }
 }

@@ -51,13 +51,13 @@
                                  @"type":type,
                                  @"page":page
                                  };
-    if(MaJia) {
-        parameters = @{
-                       @"type" : type,
-                       @"page" : page,
-                       @"vesttype" : @"free"
-                       };
-    }
+//    if(MaJia) {
+//        parameters = @{
+//                       @"type" : type,
+//                       @"page" : page,
+//                       @"vesttype" : @"free"
+//                       };
+//    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:parameters method:@"GET" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -186,9 +186,10 @@
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             NSInteger code = [[dic objectForKey:@"code"]integerValue];
             if (code == 200) {
-                NSArray *dataArray= dic[@"data"];
+                NSDictionary *dataDict= dic[@"data"];
+                NSArray *liveListArray = dataDict[@"livelist"];
                 NSMutableArray *marr = [NSMutableArray array];
-                for (NSDictionary *dic in dataArray) {
+                for (NSDictionary *dic in liveListArray) {
                     HJHomeLiveModel *model = [HJHomeLiveModel mj_objectWithKeyValues:dic];
                     [marr addObject:model];
                 }

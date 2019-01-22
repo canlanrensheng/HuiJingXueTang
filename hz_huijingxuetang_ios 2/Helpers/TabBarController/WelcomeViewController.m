@@ -117,7 +117,7 @@
     [imageView addSubview:startButton];
 }
 
-- (void)startButton:(UIButton *)button{
+- (void)startButton:(UIButton *)button {
     CustomTabbarController *tabbarVC = [[CustomTabbarController alloc]init];
     [UIApplication sharedApplication].keyWindow.rootViewController = tabbarVC;
 

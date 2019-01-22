@@ -41,7 +41,7 @@
 @implementation HJFindRecommondTextVideoLinkCell
 
 - (void)hj_configSubViews {
-    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     //头像
     UIImageView *iconImageV = [[UIImageView alloc] init];
     iconImageV.image = V_IMAGE(@"默认头像");
@@ -287,9 +287,11 @@
     self.nameLabel.text = model.realname;
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;
-    self.dateLabel.text = [DateFormatter getDate:model.createtime];
-    [_linkImageView sd_setImageWithURL:URL(model.dynamiclinkpic) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
+//    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+    NSDate *startDate = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+    self.dateLabel.text = [NSDate compareCurrentTime:startDate];
     
+    [_linkImageView sd_setImageWithURL:URL(model.dynamiclinkpic) placeholderImage:V_IMAGE(@"hjIcon") options:SDWebImageRefreshCached];
     _coverImageView.image = model.coverVideoImg;
     
     if(model.type == 1 || model.type == 2) {
@@ -347,8 +349,10 @@
                     return;
                 }
             }
+            [self.loadingView startAnimating];
             [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:model.dynamiclinkid success:^(BOOL isSetPwd){
                 //没有设置密码
+                [self.loadingView stopLoadingView];
                 if(isSetPwd) {
                     [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.dynamiclinkid,
                                                                                      @"teacherId" : model.teacherid.length > 0 ? model.teacherid : @""
@@ -364,7 +368,7 @@
                 
             } error:^{
                 //设置了密码，弹窗提示
-                
+                [self.loadingView stopLoadingView];
             }];
         }
         if(model.type == 5) {

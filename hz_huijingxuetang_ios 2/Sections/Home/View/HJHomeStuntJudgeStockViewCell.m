@@ -209,25 +209,32 @@
         }];
         
         //查看详情
-        UIButton *loodDetailBtn = [UIButton creatButton:^(UIButton *button) {
-            button.ljTitle_font_titleColor_state(@"查看详情",MediumFont(font(13)),HEXColor(@"#294D70"),0);
-            //查看详情
-            button.opaque = YES;
-            @weakify(self);
-            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-                @strongify(self);
-                if([APPUserDataIofo AccessToken].length <= 0) {
-                    [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
-                    return;
-                }
-                
-                HJHomeStuntJudgeStockModel *model = self.listViewModel.stuntJudgeStockArray[self.indexPath.row];
-                NSDictionary *para = @{@"stuntId" : model.stuntId};
-                [DCURLRouter pushURLString:@"route://stuntJudgeDetailVC" query:para animated:YES];
-            }];
+//        UIButton *loodDetailBtn = [UIButton creatButton:^(UIButton *button) {
+//            button.ljTitle_font_titleColor_state(@"查看详情",MediumFont(font(13)),HEXColor(@"#294D70"),0);
+//            //查看详情
+//            button.opaque = YES;
+//            @weakify(self);
+//            [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+//                @strongify(self);
+//                if([APPUserDataIofo AccessToken].length <= 0) {
+//                    [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
+//                    return;
+//                }
+//
+//                HJHomeStuntJudgeStockModel *model = self.listViewModel.stuntJudgeStockArray[i];
+//                NSDictionary *para = @{@"stuntId" : model.stuntId};
+//                [DCURLRouter pushURLString:@"route://stuntJudgeDetailVC" query:para animated:YES];
+//            }];
+//        }];
+        
+        UILabel *loodDetailLabel = [UILabel creatLabel:^(UILabel *label) {
+            label.ljTitle_font_textColor(@"查看详情",MediumFont(font(13)),HEXColor(@"#294D70"));
+            label.textAlignment = NSTextAlignmentCenter;
+            label.numberOfLines = 0;
+            [label sizeToFit];
         }];
-        [backView addSubview:loodDetailBtn];
-        [loodDetailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        [backView addSubview:loodDetailLabel];
+        [loodDetailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(timeLabel);
             make.right.equalTo(arrowImageV.mas_left).offset(-kWidth(5.0));
         }];

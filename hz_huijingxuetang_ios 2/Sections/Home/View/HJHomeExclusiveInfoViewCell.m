@@ -143,8 +143,7 @@
         }
         UILabel *titleLabel = [UILabel creatLabel:^(UILabel *label) {
             label.ljTitle_font_textColor(infoTitle,BoldFont(font(14)),HEXColor(@"#333333"));
-            [label sizeToFit];
-        }];
+            [label sizeToFit];        }];
         [backView addSubview:titleLabel];
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.top.equalTo(duJiaBackView).offset(kHeight(4.0));
@@ -162,12 +161,11 @@
         [desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(duJiaBackView.mas_centerY).offset(kHeight(4.0));
             make.left.equalTo(duJiaBackView.mas_right).offset(kWidth(16.0));
-            make.right.equalTo(niuPointBtn.mas_left).offset(kWidth(28.0));
+            make.right.equalTo(niuPointBtn.mas_left).offset(kWidth(-28.0));
             make.height.mas_equalTo(kHeight(13));
         }];
         
     }
-    //self.scrollView.backgroundColor = [UIColor redColor];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, CGRectGetMaxY([[self.scrollView.subviews lastObject] frame]));
 }
 

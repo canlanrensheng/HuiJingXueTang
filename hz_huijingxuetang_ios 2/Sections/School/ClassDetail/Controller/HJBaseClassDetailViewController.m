@@ -30,6 +30,7 @@
 - (void)hj_configSubViews{
     self.bottomView = [[HJClassDetailBottomView alloc] init];
     [self.view addSubview:self.bottomView];
+    self.bottomView.hidden = YES;
     self.bottomView.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1];
     self.bottomView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
     self.bottomView.layer.shadowOffset = CGSizeMake(0,1);

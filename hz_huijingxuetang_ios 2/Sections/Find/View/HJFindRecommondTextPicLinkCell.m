@@ -33,6 +33,7 @@
 @implementation HJFindRecommondTextPicLinkCell
 
 - (void)hj_configSubViews {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     //头像
     UIImageView *iconImageV = [[UIImageView alloc] init];
     iconImageV.image = V_IMAGE(@"默认头像");
@@ -238,7 +239,7 @@
         imaView.backgroundColor = Background_Color;
         imaView.userInteractionEnabled = YES;
         [self.scrollView addSubview:imaView];
-        [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
+        [imaView sd_setImageWithURL:URL(assets[i]) placeholderImage:V_IMAGE(@"hjIcon") options:SDWebImageRefreshCached];
         UITapGestureRecognizer *ta = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
         [imaView addGestureRecognizer:ta];
     }
@@ -272,7 +273,9 @@
     self.nameLabel.text = model.realname;
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;
-    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+//    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+    NSDate *startDate = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+    self.dateLabel.text = [NSDate compareCurrentTime:startDate];
     
     [self reloadScrollViewWithImageArr:model.picArray];
 }
@@ -321,7 +324,9 @@
                 }
             }
             
+            [self.loadingView startAnimating];
             [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:model.dynamiclinkid success:^(BOOL isSetPwd){
+                [self.loadingView stopLoadingView];
                 //没有设置密码
                 if(isSetPwd) {
                     [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.dynamiclinkid
@@ -336,7 +341,7 @@
                 
             } error:^{
                 //设置了密码，弹窗提示
-                
+                [self.loadingView stopLoadingView];
             }];
         }
         if(model.type == 5) {

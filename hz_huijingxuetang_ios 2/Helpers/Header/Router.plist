@@ -4,6 +4,12 @@
 <dict>
 	<key>route</key>
 	<dict>
+		<key>route://infoVC</key>
+		<string>HJInfoViewController</string>
+		<key>route://onLiveVC</key>
+		<string>HJOnLiveViewController</string>
+		<key>route://killPriceCourseVC</key>
+		<string>HJKillPriceCourseViewController</string>
 		<key>route://shareCommunityDetailVC</key>
 		<string>HJMyShareCommunityDetailViewController</string>
 		<key>route://shareMoneyHelpVC</key>

@@ -86,7 +86,7 @@
     
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, KHomeIndicatorHeight, 0));
     }];
 }
 
@@ -115,6 +115,22 @@
         NSInteger row = [[rowDict objectForKey:@"row"] integerValue];
         NSInteger select = [[rowDict objectForKey:@"select"] integerValue];
         [self dealCareOrCancleCareDataWithSelect:select row:row];
+        
+        //点击动态的关注之后联动老师详情顶部的数据
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshTeacherDetailData" object:nil userInfo:nil];
+    }];
+    
+    //点击老师上方的关注后刷新动态列表
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"RefreshTeacherDynamicVCData" object:nil] subscribeNext:^(id x) {
+        @strongify(self);
+        self.tableView.mj_footer.hidden = YES;
+        self.viewModel.tableView = self.tableView;
+        self.viewModel.page = 1;
+        [self.viewModel teacherDynamicRecommondListWithTeacherid:self.teacherId  Success:^(BOOL successFlag){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }];
     }];
 }
 

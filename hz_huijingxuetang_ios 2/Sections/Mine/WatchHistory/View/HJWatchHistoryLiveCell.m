@@ -7,7 +7,7 @@
 //
 
 #import "HJWatchHistoryLiveCell.h"
-#import "NSDate+Estension.h"
+
 @interface HJWatchHistoryLiveCell ()
 
 @property (nonatomic,strong) UIImageView *imaV;
@@ -86,11 +86,7 @@
     [self.imaV sd_setImageWithURL:URL(courseModel.coursepic) placeholderImage:V_IMAGE(@"占位图") options:SDWebImageRefreshCached];
     self.nameLabel.text = courseModel.coursename;
     self.teacherLabel.text = [NSString stringWithFormat:@"讲师：%@",courseModel.realname];
-    NSDate *endDate = [NSDate date];
     NSDate *startDate = model.course.date;
-//    DTTimePeriod *timePeriod =[[DTTimePeriod alloc] initWithStartDate:startDate endDate:endDate];
-//    double durationInHours  = [timePeriod durationInHours];
-//    self.timeLabel.text = [NSString stringWithFormat:@"%ld小时前",(long)durationInHours];
     self.timeLabel.text = [NSDate compareCurrentTime:startDate];
 }
 

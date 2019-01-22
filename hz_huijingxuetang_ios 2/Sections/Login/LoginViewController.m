@@ -57,8 +57,8 @@ static NSString *UserName = @"UserName";
         @weakify(self);
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
-            NSString *isLoginOut = self.params[@"isLoginOut"];
-            NSString *isFromMineVC = self.params[@"isFromMineVC"];
+//            NSString *isLoginOut = self.params[@"isLoginOut"];
+//            NSString *isFromMineVC = self.params[@"isFromMineVC"];
 //            if(isLoginOut) {
 //                [self.tabBarController setSelectedIndex:0];
 //                [self.navigationController popToRootViewControllerAnimated:YES];
@@ -69,7 +69,7 @@ static NSString *UserName = @"UserName";
 //                [self backBtnClicked];
 //            }
             [UserInfoSingleObject shareInstance].isLogined = NO;
-            
+    
             [self.tabBarController setSelectedIndex:0];
             [self.navigationController popToRootViewControllerAnimated:YES];
         }];

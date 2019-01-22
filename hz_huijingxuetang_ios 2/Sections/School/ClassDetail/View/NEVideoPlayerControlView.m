@@ -156,6 +156,7 @@
     if (!_killPriceImageV) {
         _killPriceImageV = [[UIImageView alloc] init];
         _killPriceImageV.image = V_IMAGE(@"砍价提示-1");
+        _killPriceImageV.hidden = YES;
     }
     return _killPriceImageV;
 }

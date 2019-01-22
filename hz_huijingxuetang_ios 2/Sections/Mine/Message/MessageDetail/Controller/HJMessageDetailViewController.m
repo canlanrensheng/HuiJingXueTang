@@ -128,6 +128,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HJMessageDetailCell *cell = (HJMessageDetailCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.row < self.viewModel.messageDetailListArray.count) {
         kRepeatClickTime(1.0);
         HJMessageDetailModel *model = self.viewModel.messageDetailListArray[indexPath.row];
@@ -156,7 +157,9 @@
                     return;
                 }
             }
+            [cell.loadingView startAnimating];
             [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:model.contentid success:^(BOOL isSetPwd){
+                [cell.loadingView stopLoadingView];
                 //没有设置密码
                 if(isSetPwd) {
                     [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.contentid,
@@ -172,6 +175,7 @@
                 }
                 
             } error:^{
+                [cell.loadingView stopLoadingView];
                 //设置了密码，弹窗提示
                 
             }];

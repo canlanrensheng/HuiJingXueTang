@@ -30,22 +30,26 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
                 self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
-                self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
-                
+                if(!MaJia){
+                   self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+                }
                 [self.tableView reloadData];
             });
         }];
     }
     
-    HJMessageViewModel *viewModel = [[HJMessageViewModel alloc] init];
-    [viewModel getMessageWithSuccess:^{
-        if(viewModel.hasmess) {
-            [self.tabBarController.tabBar showBadgeValueAtIndex:4 value:@""];
-        } else {
-            [self.tabBarController.tabBar hideBadgeValueAtIndex:4];
-        }
-        self.headerView.unReadMessageCount = viewModel.countmess;
-    }];
+    if(!MaJia){
+        HJMessageViewModel *viewModel = [[HJMessageViewModel alloc] init];
+        [viewModel getMessageWithSuccess:^{
+            if(viewModel.hasmess) {
+                [self.tabBarController.tabBar showBadgeValueAtIndex:4 value:@""];
+            } else {
+                [self.tabBarController.tabBar hideBadgeValueAtIndex:4];
+            }
+            self.headerView.unReadMessageCount = viewModel.countmess;
+        }];
+    }
+    
 }
 
 - (void)viewDidLoad {
@@ -56,7 +60,9 @@
         @strongify(self);
         [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
         self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
-        self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+        if(!MaJia){
+            self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+        }
     }];
 }
 
@@ -113,7 +119,9 @@
         [self.viewModel getUserInfoWithSuccess:^{
             [self.headerView.iconImageV sd_setImageWithURL:URL([APPUserDataIofo UserIcon]) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
             self.headerView.nameLable.text = [APPUserDataIofo nikename].length > 0 ? [APPUserDataIofo nikename] : @"未设置";
-            self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+            if(!MaJia){
+                self.headerView.vipLevelImageV.hidden = [[APPUserDataIofo Partner] isEqualToString:@"1"] ? NO : YES;
+            }
         }];
     }];
 }

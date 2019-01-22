@@ -83,16 +83,19 @@
     self.viewControllers = self.controllers;
     
     //登陆的时候获取小红点
-    if([APPUserDataIofo AccessToken].length > 0) {
-        HJMessageViewModel *viewModel = [[HJMessageViewModel alloc] init];
-        [viewModel getMessageWithSuccess:^{
-            if(viewModel.hasmess) {
-                [self.tabBar showBadgeValueAtIndex:4 value:@""];
-            } else {
-                [self.tabBar hideBadgeValueAtIndex:4];
-            }
-        }];
+    if(!MaJia){
+        if([APPUserDataIofo AccessToken].length > 0) {
+            HJMessageViewModel *viewModel = [[HJMessageViewModel alloc] init];
+            [viewModel getMessageWithSuccess:^{
+                if(viewModel.hasmess) {
+                    [self.tabBar showBadgeValueAtIndex:4 value:@""];
+                } else {
+                    [self.tabBar hideBadgeValueAtIndex:4];
+                }
+            }];
+        }
     }
+   
     
     //去掉分割线
     self.tabBar.backgroundImage = [UIImage new];
@@ -128,15 +131,27 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
     self.tabBar.hidden = NO;
-    DLog(@"获取到的数据是:%ld",self.selectedIndex);
-    if(self.selectedIndex == 4){
-        if([APPUserDataIofo AccessToken].length <= 0) {
-//            ShowMessage(@"您还未登录");
-            [UserInfoSingleObject shareInstance].isLogined = YES;
-            NSDictionary *para = @{@"isFromMineVC" :@(YES)};
-            [DCURLRouter pushURLString:@"route://loginVC" query:para animated:YES];
+//    DLog(@"获取到的数据是:%ld",self.selectedIndex);
+    if(MaJia) {
+        if(self.selectedIndex == 3){
+            if([APPUserDataIofo AccessToken].length <= 0) {
+                //            ShowMessage(@"您还未登录");
+                [UserInfoSingleObject shareInstance].isLogined = YES;
+                NSDictionary *para = @{@"isFromMineVC" :@(YES)};
+                [DCURLRouter pushURLString:@"route://loginVC" query:para animated:YES];
+            }
+        }
+    } else {
+        if(self.selectedIndex == 4){
+            if([APPUserDataIofo AccessToken].length <= 0) {
+                //            ShowMessage(@"您还未登录");
+                [UserInfoSingleObject shareInstance].isLogined = YES;
+                NSDictionary *para = @{@"isFromMineVC" :@(YES)};
+                [DCURLRouter pushURLString:@"route://loginVC" query:para animated:YES];
+            }
         }
     }
+    
 }
 
 - (UITabBarItem *)setTabbarItemWithTitle:(NSString *)title withImage:(NSString *)image withSelectImage:(NSString *)selectImage {

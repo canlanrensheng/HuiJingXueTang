@@ -109,23 +109,24 @@
         [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
             @strongify(self);
             if([APPUserDataIofo AccessToken].length <= 0) {
-//                ShowMessage(@"您还未登录");
                 [DCURLRouter pushURLString:@"route://loginVC" animated:YES];
                 return;
             }
             if (!button.selected) {
                 [_viewModel careOrCancleCareWithTeacherId:_viewModel.teacherId accessToken:[APPUserDataIofo AccessToken] insterest:@"1" Success:^{
                     button.selected = !button.selected;
-//                    ShowMessage(@"关注成功");
                     self.model.fans_count += 1;
                     self.fenCountLabel.text = [NSString stringWithFormat:@"%ld",self.model.fans_count];
+                    //刷新老师的动态列表
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshTeacherDynamicVCData" object:nil userInfo:nil];
                 }];
             } else {
                 [_viewModel careOrCancleCareWithTeacherId:_viewModel.teacherId accessToken:[APPUserDataIofo AccessToken] insterest:@"0" Success:^{
                     button.selected = !button.selected;
-//                    ShowMessage(@"取消关注成功");
                     self.model.fans_count -= 1;
                     self.fenCountLabel.text = [NSString stringWithFormat:@"%ld",self.model.fans_count];
+                    //刷新老师的动态列表的数据
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshTeacherDynamicVCData" object:nil userInfo:nil];
                 }];
             }
         }];

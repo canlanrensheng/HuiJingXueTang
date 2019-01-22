@@ -32,21 +32,25 @@
 }
 
 
-- (void)hj_configSubViews{
+- (void)hj_configSubViews {
     //    self.tableView.scrollEnabled = NO;
     
     [self.tableView registerClass:[HJSchoolLiveCell class] forCellReuseIdentifier:NSStringFromClass([HJSchoolLiveCell class])];
     
-    HJSchoolLiveToolView *toolView = [[HJSchoolLiveToolView alloc] init];
-    [self.view addSubview:toolView];
-    [toolView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.view);
-        make.height.mas_equalTo(kHeight(40.0));
-    }];
+//    HJSchoolLiveToolView *toolView = [[HJSchoolLiveToolView alloc] init];
+//    [self.view addSubview:toolView];
+//    [toolView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.top.right.equalTo(self.view);
+//        make.height.mas_equalTo(kHeight(40.0));
+//    }];
+//    [self.view addSubview:self.tableView];
     
-    [self.view addSubview:self.tableView];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kHeight(40.0) , 0, kBottomBarHeight, 0));
+    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if(isFringeScreen) {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+        } else {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, KHomeIndicatorHeight, 0));
+        }
     }];
 }
 
@@ -61,6 +65,7 @@
     }];
 }
 
+//上拉加载和下拉刷新
 - (void)hj_refreshData {
     @weakify(self);
     self.tableView.mj_header = [MKRefreshHeader headerWithRefreshingBlock:^{
@@ -89,20 +94,22 @@
     }];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+#pragma mark UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return  kHeight(111.0);
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.viewModel.liveListArray.count;
 }
 
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HJSchoolLiveCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([HJSchoolLiveCell class]) forIndexPath:indexPath];
     self.tableView.separatorColor = clear_color;
     if (indexPath.row < self.viewModel.liveListArray.count) {
@@ -111,8 +118,9 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HJSchoolLiveCell *cell = (HJSchoolLiveCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.row < self.viewModel.liveListArray.count) {
         kRepeatClickTime(1.0);
         HJTeacherLiveModel *model = self.viewModel.liveListArray[indexPath.row];
@@ -143,7 +151,9 @@
         }
         
         //登陆后检验密码
+        [cell.loadingView startAnimating];
         [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:liveId success:^(BOOL isSetPwd){
+            [cell.loadingView stopLoadingView];
             //没有设置密码
             if(isSetPwd) {
                 [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : liveId,
@@ -160,17 +170,18 @@
                 [alertView show];
             }
         } error:^{
+            [cell.loadingView stopLoadingView];
             //设置了密码，弹窗提示
             
         }];
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0.0001f;
 }
 
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView{
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
     NSString *text = @"";
     if([UserInfoSingleObject shareInstance].networkStatus == NotReachable) {
         text = @"网络好像出了点问题";

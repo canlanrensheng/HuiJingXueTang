@@ -178,11 +178,11 @@
             success(YES);
         } else {
             success(NO);
-            ShowError([dic objectForKey:@"msg"]);
+//            ShowError([dic objectForKey:@"msg"]);
         }
     } fail:^(id error) {
         success(NO);
-        ShowError(error);
+//        ShowError(error);
     }];
 }
 

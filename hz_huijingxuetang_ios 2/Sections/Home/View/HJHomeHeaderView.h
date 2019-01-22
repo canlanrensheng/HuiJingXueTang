@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJHomeHeaderView : BaseView
 
+//正在直播的按钮
+@property (nonatomic,strong) UIButton *onLiveButton;
+
 @end
 
 NS_ASSUME_NONNULL_END

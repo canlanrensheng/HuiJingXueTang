@@ -16,13 +16,13 @@
     parameters = @{
                    @"id" : stuntId.length > 0 ? stuntId : @""
                    };
-    if(MaJia) {
-        parameters = @{
-                       @"id" : stuntId.length > 0 ? stuntId : @"",
-                       @"vesttype" : @"free"
-                       };
-        
-    }
+//    if(MaJia) {
+//        parameters = @{
+//                       @"id" : stuntId.length > 0 ? stuntId : @"",
+//                       @"vesttype" : @"free"
+//                       };
+//        
+//    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:parameters method:@"POST" callBack:^(id responseObject) {
             NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];

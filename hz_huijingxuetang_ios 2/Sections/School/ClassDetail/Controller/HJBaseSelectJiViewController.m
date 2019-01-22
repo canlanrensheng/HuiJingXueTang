@@ -14,8 +14,6 @@
 @interface HJBaseSelectJiViewController ()
 
 @property (nonatomic,strong) HJClassDetailBottomView *bottomView;
-//选中的model
-@property (nonatomic,strong) HJCourseSelectJiModel *lastSelectModel;
 
 @end
 
@@ -34,6 +32,7 @@
 - (void)hj_configSubViews{
     self.bottomView = [[HJClassDetailBottomView alloc] init];
     [self.view addSubview:self.bottomView];
+    self.bottomView.hidden = YES;
     self.bottomView.backgroundColor = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1];
     self.bottomView.layer.shadowColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0.1].CGColor;
     self.bottomView.layer.shadowOffset = CGSizeMake(0,1);
@@ -174,9 +173,8 @@
         [_viewModel getCourceSelectJiWithCourseid:self.viewModel.courseId Success:^{
             if(weakSelf.viewModel.selectJiArray.count > 0){
                 HJCourseSelectJiModel *model = weakSelf.viewModel.selectJiArray.firstObject;
-                self.lastSelectModel = model;
+//                self.lastSelectModel = model;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"SetFirstPlayVideoMessage" object:nil userInfo:@{@"model" : model}];
-                
             }
             [weakSelf.tableView reloadData];
         }];
@@ -291,11 +289,7 @@
         @strongify(self);
         if(self.viewModel.selectJiArray.count > 0) {
             HJCourseSelectJiModel *firstModel = self.viewModel.selectJiArray.firstObject;
-            firstModel.isOnPlay = YES;
-            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
-            [defa setValue:@"1" forKey:firstModel.videourl];
-            [defa synchronize];
-            self.lastSelectModel = firstModel;
+            self.viewModel.selectCourseId = firstModel.videoid;
             [self.tableView reloadData];
         }
     }];
@@ -352,34 +346,13 @@
 //            }
 //        }
         HJCourseSelectJiModel *model = self.viewModel.selectJiArray[indexPath.row];
-
         [self.backSub sendNext:model];
-
-        //播放量加一
-        if (self.lastSelectModel) {
-            self.lastSelectModel.isOnPlay = NO;
-            //存储是否已经播放
-            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
-            [defa setValue:@"1" forKey:self.lastSelectModel.videourl];
-            [defa synchronize];
-
-            self.lastSelectModel = model;
-
-            model.isOnPlay = YES;
-
-            //刷新数据
-            [self.tableView reloadData];
-
-        } else {
-            self.lastSelectModel = model;
-            model.isOnPlay = YES;
-            //刷新数据
-            [self.tableView reloadData];
-
-            NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
-            [defa setValue:@"1" forKey:model.videourl];
-            [defa synchronize];
-        }
+        NSUserDefaults *defa = [NSUserDefaults standardUserDefaults];
+        [defa setValue:@"1" forKey:model.videourl];
+        [defa synchronize];
+        self.viewModel.selectCourseId = model.videoid;
+        //刷新数据
+        [self.tableView reloadData];
     }
 }
 

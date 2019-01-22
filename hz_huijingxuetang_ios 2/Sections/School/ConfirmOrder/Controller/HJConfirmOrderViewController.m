@@ -112,7 +112,7 @@
         make.height.mas_equalTo(kHeight(49.0));
     }];
     
-    
+    //实付金额的label
     UILabel *countLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"实付金额：￥0",MediumFont(font(15)),HEXColor(@"#666666"));
         label.textAlignment = NSTextAlignmentLeft;
@@ -127,6 +127,7 @@
         make.height.mas_equalTo(kHeight(14.0));
     }];
     
+    //确认订单的按钮
     UIButton *buyButton = [UIButton creatButton:^(UIButton *button) {
         button.ljTitle_font_titleColor_state(@"确认订单",MediumFont(font(15)),white_color,0);
         button.backgroundColor = HEXColor(@"#FF4400");
@@ -141,6 +142,17 @@
         make.right.bottom.top.equalTo(self.bottomView);
         make.width.mas_equalTo(kWidth(119));
     }];
+    
+    //适配iPhone X
+    if(isFringeScreen) {
+        UIView *bottomView = [[UIView alloc] init];
+        bottomView.backgroundColor = white_color;
+        [self.view addSubview:bottomView];
+        [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.view);
+            make.height.mas_equalTo(KHomeIndicatorHeight);
+        }];
+    }
 }
 
 //确认订单的操作

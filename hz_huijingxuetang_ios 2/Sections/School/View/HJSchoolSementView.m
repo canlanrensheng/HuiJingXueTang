@@ -88,7 +88,7 @@
     if(!_lineView){
         _lineView = [[UIView alloc] init];
         _lineView.backgroundColor = HEXColor(@"#FAD466");
-        [_lineView clipWithCornerRadius:kHeight(1.5) borderColor:nil borderWidth:0];
+//        [_lineView clipWithCornerRadius:kHeight(1.5) borderColor:nil borderWidth:0];
     }
     return _lineView;
 }

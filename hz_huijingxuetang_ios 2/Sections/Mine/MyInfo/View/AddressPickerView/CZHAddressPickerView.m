@@ -9,7 +9,8 @@
 #import "CZHAddressPickerView.h"
 #import "AddressPickerHeader.h"
 #import "UIButton+CZHExtension.h"
-
+#import "AccountMessageViewModel.h"
+#import "JSLoadingView.h"
 #define TOOLBAR_BUTTON_WIDTH CZH_ScaleWidth(65)
 
 typedef NS_ENUM(NSInteger, CZHAddressPickerViewButtonType) {
@@ -57,6 +58,8 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
 @property (nonatomic, copy) void (^cityBlock)(NSString *province, NSString *city);
 ///区域回调
 @property (nonatomic, copy) void (^areaBlock)(NSString *province, NSString *city, NSString *area);
+
+@property (nonatomic,strong) JSLoadingView *loadingView;
 @end
 
 
@@ -114,8 +117,6 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
 }
 
 
-
-
 + (instancetype)addressPickerViewWithProvince:(NSString *)province city:(NSString *)city area:(NSString *)area provinceBlock:(void(^)(NSString *province))provinceBlock cityBlock:(void(^)(NSString *province, NSString *city))cityBlock areaBlock:(void(^)(NSString *province, NSString *city, NSString *area))areaBlock  showType:(CZHAddressPickerViewType)showType{
     
     CZHAddressPickerView *_view = [[CZHAddressPickerView alloc] init];
@@ -139,21 +140,29 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
     [_view showView];
     
     return _view;
-    
 }
 
-
+- (JSLoadingView *)loadingView{
+    if (!_loadingView) {
+        _loadingView = [[JSLoadingView alloc] init];
+        _loadingView.backgroundColor = white_color;
+        [self.containView addSubview:_loadingView];
+        [_loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.containView).offset(kHeight(40.0));
+            make.left.mas_equalTo(self.containView);
+            make.width.mas_equalTo(self.containView);
+            make.height.mas_equalTo(self.containView);
+        }];
+    }
+    return _loadingView;
+}
 
 - (instancetype)init {
     if (self = [super init]) {
-        
         [self czh_setView];
-
     }
     return self;
 }
-
-
 
 - (void)czh_setView {
     
@@ -163,10 +172,8 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
     containView.frame = CGRectMake(0, ScreenHeight, ScreenWidth, CZH_ScaleHeight(195));
     [self addSubview:containView];
     self.containView = containView;
-//    containView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideView)];
     [self addGestureRecognizer:tap];
-    
     
     UIView *toolBar = [[UIView alloc] init];
     toolBar.frame = CGRectMake(0, 0, ScreenWidth, CZH_ScaleHeight(40));
@@ -189,120 +196,134 @@ typedef NS_ENUM(NSInteger, CZHAddressPickerViewType) {
     pickerView.dataSource = self;
     [containView addSubview:pickerView];
     self.pickerView = pickerView;
-    
 }
 
 //获取数据
 - (void)czh_getData {
-    NSString * path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"plist"];
-    self.dataSource = [NSArray arrayWithContentsOfFile:path];
-    
-    NSMutableArray * tempArray = [NSMutableArray array];
-    
-    for (NSDictionary * tempDic in self.dataSource) {
-        
-        for (int i = 0; i < tempDic.allKeys.count; i ++) {
-            [tempArray addObject:tempDic.allKeys[i]];
-        }
-        
-    }
-  
     if(self.showType == CZHAddressPickerViewTypeProvince) {
-        self.provinceArray = @[@"男",@"女"];
-    } else {
-        //省
-        self.provinceArray = [tempArray copy];
-    }
-    
-    //市
-    self.cityArray = [self getCityNamesFromProvinceIndex:0];
-    //区
-    self.areaArray = [self getAreaNamesFromProvinceIndex:0 cityIndex:0];
-
-    //如果没有传入默认选中的省市区，默认选中各个数组的第一个
-    if (!self.selectProvince.length) {
-        self.selectProvince = [self.provinceArray firstObject];
-    }
-    if (!self.selectCity.length) {
-        self.selectCity = [self.cityArray firstObject];
-    }
-    if (!self.selectArea.length) {
-        self.selectArea = [self.areaArray firstObject];
-    }
-
-    NSInteger provinceIndex = 0;
-    NSInteger cityIndex = 0;
-    NSInteger areaIndex = 0;
-
-    for (NSInteger p = 0; p < self.provinceArray.count; p++) {
-        if ([self.provinceArray[p] isEqualToString:self.selectProvince]) {
-            self.selectProvinceIndex = p;
-            provinceIndex = p;
-            self.cityArray = [self getCityNamesFromProvinceIndex:p];
-
-            for (NSInteger c = 0; c < self.cityArray.count; c++) {
-                if ([self.cityArray[c] isEqualToString:self.selectCity]) {
-                    cityIndex = c;
-                    self.areaArray = [self getAreaNamesFromProvinceIndex:p cityIndex:c];
-
-                    for (NSInteger a = 0; a < self.areaArray.count; a++) {
-                        if ([self.areaArray[a] isEqualToString:self.selectArea]) {
-                            areaIndex = a;
-                        }
-                    }
-                }
+       //选择性别的时候的操作
+       self.provinceArray = @[@"男",@"女"];
+        if (!self.selectProvince.length) {
+            self.selectProvince = [self.provinceArray firstObject];
+        }
+        NSInteger provinceIndex = 0;
+        for (NSInteger p = 0; p < self.provinceArray.count; p++) {
+            if ([self.provinceArray[p] isEqualToString:self.selectProvince]) {
+                self.selectProvinceIndex = p;
             }
         }
+       [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
+    } else {
+        //获取省市区的数据
+        AccountMessageViewModel *viewModel = [[AccountMessageViewModel alloc] init];
+        [self.loadingView startAnimating];
+        [viewModel getAreaWithSuccess:^(NSArray *dataArray) {
+            [self.loadingView stopLoadingView];
+            
+            self.dataSource = [NSMutableArray arrayWithArray:dataArray];
+            
+            NSMutableArray * tempArray = [NSMutableArray array];
+            for (NSDictionary *tempDic in self.dataSource) {
+                NSString *name = [tempDic objectForKey:@"name"];
+                [tempArray addObject:name];
+            }
+            
+//            if(self.showType == CZHAddressPickerViewTypeProvince) {
+//                self.provinceArray = @[@"男",@"女"];
+//            } else {
+                //省
+                self.provinceArray = [tempArray copy];
+//            }
+            
+            //市
+            self.cityArray = [self getCityNamesFromProvinceIndex:0];
+            //区
+            self.areaArray = [self getAreaNamesFromProvinceIndex:0 cityIndex:0];
+            
+            //如果没有传入默认选中的省市区，默认选中各个数组的第一个
+            if (!self.selectProvince.length) {
+                self.selectProvince = [self.provinceArray firstObject];
+            }
+            if (!self.selectCity.length) {
+                self.selectCity = [self.cityArray firstObject];
+            }
+            if (!self.selectArea.length) {
+                self.selectArea = [self.areaArray firstObject];
+            }
+            
+            NSInteger provinceIndex = 0;
+            NSInteger cityIndex = 0;
+//            NSInteger areaIndex = 0;
+            
+            for (NSInteger p = 0; p < self.provinceArray.count; p++) {
+                if ([self.provinceArray[p] isEqualToString:self.selectProvince]) {
+                    self.selectProvinceIndex = p;
+                    provinceIndex = p;
+                    self.cityArray = [self getCityNamesFromProvinceIndex:p];
+                    
+//                    for (NSInteger c = 0; c < self.cityArray.count; c++) {
+//                        if ([self.cityArray[c] isEqualToString:self.selectCity]) {
+//                            cityIndex = c;
+//                            self.areaArray = [self getAreaNamesFromProvinceIndex:p cityIndex:c];
+//
+//                            for (NSInteger a = 0; a < self.areaArray.count; a++) {
+//                                if ([self.areaArray[a] isEqualToString:self.selectArea]) {
+//                                    areaIndex = a;
+//                                }
+//                            }
+//                        }
+//                    }
+                }
+            }
+            
+            if (self.showType == CZHAddressPickerViewTypeProvince) {
+                [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
+            } else if (self.showType == CZHAddressPickerViewTypeCity) {
+                [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
+                [self.pickerView selectRow:cityIndex inComponent:1 animated:YES];
+            }
+//            else if (self.showType == CZHAddressPickerViewTypeArea) {
+//                [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
+//                [self.pickerView selectRow:cityIndex inComponent:1 animated:YES];
+//                [self.pickerView selectRow:areaIndex inComponent:2 animated:YES];
+//            }
+            
+            [self.pickerView reloadAllComponents];
+        }];
     }
-
-
-    if (self.showType == CZHAddressPickerViewTypeProvince) {
-        [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
-    } else if (self.showType == CZHAddressPickerViewTypeCity) {
-        [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
-        [self.pickerView selectRow:cityIndex inComponent:1 animated:YES];
-    } else if (self.showType == CZHAddressPickerViewTypeArea) {
-        [self.pickerView selectRow:provinceIndex inComponent:0 animated:YES];
-        [self.pickerView selectRow:cityIndex inComponent:1 animated:YES];
-        [self.pickerView selectRow:areaIndex inComponent:2 animated:YES];
-    }
+   
+    
+//    NSString * path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"plist"];
+//    self.dataSource = [NSArray arrayWithContentsOfFile:path];
 
 }
 
 //获取plist区域数组
-- (NSArray *)getAreaNamesFromProvinceIndex:(NSInteger)provinceIndex cityIndex:(NSInteger)cityIndex
-{
-
+- (NSArray *)getAreaNamesFromProvinceIndex:(NSInteger)provinceIndex cityIndex:(NSInteger)cityIndex {
 //    NSDictionary * tempDic = [self.dataSource[provinceIndex] objectForKey:self.provinceArray[provinceIndex]];
 //    NSArray * array = [NSArray array];
 //
 //    NSDictionary * dic = tempDic.allValues[cityIndex];
 //    array = [dic objectForKey:self.cityArray[cityIndex]];
-    
     NSArray *array = @[@"女"];
-    
     return array;
 }
-//获取plist城市数组
-- (NSArray *)getCityNamesFromProvinceIndex:(NSInteger)provinceIndex
-{
-    NSDictionary * tempDic = [self.dataSource[provinceIndex] objectForKey:self.provinceArray[provinceIndex]];
-    NSMutableArray * cityArray = [NSMutableArray array];
-    for (NSDictionary * valueDic in tempDic.allValues) {
-        
-        for (int i = 0; i < valueDic.allKeys.count; i ++) {
-            [cityArray addObject:valueDic.allKeys[i]];
-        }
+
+//获取市的数组
+- (NSArray *)getCityNamesFromProvinceIndex:(NSInteger)provinceIndex {
+    NSDictionary *tempDic = self.dataSource[provinceIndex];
+    NSArray *cityArr = [tempDic objectForKey:@"cities"];
+    NSMutableArray *cityArray = [NSMutableArray array];
+    for (NSDictionary *valueDic in cityArr) {
+        NSString *name = [valueDic objectForKey:@"name"];
+        [cityArray addObject:name];
     }
     return [cityArray copy];
 }
 
 - (void)buttonClick:(UIButton *)sender {
-    
     [self hideView];
-    
     if (sender.tag == CZHAddressPickerViewButtonTypeSure) {
-        
         if (_provinceBlock) {
             _provinceBlock(self.selectProvince);
         }

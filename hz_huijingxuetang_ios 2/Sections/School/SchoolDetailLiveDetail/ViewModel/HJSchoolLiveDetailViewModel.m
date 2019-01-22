@@ -10,7 +10,7 @@
 #import "HJPastListModel.h"
 @implementation HJSchoolLiveDetailViewModel
 
-- (void)getLiveDetailDataWithLiveId:(NSString *)liveId  Success:(void (^)(BOOL successFlag))success {
+- (void)getLiveDetailDataWithLiveId:(NSString *)liveId  Success:(void (^)(NSInteger code))success {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/livecourseroom", API_BASEURL];
     NSDictionary *para = @{@"accesstoken" : [APPUserDataIofo AccessToken],
                            @"courseid" : liveId.length > 0 ? liveId : @"",
@@ -21,21 +21,23 @@
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
             DLog(@"获取到的直播详情的数据是:%@",[NSString convertToJsonData:dic]);
             NSInteger code = [[dic objectForKey:@"code"] integerValue];
-            if (code == 200) {
+            if (code == 200 || code == 22) {
                 NSDictionary *dataDict = dic[@"data"];
                 self.model = [HJLiveDetailModel mj_objectWithKeyValues:dataDict];
-                success(YES);
+                if(code == 22){
+                    ShowError([dic objectForKey:@"msg"]);
+                }
             } else {
                 self.liveDetailErrorCode = code;
-                if(code == 29) {
-                    ShowError(@"您暂无购买课程或已购课程已过期");
-                    return ;
-                }
+//                if(code == 29) {
+//                    ShowError(@"您暂无购买相关课程或购买课程已过期");
+//                    return ;
+//                }
                 ShowError([dic objectForKey:@"msg"]);
-                success(NO);
             }
+            success(code);
         } fail:^(id error) {
-            success(NO);
+            success(-1);
             ShowError(error);
         }];
     });

@@ -92,6 +92,25 @@
     }];
 }
 
+//获取省市区的信息
+- (void)getAreaWithSuccess:(void (^)(NSArray *dataArray))success {
+    NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/getarea",API_BASEURL];
+//    NSDictionary *parameters = nil;
+    [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:nil method:@"POST" callBack:^(id responseObject) {
+        NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
+        NSInteger code = [[dic objectForKey:@"code"] integerValue];
+        DLog(@"获取到的省市区的信息是:%@",[dic objectForKey:@"data"]);
+        if (code == 200) {
+            self.iconUrl = [dic objectForKey:@"data"];
+        } else {
+            ShowError([dic objectForKey:@"msg"]);
+        }
+        success([dic objectForKey:@"data"]);
+    } fail:^(id error) {
+        ShowError(error);
+    }];
+}
+
 - (void)tx_initialize {
     [self.dataArray addObjectsFromArray:@[@[@"头像",@"昵称",@"性别"],
                                           @[@"手机号",@"地区"],

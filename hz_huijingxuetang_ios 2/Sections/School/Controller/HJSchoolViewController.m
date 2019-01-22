@@ -143,10 +143,11 @@
         make.height.mas_equalTo(kHeight(45));
     }];
     
+    CGFloat vcHeight = Screen_Height - kNavigationBarHeight - kBottomBarHeight - kHeight(45);
     self.controllersClass = @[@"HJSchoolClassViewController",@"HJSchoolLiveViewController"];
-    UIScrollView *scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.toolView.frame), Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight)];
+    UIScrollView *scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.toolView.frame), Screen_Width, vcHeight)];
     [self.view addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kNavigationBarHeight - kBottomBarHeight);
+    scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  vcHeight);
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.pagingEnabled = YES;
     scrollView.scrollEnabled = YES;
@@ -159,12 +160,12 @@
     for (int index = 0; index < self.controllersClass.count; index++) {
         if(index == 0) {
             HJSchoolClassViewController *listVC = [[HJSchoolClassViewController alloc] init];
-            listVC.view.frame = CGRectMake(0, 0, Screen_Width, Screen_Height  - kNavigationBarHeight - kBottomBarHeight);
+            listVC.view.frame = CGRectMake(0, 0, Screen_Width, vcHeight);
             [self addChildViewController:listVC];
             [scrollView addSubview:listVC.view];
         }  else if (index == 1){
             HJSchoolLiveViewController *listVC = [[HJSchoolLiveViewController alloc] init];
-            listVC.view.frame = CGRectMake(Screen_Width * 1, 0, Screen_Width, Screen_Height - kNavigationBarHeight - kBottomBarHeight);
+            listVC.view.frame = CGRectMake(Screen_Width * 1, 0, Screen_Width, vcHeight  );
             [self addChildViewController:listVC];
             [scrollView addSubview:listVC.view];
         }
@@ -172,7 +173,7 @@
 }
 
 - (void)hj_loadData {
-    
+
 }
 
 //设置页面滚动

@@ -39,4 +39,19 @@
     return  _backSubject;
 }
 
+- (JSLoadingView *)loadingView{
+    if (!_loadingView) {
+        _loadingView = [[JSLoadingView alloc] init];
+        _loadingView.backgroundColor = clear_color;
+        [self addSubview:_loadingView];
+        [_loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.mas_equalTo(self);
+            make.width.mas_equalTo(self);
+            make.height.mas_equalTo(self);
+        }];
+    }
+    return _loadingView;
+}
+
+
 @end

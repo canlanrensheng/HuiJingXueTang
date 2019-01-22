@@ -46,8 +46,8 @@
         scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kNavigationBarHeight);
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.pagingEnabled = YES;
-        scrollView.scrollEnabled = YES;
-        scrollView.delegate = self;
+        scrollView.scrollEnabled = NO;
+//        scrollView.delegate = self;
         scrollView.bounces = NO;
         
         [self.view addSubview:scrollView];
@@ -68,8 +68,8 @@
         scrollView.contentSize = CGSizeMake(Screen_Width * self.controllersClass.count,  Screen_Height - kNavigationBarHeight - kHeight(40));
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.pagingEnabled = YES;
-        scrollView.scrollEnabled = YES;
-        scrollView.delegate = self;
+        scrollView.scrollEnabled = NO;
+//        scrollView.delegate = self;
         scrollView.bounces = NO;
         
         [self.view addSubview:scrollView];
@@ -93,11 +93,11 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat width = self.view.frame.size.width;
-    CGFloat offsetX = scrollView.contentOffset.x;
-    //获取索引
-    NSInteger scrollIndex = offsetX / width;
-    self.toolView.selectIndex = scrollIndex;
+//    CGFloat width = self.view.frame.size.width;
+//    CGFloat offsetX = scrollView.contentOffset.x;
+//    //获取索引
+//    NSInteger scrollIndex = offsetX / width;
+//    self.toolView.selectIndex = scrollIndex;
 }
 
 @end

@@ -105,13 +105,26 @@
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, BottomViewHeight + KHomeIndicatorHeight, 0));
     }];
     
+    //键盘将要弹起的时候
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"SendChatMessageKeyboardShow" object:nil] subscribeNext:^(id x) {
         @strongify(self);
         [self.bottomView.inputTextField becomeFirstResponder];
     }];
+    
+    //适配iPhone X
+    if(isFringeScreen) {
+        UIView *bottomView = [[UIView alloc] init];
+        bottomView.backgroundColor = white_color;
+        [self.view addSubview:bottomView];
+        [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.view);
+            make.height.mas_equalTo(KHomeIndicatorHeight);
+        }];
+    }
 }
 
 - (void)hj_bindViewModel {
+    //打赏支付成功之后发送打赏了什么东西的通知
     @weakify(self);
     [[[NSNotificationCenter defaultCenter] rac_addObserverForName:@"GiftRewardSuccessSendSystemNoty" object:nil] subscribeNext:^(NSNotification *noty) {
         @strongify(self);

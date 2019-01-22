@@ -37,8 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSMutableArray *videoCourseListArray;
 @property (nonatomic,strong) HJSchoolCourseListModel *model;
 - (void)getListWithSuccess:(void (^)(void))success;
-
-@property (nonatomic,assign) BOOL isFirstLoad;
+//是否是第一次加载数据
+@property (nonatomic,assign,getter=isFirstLoad) BOOL firstLoad;
 
 @end
 

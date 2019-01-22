@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JSLoadingView.h"
 #import "BaseTableViewCellProtocol.h"
 
 @interface BaseTableViewCell : UITableViewCell<BaseTableViewCellProtocol>
 
 @property (nonatomic,strong) RACSubject *backSubject;
+@property (nonatomic,strong) JSLoadingView *loadingView;
 
 @end

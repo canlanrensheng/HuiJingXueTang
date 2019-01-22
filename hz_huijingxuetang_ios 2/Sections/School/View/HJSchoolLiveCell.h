@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HJSchoolLiveCell : BaseTableViewCell
 
+
+
 @end
 
 NS_ASSUME_NONNULL_END

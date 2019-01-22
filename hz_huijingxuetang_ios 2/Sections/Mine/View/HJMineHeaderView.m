@@ -183,6 +183,7 @@
         make.left.equalTo(nameLabel.mas_right).offset(kWidth(10));
         make.centerY.equalTo(nameLabel);
     }];
+    vipLevelImageV.hidden = YES;
     self.vipLevelImageV = vipLevelImageV;
     
     //成员名称

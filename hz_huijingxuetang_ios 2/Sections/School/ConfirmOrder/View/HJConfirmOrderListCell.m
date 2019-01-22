@@ -18,6 +18,9 @@
 @property (nonatomic,strong) UILabel *serviceTimeLabel;
 @property (nonatomic,strong) UILabel *priceLabel;
 
+@property (nonatomic,strong) UILabel *originPriceLabel;
+@property (nonatomic,strong) UIView *priceLineView;
+
 @end
 
 @implementation HJConfirmOrderListCell
@@ -95,6 +98,31 @@
         make.right.equalTo(self).offset(-kWidth(10.0));
         make.height.mas_equalTo(kHeight(13.0));
     }];
+    
+    //原价的价格
+    UILabel *originPriceLabel = [UILabel creatLabel:^(UILabel *label) {
+        label.ljTitle_font_textColor(@"",MediumFont(font(10)),HEXColor(@"#999999"));
+        label.textAlignment = NSTextAlignmentRight;
+        [label sizeToFit];
+    }];
+    [self addSubview:originPriceLabel];
+    [originPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(_priceLabel);
+        make.bottom.equalTo(_priceLabel.mas_top).offset(-kHeight(5.0));
+        make.height.mas_equalTo(kHeight(8.0));
+    }];
+    
+    self.originPriceLabel = originPriceLabel;
+    //画线
+    UIView *priceLineView= [[UIView alloc] init];
+    priceLineView.backgroundColor = HEXColor(@"#999999");
+    [self addSubview:priceLineView];
+    [priceLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(originPriceLabel);
+        make.left.right.equalTo(originPriceLabel);
+        make.height.mas_equalTo(kHeight(0.5));
+    }];
+    self.priceLineView = priceLineView;
 }
 
 - (void)setViewModel:(BaseViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
@@ -107,8 +135,30 @@
         self.serviceTimeLabel.attributedText = [serviceTimeString attributeWithStr:@"服务周期：" color:HEXColor(@"#999999") font:MediumFont(font(11.0))];
 //        self.serviceTimeLabel.text = [NSString stringWithFormat:@"服务周期：%ld天",courseModel.periods];
         self.courceTypeLabel.text = @"";
-        NSString *price = [NSString stringWithFormat:@"￥%.2f",courseModel.coursemoney.floatValue];
-        self.priceLabel.attributedText = [price attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+//        NSString *price = [NSString stringWithFormat:@"￥%.2f",courseModel.coursemoney.floatValue];
+//        self.priceLabel.attributedText = [price attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+        CGFloat price = 0;
+        CGFloat originPrice = 0;
+        if (courseModel.hassecond == 1) {
+            //有秒杀价
+            self.originPriceLabel.hidden = NO;
+            self.priceLineView.hidden = NO;
+            price = courseModel.secondprice.floatValue;
+            originPrice = courseModel.coursemoney.floatValue;
+            
+            NSString *priceString = [NSString stringWithFormat:@"￥%.2f",price];
+            self.priceLabel.attributedText = [priceString attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+            
+            self.originPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",originPrice];
+        } else {
+            //没有秒杀价
+            self.originPriceLabel.hidden = YES;
+            self.priceLineView.hidden = YES;
+            //没有秒杀价
+            price = courseModel.coursemoney.floatValue;
+            NSString *priceString = [NSString stringWithFormat:@"￥%.2f",price];
+            self.priceLabel.attributedText = [priceString attributeWithStr:@"￥" color:HEXColor(@"#333333") font:MediumFont(font(13))];
+        }
     }
 }
 

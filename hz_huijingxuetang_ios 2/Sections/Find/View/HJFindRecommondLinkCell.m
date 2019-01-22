@@ -11,6 +11,7 @@
 #import "HJFindViewModel.h"
 #import "HJFindRecommondModel.h"
 #import "HJInfoCheckPwdAlertView.h"
+
 @interface HJFindRecommondLinkCell ()
 
 @property (nonatomic,strong) UIImageView *linkImageView;
@@ -30,6 +31,7 @@
 @implementation HJFindRecommondLinkCell
 
 - (void)hj_configSubViews {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     
     //头像
     UIImageView *iconImageV = [[UIImageView alloc] init];
@@ -222,12 +224,13 @@
     self.viewModel = (HJFindViewModel *)viewModel;
     self.model = model;
     
-    [_linkImageView sd_setImageWithURL:URL(model.dynamiclinkpic) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
+    [_linkImageView sd_setImageWithURL:URL(model.dynamiclinkpic) placeholderImage:V_IMAGE(@"hjIcon") options:SDWebImageRefreshCached];
     [self.iconImageV sd_setImageWithURL:URL(model.iconurl) placeholderImage:V_IMAGE(@"默认头像") options:SDWebImageRefreshCached];
     self.nameLabel.text = model.realname;
     self.careBtn.selected = model.isinterest == 1 ? YES : NO;
     self.contentLabel.text = model.dynamiccontent;
-    self.dateLabel.text = [DateFormatter getDate:model.createtime];
+    NSDate *startDate = [NSDate dateWithString:model.createtime formatString:@"yyyy-MM-dd HH:mm:ss"];
+    self.dateLabel.text = [NSDate compareCurrentTime:startDate];
     
     if(model.type == 1 || model.type == 2) {
         self.warnLabel.text = @"点击查阅文章";
@@ -282,7 +285,9 @@
                     return;
                 }
             }
+            [self.loadingView startAnimating];
             [[HJCheckLivePwdTool shareInstance] checkLivePwdWithPwd:@"" courseId:model.dynamiclinkid success:^(BOOL isSetPwd){
+                [self.loadingView stopLoadingView];
                 //没有设置密码
                 if(isSetPwd) {
                     [DCURLRouter pushURLString:@"route://schoolDetailLiveVC" query:@{@"liveId" : model.dynamiclinkid,
@@ -298,7 +303,7 @@
                 }
             } error:^{
                 //设置了密码，弹窗提示
-                
+                [self.loadingView stopLoadingView];
             }];
         }
         if(model.type == 5) {

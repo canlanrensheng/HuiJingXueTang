@@ -21,7 +21,7 @@
                            };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
-        DLog(@"生成电子签名的数据是:%@",dic);
+//        DLog(@"生成电子签名的数据是:%@",dic);
         success(dic);
     } fail:^(id error) {
         failure(error);
@@ -31,7 +31,9 @@
 //上线马甲包控制
 +(void)SetOnlineMaJiaBaoWithCheckVersion:(NSString *)checkVersion success:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure {
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/auditiosflag",API_BASEURL];
-    NSDictionary *para = @{@"auditver" : checkVersion.length > 0 ? checkVersion : @""};
+    NSDictionary *para = @{@"auditver" : checkVersion.length > 0 ? checkVersion : @""
+                           ,@"platFormType" : @(1)
+                           };
     [[YJNetWorkTool sharedTool] requestWithURLString:url parameters:para method:@"POST" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         DLog(@"获取版本更新的马甲包的数据是:%@",dic);
@@ -95,7 +97,7 @@
 /**
  首页 - 最新动态
  **/
-+(void)HomeViewNewsuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
++ (void)HomeViewNewsuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/dynamicnews",API_BASEURL];
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
@@ -111,7 +113,6 @@
  **/
 +(void)HomeViewTeachersuccess:(void (^)(NSDictionary* responseObject))success failure:(void (^)(NSString* error))failure{
     NSString *url = [NSString stringWithFormat:@"%@LiveApi/app/indexteacher",API_BASEURL];
-    
     [[YJNetWorkTool sharedTool]requestWithURLString:url parameters:nil method:@"GET" callBack:^(id responseObject) {
         NSDictionary*dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers| NSJSONReadingMutableLeaves error:nil];
         NSLog(@"%@",dic);

@@ -19,6 +19,9 @@
 //是否已经完成
 @property (nonatomic,assign) BOOL isFinished;
 
+//关闭按钮
+@property (nonatomic,strong) UIButton *closeButton;
+
 @end
 
 @implementation HJInputCodeViewController
@@ -48,6 +51,21 @@
 }
 
 - (void)hj_configSubViews {
+    _closeButton = [UIButton creatButton:^(UIButton *button) {
+        button.ljTitle_font_titleColor_state(@"关闭",MediumFont(font(13)),white_color,0);
+        [button setImage:V_IMAGE(@"close") forState:UIControlStateNormal];
+        @weakify(self);
+        [[button rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+            @strongify(self);
+            [DCURLRouter popViewControllerAnimated:YES];
+        }];
+    }];
+    [self.view addSubview:_closeButton];
+    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(kStatusBarHeight + kHeight(15));
+        make.left.equalTo(self.view).offset(kWidth(10));
+        make.width.height.mas_equalTo(CGSizeMake(kWidth(22), kWidth(22)));
+    }];
     //设置登录密码
     UILabel *setLoginPasswordLabel = [UILabel creatLabel:^(UILabel *label) {
         label.ljTitle_font_textColor(@"验证码",MediumFont(font(25)),[UIColor colorWithHexString:@"#333333"]);
@@ -55,8 +73,10 @@
     }];
     [self.view addSubview:setLoginPasswordLabel];
     [setLoginPasswordLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.offset(kWidth(10));
+//        make.top.offset(kHeight(79));
         make.left.offset(kWidth(10));
-        make.top.offset(kHeight(79));
+        make.top.equalTo(_closeButton.mas_bottom).offset(kHeight(26.0));
     }];
     
     //8~16位数字、字母或符号组合
